@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Create account — Noobstron',
+    'meta_description' => 'Create your account on Noobstron and start setting up your workspace.',
+    'eyebrow' => 'Registration',
+    'heading' => 'Create your account',
+    'errors_title' => 'Review the highlighted fields before continuing.',
+    'intro' => 'Start with your access details. The next steps configure your company, country, language and plan.',
+    'company' => 'Company',
+    'name' => 'Name',
+    'email' => 'Email',
+    'password' => 'Password',
+    'password_confirmation' => 'Confirm password',
+    'country' => 'Country',
+    'language' => 'Language',
+    'plan' => 'Plan',
+    'enterprise_note' => 'Enterprise has custom commercial terms and is not available through self-service registration.',
+    'summary' => 'Order summary',
+    'selected_plan' => 'Selected plan',
+    'trial_period' => 'Trial period',
+    'trial_days' => ':days-day trial',
+    'trial_note' => 'Your trial period will begin when company registration is completed.',
+    'create' => 'Create account',
+    'already_have_account' => 'Already have an account?',
+    'login' => 'Sign in',
+];

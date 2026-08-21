@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'title' => 'WhatsApp',
+    'history' => 'Histórico de WhatsApp',
+    'new_message' => 'Nova mensagem',
+    'templates' => 'Templates de WhatsApp',
+    'phone' => 'Telefone',
+    'recipient_name' => 'Nome do destinatário',
+    'message' => 'Mensagem',
+    'provider' => 'Provedor',
+    'status' => 'Status',
+    'direction' => 'Direção',
+    'sent_at' => 'Enviado em',
+    'send_now' => 'Enviar agora',
+    'save' => 'Salvar',
+    'template_name' => 'Nome do template',
+    'template_body' => 'Conteúdo do template',
+    'provider_template_name' => 'Nome no provedor',
+    'language' => 'Idioma',
+    'active' => 'Ativo',
+    'create_template' => 'Criar template',
+    'no_messages' => 'Nenhuma mensagem encontrada.',
+    'no_templates' => 'Nenhum template encontrado.',
+
+    'ai_rewrite' => 'Reescrever com IA',
+    'ai_rewrite_empty' => 'Digite uma mensagem antes de usar a IA.',
+    'ai_rewrite_loading' => 'Reescrevendo...',
+    'ai_rewrite_success' => 'Mensagem reescrita.',
+    'ai_rewrite_error' => 'Nao foi possivel reescrever a mensagem.',
+    'ai_rewrite_instruction' => 'Reescreva esta mensagem de WhatsApp com clareza, naturalidade e tom profissional, preservando o significado original.',
+];

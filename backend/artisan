@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+use Illuminate\Foundation\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+define('LARAVEL_START', microtime(true));
+
+/*
+ * Safety guard:
+ *
+ * Never allow the test suite to start unless the process was explicitly
+ * configured to use the isolated SQLite in-memory testing database.
+ *
+ * This check runs before Composer and Laravel are bootstrapped so an
+ * accidental "php artisan test" cannot touch the development database.
+ */
+$command = $argv[1] ?? null;
+
+if ($command === 'test') {
+    $appEnv = getenv('APP_ENV') ?: '';
+    $dbConnection = getenv('DB_CONNECTION') ?: '';
+    $dbDatabase = getenv('DB_DATABASE') ?: '';
+    $dbUrl = getenv('DB_URL');
+
+    $safeTestingEnvironment =
+        $appEnv === 'testing'
+        && $dbConnection === 'sqlite'
+        && $dbDatabase === ':memory:'
+        && ($dbUrl === false || $dbUrl === '');
+
+    if (!$safeTestingEnvironment) {
+        fwrite(
+            STDERR,
+            PHP_EOL
+            ."TEST BLOCKED: unsafe database environment.".PHP_EOL
+            ."Use the project test-safe wrapper instead.".PHP_EOL
+            .PHP_EOL
+        );
+
+        exit(1);
+    }
+}
+
+// Register the Composer autoloader...
+require __DIR__.'/vendor/autoload.php';
+
+// Bootstrap Laravel and handle the command...
+/** @var Application $app */
+$app = require_once __DIR__.'/bootstrap/app.php';
+
+$status = $app->handleCommand(new ArgvInput);
+
+exit($status);

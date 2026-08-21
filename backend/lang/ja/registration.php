@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'アカウント作成 — 私たちのプラットフォーム',
+    'meta_description' => '私たちのプラットフォームでアカウントを作成し、ワークスペースの設定を始めます。',
+    'eyebrow' => '登録',
+    'heading' => 'アカウントを作成',
+    'errors_title' => '続行する前に入力内容を確認してください。',
+    'intro' => 'まずログイン情報を入力してください。次のステップで会社、国、言語、プランを設定します。',
+    'company' => '会社',
+    'name' => '名前',
+    'email' => 'メール',
+    'password' => 'パスワード',
+    'password_confirmation' => 'パスワード確認',
+    'country' => '国',
+    'language' => '言語',
+    'plan' => 'プラン',
+    'enterprise_note' => 'Enterprise は個別の商談条件があり、セルフサービス登録の対象外です。',
+    'summary' => '申込内容',
+    'selected_plan' => '選択したプラン',
+    'trial_period' => '試用期間',
+    'trial_days' => ':days 日間のトライアル',
+    'trial_note' => '会社登録が完了すると試用期間が開始されます。',
+    'create' => 'アカウントを作成',
+    'already_have_account' => 'すでにアカウントをお持ちですか？',
+    'login' => 'ログイン',
+];

@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'title' => 'WhatsApp',
+    'history' => 'WhatsApp 履歴',
+    'new_message' => '新しいメッセージ',
+    'templates' => 'WhatsApp テンプレート',
+    'phone' => '電話番号',
+    'recipient_name' => '受信者名',
+    'message' => 'メッセージ',
+    'provider' => 'プロバイダー',
+    'status' => 'ステータス',
+    'direction' => '方向',
+    'sent_at' => '送信日時',
+    'send_now' => '今すぐ送信',
+    'save' => '保存',
+    'template_name' => 'テンプレート名',
+    'template_body' => 'テンプレート内容',
+    'provider_template_name' => 'プロバイダー側の名前',
+    'language' => '言語',
+    'active' => '有効',
+    'create_template' => 'テンプレートを作成',
+    'no_messages' => 'メッセージがありません。',
+    'no_templates' => 'テンプレートがありません。',
+
+    'ai_rewrite' => 'AIで書き直す',
+    'ai_rewrite_empty' => 'AIを使用する前にメッセージを入力してください。',
+    'ai_rewrite_loading' => '書き直しています...',
+    'ai_rewrite_success' => 'メッセージを書き直しました。',
+    'ai_rewrite_error' => 'メッセージを書き直せませんでした。',
+    'ai_rewrite_instruction' => '元の意味を保ちながら、このWhatsAppメッセージを明確で自然かつプロフェッショナルな表現に書き直してください。',
+];

@@ -1,0 +1,33 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!backend/.env.production.example
+
+# Local backups
+backups/
+_visual-backup-*/
+_before-*/
+*.bak
+*.dump
+
+# Generated/debug files
+_final-route-list.txt
+
+# Laravel
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*.php
+
+# Frontend build
+backend/public/build/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

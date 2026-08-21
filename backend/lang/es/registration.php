@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Crear cuenta — Noobstron',
+    'meta_description' => 'Crea tu cuenta en Noobstron y empieza a configurar tu espacio.',
+    'eyebrow' => 'Registro',
+    'heading' => 'Crear tu cuenta',
+    'errors_title' => 'Revisa los campos indicados antes de continuar.',
+    'intro' => 'Empieza con tus datos de acceso. Los siguientes pasos configuran tu empresa, país, idioma y plan.',
+    'company' => 'Empresa',
+    'name' => 'Nombre',
+    'email' => 'Correo electrónico',
+    'password' => 'Contraseña',
+    'password_confirmation' => 'Confirmar contraseña',
+    'country' => 'País',
+    'language' => 'Idioma',
+    'plan' => 'Plan',
+    'enterprise_note' => 'Enterprise tiene condiciones comerciales personalizadas y no forma parte del registro self-service.',
+    'summary' => 'Resumen de contratación',
+    'selected_plan' => 'Plan elegido',
+    'trial_period' => 'Período de prueba',
+    'trial_days' => ':days días de prueba',
+    'trial_note' => 'Tu período de prueba comenzará cuando se complete el registro de la empresa.',
+    'create' => 'Crear cuenta',
+    'already_have_account' => '¿Ya tienes una cuenta?',
+    'login' => 'Entrar',
+];

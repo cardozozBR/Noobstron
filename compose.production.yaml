@@ -1,0 +1,194 @@
+name: nossa-plataforma-production
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.production
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    restart: unless-stopped
+    working_dir: /var/www/html
+
+    volumes:
+      - app_storage:/var/www/html/storage/app
+
+    env_file:
+      - ./backend/.env.production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm -t"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - backend
+
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.production
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    restart: unless-stopped
+    working_dir: /var/www/html
+
+    volumes:
+      - app_storage:/var/www/html/storage/app
+
+    command:
+      [
+        "php",
+        "artisan",
+        "queue:work",
+        "--sleep=3",
+        "--tries=3",
+        "--timeout=60",
+        "--max-time=3600"
+      ]
+
+    healthcheck:
+      test: ["CMD", "php", "artisan", "queue:monitor", "default", "--max=1000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    env_file:
+      - ./backend/.env.production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    stop_grace_period: 30s
+
+    networks:
+      - backend
+
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.production
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    restart: unless-stopped
+    working_dir: /var/www/html
+
+    volumes:
+      - app_storage:/var/www/html/storage/app
+
+    command:
+      [
+        "php",
+        "artisan",
+        "schedule:work"
+      ]
+
+    env_file:
+      - ./backend/.env.production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    stop_grace_period: 30s
+
+    networks:
+      - backend
+
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.production
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    restart: unless-stopped
+    volumes:
+      - app_storage:/var/www/html/storage/app:ro
+
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - backend
+
+
+  postgres:
+    image: postgres:18
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env.production
+
+    volumes:
+      - postgres_production_data:/var/lib/postgresql
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - backend
+
+
+volumes:
+  postgres_production_data:
+  app_storage:
+
+
+networks:
+  backend:
+    driver: bridge

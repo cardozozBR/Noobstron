@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => '创建账户 — 我们的平台',
+    'meta_description' => '在我们的平台创建账户并开始配置您的工作空间。',
+    'eyebrow' => '注册',
+    'heading' => '创建账户',
+    'errors_title' => '请检查标出的字段后再继续。',
+    'intro' => '请先填写登录信息。接下来的步骤将配置公司、国家、语言和方案。',
+    'company' => '公司',
+    'name' => '姓名',
+    'email' => '电子邮件',
+    'password' => '密码',
+    'password_confirmation' => '确认密码',
+    'country' => '国家',
+    'language' => '语言',
+    'plan' => '方案',
+    'enterprise_note' => 'Enterprise 提供定制商务条件，不属于自助注册范围。',
+    'summary' => '订单摘要',
+    'selected_plan' => '已选方案',
+    'trial_period' => '试用期',
+    'trial_days' => ':days 天试用',
+    'trial_note' => '公司注册完成后，您的试用期将开始。',
+    'create' => '创建账户',
+    'already_have_account' => '已有账户？',
+    'login' => '登录',
+];

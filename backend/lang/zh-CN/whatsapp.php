@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'title' => 'WhatsApp',
+    'history' => 'WhatsApp 历史记录',
+    'new_message' => '新消息',
+    'templates' => 'WhatsApp 模板',
+    'phone' => '电话号码',
+    'recipient_name' => '收件人姓名',
+    'message' => '消息',
+    'provider' => '提供商',
+    'status' => '状态',
+    'direction' => '方向',
+    'sent_at' => '发送时间',
+    'send_now' => '立即发送',
+    'save' => '保存',
+    'template_name' => '模板名称',
+    'template_body' => '模板内容',
+    'provider_template_name' => '提供商模板名称',
+    'language' => '语言',
+    'active' => '启用',
+    'create_template' => '创建模板',
+    'no_messages' => '未找到消息。',
+    'no_templates' => '未找到模板。',
+
+    'ai_rewrite' => '使用 AI 改写',
+    'ai_rewrite_empty' => '请先输入消息，然后再使用 AI。',
+    'ai_rewrite_loading' => '正在改写...',
+    'ai_rewrite_success' => '消息已改写。',
+    'ai_rewrite_error' => '无法改写消息。',
+    'ai_rewrite_instruction' => '请在保留原意的同时，将这条 WhatsApp 消息改写得清晰、自然且专业。',
+];
