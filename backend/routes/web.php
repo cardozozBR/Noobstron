@@ -160,6 +160,17 @@ Route::get('/aprender/automatize-e-escale', function () {
     )
     ->name('marketing.learn.automation');
 
+Route::get('/aprender/rotina-comercial', function () {
+    return view('marketing.learn.routine');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.routine');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -255,6 +266,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.automation'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.routine'),
             'weekly',
             '0.9',
         ],

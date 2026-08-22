@@ -17,7 +17,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Melhore seu follow-up')
             ->assertSee('Centralize a comunicação')
             ->assertSee('Acompanhe resultados e evolua')
-            ->assertSee('Automatize e escale');
+            ->assertSee('Automatize e escale')
+            ->assertSee('Organize sua rotina comercial');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -99,6 +100,15 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_routine_guide_is_public(): void
+    {
+        $this->get('/aprender/rotina-comercial')
+            ->assertOk()
+            ->assertSee(
+                'Como organizar sua rotina comercial'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -110,7 +120,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/follow-up-e-atividades', false)
             ->assertSee('/aprender/centralizar-comunicacao', false)
             ->assertSee('/aprender/resultados-e-evolucao', false)
-            ->assertSee('/aprender/automatize-e-escale', false);
+            ->assertSee('/aprender/automatize-e-escale', false)
+            ->assertSee('/aprender/rotina-comercial', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -145,6 +156,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.automation'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.routine'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -193,10 +208,10 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-    962,
-    $baseKeys,
-    'A quantidade de chaves do learn.php pt-BR mudou.'
-);
+            1119,
+            $baseKeys,
+            'A quantidade de chaves do learn.php pt-BR mudou.'
+        );
 
         foreach ($locales as $locale) {
             $data = require lang_path(
@@ -379,4 +394,33 @@ class PublicLearningCenterTest extends TestCase
                 ->assertSee($expected);
         }
     }
+
+    public function test_routine_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como organizar sua rotina comercial.',
+
+            'en' =>
+                'How to organize your sales routine.',
+
+            'es' =>
+                'Cómo organizar tu rutina comercial.',
+
+            'zh-CN' =>
+                '如何组织销售日常工作。',
+
+            'ja' =>
+                '営業ルーティンを整理する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/rotina-comercial')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
 }

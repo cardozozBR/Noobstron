@@ -206,6 +206,7 @@
 <div class="learn-page">
 
 <section class="learn-hero">
+
     <div class="container learn-hero-inner">
 
         <span class="learn-eyebrow">
@@ -221,9 +222,11 @@
         </p>
 
     </div>
+
 </section>
 
 <section class="learn-section">
+
 <div class="container">
 
     <div class="learn-section-header">
@@ -255,6 +258,7 @@
                     'communication',
                     'results',
                     'automation',
+                    'routine',
                 ],
                 true
             ))
@@ -282,6 +286,9 @@
 
                             'automation' =>
                                 'marketing.learn.automation',
+
+                            'routine' =>
+                                'marketing.learn.routine',
                         }
                     ) }}"
                     class="learn-card"
@@ -334,9 +341,11 @@
     </div>
 
 </div>
+
 </section>
 
 <section class="learn-section">
+
 <div class="container">
 
     <div class="learn-section-header">
@@ -394,6 +403,7 @@
     </div>
 
 </div>
+
 </section>
 
 </div>
