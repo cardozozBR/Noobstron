@@ -23,7 +23,7 @@ return [
                 'number' => '02',
                 'title' => 'Organize seus clientes',
                 'description' => 'Centralize contatos, histórico, responsáveis e informações comerciais.',
-                'action' => 'Em breve',
+                'action' => 'Abrir guia →',
             ],
             'sales' => [
                 'number' => '03',
@@ -296,4 +296,209 @@ return [
             'guides_button' => 'Ver outros guias',
         ],
     ],
-];
+
+    'customers' => [
+        'meta_title' => 'Como organizar seus clientes em um CRM — Noobstron',
+        'meta_description' => 'Aprenda como organizar clientes, contatos, histórico, responsáveis, importação e qualidade dos dados em um CRM.',
+
+        'back' => '← Central de Aprendizado',
+        'eyebrow' => 'Guia 02 • CRM e clientes',
+        'title' => 'Como organizar seus clientes em um CRM.',
+        'lead' => 'Um cadastro bem estruturado transforma informações soltas em contexto comercial. Neste guia, você vai aprender como organizar clientes, contatos, histórico e responsabilidades para que sua equipe trabalhe melhor.',
+
+        'nav_title' => 'Neste guia',
+
+        'nav' => [
+            'por-que-organizar' => '1. Por que organizar clientes',
+            'cadastro' => '2. Estruture o cadastro',
+            'contatos' => '3. Organize contatos',
+            'enderecos' => '4. Endereços e contexto',
+            'historico' => '5. Histórico de relacionamento',
+            'responsaveis' => '6. Responsáveis e continuidade',
+            'importacao' => '7. Importação de clientes',
+            'qualidade' => '8. Qualidade dos dados',
+            'erros' => '9. Erros comuns',
+            'noobstron' => '10. Como aplicar no Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'por-que-organizar',
+                'title' => 'Por que organizar clientes',
+                'paragraphs' => [
+                    'Quando informações de clientes ficam espalhadas entre planilhas, agendas, e-mails e conversas, a equipe perde contexto e passa a depender da memória de cada pessoa.',
+                    'Um CRM organizado cria uma fonte central de informação para que todos saibam quem é o cliente, quem atende, o que já aconteceu e qual deve ser o próximo passo.',
+                ],
+                'box_title' => 'O objetivo não é apenas cadastrar',
+                'box_text' => 'Um bom CRM deve ajudar sua equipe a tomar decisões, continuar atendimentos e encontrar oportunidades com mais contexto.',
+            ],
+            [
+                'id' => 'cadastro',
+                'title' => 'Estruture o cadastro principal',
+                'paragraphs' => [
+                    'O cadastro principal deve guardar informações essenciais e confiáveis sobre cada cliente.',
+                    'Evite transformar o cadastro em um formulário enorme com campos que ninguém utiliza. Comece pelo que realmente ajuda sua operação.',
+                ],
+                'subtitle' => 'Informações úteis para começar',
+                'items' => [
+                    'Nome ou razão social.',
+                    'Documento ou identificador quando necessário.',
+                    'Segmento ou tipo de cliente.',
+                    'Responsável interno.',
+                    'Status do relacionamento.',
+                    'Observações relevantes.',
+                ],
+                'after_list' => 'A estrutura pode evoluir conforme sua empresa descobre quais informações realmente ajudam vendas, atendimento e gestão.',
+            ],
+            [
+                'id' => 'contatos',
+                'title' => 'Organize contatos, telefones e e-mails',
+                'paragraphs' => [
+                    'Uma empresa pode ter vários contatos. Por isso, é importante separar os dados da organização das pessoas com quem sua equipe realmente conversa.',
+                    'Manter telefones e e-mails associados ao cliente ajuda a reduzir duplicidade e facilita o acesso às informações corretas.',
+                ],
+                'subtitle' => 'Para cada contato, registre quando fizer sentido',
+                'items' => [
+                    'Nome.',
+                    'Cargo ou função.',
+                    'Telefone.',
+                    'E-mail.',
+                    'Canal preferido de contato.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Um cliente pode ter um contato financeiro, um responsável pela compra e outro responsável técnico. Manter essas funções separadas evita falar com a pessoa errada.',
+            ],
+            [
+                'id' => 'enderecos',
+                'title' => 'Use endereços como contexto comercial',
+                'paragraphs' => [
+                    'Endereços podem ser importantes para faturamento, entrega, atendimento em campo ou definição de região comercial.',
+                    'O ideal é manter o endereço relacionado ao cliente sem misturar informações que pertencem a contatos específicos.',
+                ],
+                'subtitle' => 'Alguns usos comuns',
+                'items' => [
+                    'Endereço comercial.',
+                    'Endereço de cobrança.',
+                    'Endereço de entrega.',
+                    'Unidades ou filiais.',
+                ],
+            ],
+            [
+                'id' => 'historico',
+                'title' => 'Construa um histórico de relacionamento',
+                'paragraphs' => [
+                    'O histórico é uma das partes mais valiosas de um CRM. Ele permite entender o que aconteceu antes de uma nova conversa começar.',
+                    'Interações, atividades, propostas e negociações devem ficar conectadas ao cliente sempre que possível.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Antes de ligar para um cliente, o vendedor pode consultar a última proposta enviada, a atividade pendente e as conversas anteriores.',
+                'box_title' => 'Contexto reduz retrabalho',
+                'box_text' => 'Quando o histórico está centralizado, o cliente não precisa repetir toda a história cada vez que fala com uma pessoa diferente da equipe.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Defina responsáveis e preserve continuidade',
+                'paragraphs' => [
+                    'Clientes precisam ter responsáveis claros quando a operação depende de acompanhamento individual.',
+                    'Isso facilita a distribuição da carteira e evita situações em que todos acreditam que outra pessoa está cuidando daquele relacionamento.',
+                ],
+                'subtitle' => 'Responsabilidade clara ajuda a responder',
+                'items' => [
+                    'Quem acompanha este cliente?',
+                    'Quem deve realizar o próximo contato?',
+                    'Quem pode assumir o relacionamento se o responsável estiver ausente?',
+                ],
+                'after_list' => 'Mesmo com um responsável principal, o histórico deve continuar acessível para pessoas autorizadas da equipe.',
+            ],
+            [
+                'id' => 'importacao',
+                'title' => 'Importe clientes existentes com cuidado',
+                'paragraphs' => [
+                    'Se sua empresa já possui uma base em planilhas ou outro sistema, a importação pode economizar muito tempo.',
+                    'Mas importar dados sem revisão também pode trazer duplicidades, informações antigas e campos inconsistentes.',
+                ],
+                'subtitle' => 'Antes de importar',
+                'items' => [
+                    'Remova registros claramente duplicados.',
+                    'Padronize campos importantes.',
+                    'Confira e-mails e telefones.',
+                    'Defina quais colunas realmente precisam ser importadas.',
+                    'Faça um teste com uma pequena amostra primeiro.',
+                ],
+                'box_title' => 'Importar menos e melhor',
+                'box_text' => 'Uma base menor, organizada e confiável costuma gerar mais valor que milhares de registros sem qualidade.',
+            ],
+            [
+                'id' => 'qualidade',
+                'title' => 'Cuide da qualidade dos dados',
+                'paragraphs' => [
+                    'Um CRM perde valor rapidamente quando a equipe deixa de confiar nas informações.',
+                    'A qualidade dos dados depende menos de preencher muitos campos e mais de manter os campos importantes corretos e atualizados.',
+                ],
+                'subtitle' => 'Boas práticas',
+                'items' => [
+                    'Evite criar o mesmo cliente várias vezes.',
+                    'Atualize contatos quando houver mudança.',
+                    'Remova informações claramente inválidas.',
+                    'Use padrões consistentes para campos importantes.',
+                    'Registre informações úteis, não apenas quantidade de dados.',
+                ],
+            ],
+            [
+                'id' => 'erros',
+                'title' => 'Evite erros comuns na organização do CRM',
+                'paragraphs' => [
+                    'Muitos problemas de CRM não são causados pela ferramenta, mas pela forma como os dados são utilizados no dia a dia.',
+                ],
+                'subtitle' => 'Erros que vale evitar',
+                'items' => [
+                    'Cadastrar tudo sem nenhum padrão.',
+                    'Compartilhar uma única conta entre vários usuários.',
+                    'Criar muitos campos obrigatórios sem necessidade.',
+                    'Nunca atualizar registros antigos.',
+                    'Manter informações importantes somente em conversas privadas.',
+                    'Criar clientes duplicados para cada nova negociação.',
+                ],
+                'after_list' => 'O melhor processo é aquele que a equipe consegue manter de forma consistente.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Como aplicar isso no Noobstron',
+                'paragraphs' => [
+                    'No Noobstron, o cadastro de clientes pode reunir os principais dados da organização e manter informações relacionadas no mesmo contexto.',
+                    'Contatos, telefones, e-mails, endereços e histórico podem ser organizados de forma estruturada para apoiar vendas e relacionamento.',
+                ],
+                'subtitle' => 'Uma sequência simples para começar',
+                'items' => [
+                    'Cadastre ou importe os clientes.',
+                    'Revise contatos e canais de comunicação.',
+                    'Defina responsáveis quando necessário.',
+                    'Conecte leads e oportunidades ao processo comercial.',
+                    'Registre atividades e próximos passos.',
+                    'Mantenha o histórico atualizado.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Quando qualquer pessoa autorizada abrir o cadastro de um cliente, ela deve conseguir entender rapidamente quem ele é, como falar com ele e o que está acontecendo no relacionamento.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de uma base organizada',
+        'checklist_description' => 'Antes de avançar para automações e processos mais complexos, confira se sua base de clientes está preparada.',
+
+        'checklist' => [
+            'Clientes sem duplicidades evidentes.',
+            'Contatos principais registrados.',
+            'Telefones e e-mails atualizados.',
+            'Responsáveis definidos quando necessário.',
+            'Histórico comercial acessível.',
+            'Base antiga revisada antes da importação.',
+            'Equipe seguindo um padrão de cadastro.',
+        ],
+
+        'cta' => [
+            'title' => 'Transforme seus dados em contexto comercial.',
+            'description' => 'Comece organizando sua base de clientes e construa o restante do processo comercial sobre informações confiáveis.',
+            'trial' => 'Começar meu trial',
+            'previous' => 'Ver guia de primeiros passos',
+        ],
+    ],];

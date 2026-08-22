@@ -245,11 +245,17 @@
             as $key => $card
         )
 
-            @if ($key === 'getting_started')
+            @if (in_array(
+                $key,
+                ['getting_started', 'customers'],
+                true
+            ))
 
                 <a
                     href="{{ route(
-                        'marketing.learn.getting-started'
+                        $key === 'getting_started'
+                            ? 'marketing.learn.getting-started'
+                            : 'marketing.learn.customers'
                     ) }}"
                     class="learn-card"
                 >
@@ -299,6 +305,7 @@
         @endforeach
 
     </div>
+
 </div>
 </section>
 

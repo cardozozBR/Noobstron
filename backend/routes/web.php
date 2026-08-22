@@ -94,6 +94,17 @@ Route::get('/aprender/primeiros-passos', function () {
     )
     ->name('marketing.learn.getting-started');
 
+Route::get('/aprender/organizar-clientes', function () {
+    return view('marketing.learn.customers');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.customers');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -159,6 +170,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.getting-started'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.customers'),
             'weekly',
             '0.9',
         ],
