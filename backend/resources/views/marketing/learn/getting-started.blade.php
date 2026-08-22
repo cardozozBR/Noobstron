@@ -2,12 +2,12 @@
 
 @section(
     'title',
-    'Primeiros passos com o Noobstron'
+    __('learn.getting_started.meta_title')
 )
 
 @section(
     'meta_description',
-    'Aprenda passo a passo como configurar o Noobstron, organizar sua equipe, cadastrar clientes, trabalhar com leads, oportunidades, propostas e vendas.'
+    __('learn.getting_started.meta_description')
 )
 
 @section('content')
@@ -15,6 +15,12 @@
 <style>
 .guide-page {
     padding-bottom: 80px;
+}
+
+.guide-page .container {
+    width: min(1180px, calc(100% - 48px));
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .guide-hero {
@@ -66,10 +72,7 @@
 
 .guide-progress {
     display: grid;
-    grid-template-columns: repeat(
-        9,
-        minmax(0, 1fr)
-    );
+    grid-template-columns: repeat(9, minmax(0, 1fr));
     gap: 8px;
     margin-top: 38px;
 }
@@ -286,10 +289,7 @@
     }
 
     .guide-progress {
-        grid-template-columns: repeat(
-            3,
-            minmax(0, 1fr)
-        );
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -301,805 +301,586 @@
     .guide-next {
         padding: 28px 20px;
     }
+
+    .guide-page .container {
+        width: min(100% - 28px, 1180px);
+    }
 }
 </style>
 
 <div class="guide-page">
 
-    <section class="guide-hero">
-        <div class="container guide-hero-inner">
+<section class="guide-hero">
+<div class="container guide-hero-inner">
+
+    <a
+        href="{{ route('marketing.learn.index') }}"
+        class="guide-back"
+    >
+        {{ __('learn.getting_started.back') }}
+    </a>
+
+    <span class="guide-eyebrow">
+        {{ __('learn.getting_started.eyebrow') }}
+    </span>
+
+    <h1 class="guide-title">
+        {{ __('learn.getting_started.title') }}
+    </h1>
+
+    <p class="guide-lead">
+        {{ __('learn.getting_started.lead') }}
+    </p>
+
+    <div class="guide-progress">
+
+        @foreach (
+            __('learn.getting_started.progress')
+            as $item
+        )
+            <div class="guide-progress-item">
+                {{ $item }}
+            </div>
+        @endforeach
+
+    </div>
+
+</div>
+</section>
+
+<section>
+<div class="container guide-layout">
+
+<aside class="guide-nav">
+
+    <span class="guide-nav-title">
+        {{ __('learn.getting_started.nav_title') }}
+    </span>
+
+    <a href="#visao-geral">
+        {{ __('learn.getting_started.nav.overview') }}
+    </a>
+
+    <a href="#empresa">
+        {{ __('learn.getting_started.nav.company') }}
+    </a>
+
+    <a href="#equipe">
+        {{ __('learn.getting_started.nav.team') }}
+    </a>
+
+    <a href="#clientes">
+        {{ __('learn.getting_started.nav.customers') }}
+    </a>
+
+    <a href="#pipeline">
+        {{ __('learn.getting_started.nav.pipeline') }}
+    </a>
+
+    <a href="#leads">
+        {{ __('learn.getting_started.nav.leads') }}
+    </a>
+
+    <a href="#oportunidades">
+        {{ __('learn.getting_started.nav.opportunities') }}
+    </a>
+
+    <a href="#atividades">
+        {{ __('learn.getting_started.nav.activities') }}
+    </a>
+
+    <a href="#propostas">
+        {{ __('learn.getting_started.nav.proposals') }}
+    </a>
+
+    <a href="#venda">
+        {{ __('learn.getting_started.nav.sale') }}
+    </a>
+
+    <a href="#evoluir">
+        {{ __('learn.getting_started.nav.evolve') }}
+    </a>
+
+</aside>
+
+<main class="guide-content">
+
+<section
+    id="visao-geral"
+    class="guide-section"
+>
+
+    <span class="guide-step">00</span>
+
+    <h2>
+        {{ __('learn.getting_started.overview.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.overview.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <div class="guide-flow">
+
+        @foreach (
+            __('learn.getting_started.overview.flow')
+            as $item
+        )
+
+            <div class="guide-flow-item">
+                {{ $item }}
+            </div>
+
+            @if (!$loop->last)
+                <div class="guide-flow-arrow">
+                    ↓
+                </div>
+            @endif
+
+        @endforeach
+
+    </div>
+
+    <div class="guide-box">
+        <strong>
+            {{ __('learn.getting_started.overview.box_title') }}
+        </strong>
+
+        <p>
+            {{ __('learn.getting_started.overview.box_text') }}
+        </p>
+    </div>
+
+</section>
+
+<section id="empresa" class="guide-section">
+
+    <span class="guide-step">01</span>
+
+    <h2>
+        {{ __('learn.getting_started.company.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.company.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <h3>
+        {{ __('learn.getting_started.company.subtitle') }}
+    </h3>
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.company.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <p>
+        {{ __('learn.getting_started.company.after_list') }}
+    </p>
+
+    <div class="guide-example">
+        <strong>
+            {{ __('learn.getting_started.company.example_title') }}
+        </strong>
+
+        {{ __('learn.getting_started.company.example_text') }}
+    </div>
+
+</section>
+
+<section id="equipe" class="guide-section">
+
+    <span class="guide-step">02</span>
+
+    <h2>
+        {{ __('learn.getting_started.team.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.team.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <h3>
+        {{ __('learn.getting_started.team.subtitle') }}
+    </h3>
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.team.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <div class="guide-box">
+        <strong>
+            {{ __('learn.getting_started.team.box_title') }}
+        </strong>
+
+        <p>
+            {{ __('learn.getting_started.team.box_text') }}
+        </p>
+    </div>
+
+</section>
+
+<section id="clientes" class="guide-section">
+
+    <span class="guide-step">03</span>
+
+    <h2>
+        {{ __('learn.getting_started.customers.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.customers.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <h3>
+        {{ __('learn.getting_started.customers.subtitle') }}
+    </h3>
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.customers.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <p>
+        {{ __('learn.getting_started.customers.after_list') }}
+    </p>
+
+    <div class="guide-example">
+        <strong>
+            {{ __('learn.getting_started.customers.example_title') }}
+        </strong>
+
+        {{ __('learn.getting_started.customers.example_text') }}
+    </div>
+
+    <h3>
+        {{ __('learn.getting_started.customers.import_title') }}
+    </h3>
+
+    <p>
+        {{ __('learn.getting_started.customers.import_text') }}
+    </p>
+
+</section>
+
+<section id="pipeline" class="guide-section">
+
+    <span class="guide-step">04</span>
+
+    <h2>
+        {{ __('learn.getting_started.pipeline.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.pipeline.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <div class="guide-flow">
+
+        @foreach (
+            __('learn.getting_started.pipeline.flow')
+            as $item
+        )
+
+            <div class="guide-flow-item">
+                {{ $item }}
+            </div>
+
+            @if (!$loop->last)
+                <div class="guide-flow-arrow">↓</div>
+            @endif
+
+        @endforeach
+
+    </div>
+
+    <div class="guide-box">
+        <strong>
+            {{ __('learn.getting_started.pipeline.box_title') }}
+        </strong>
+
+        <p>
+            {{ __('learn.getting_started.pipeline.box_text') }}
+        </p>
+    </div>
+
+</section>
+
+<section id="leads" class="guide-section">
+
+    <span class="guide-step">05</span>
+
+    <h2>
+        {{ __('learn.getting_started.leads.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.leads.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <h3>
+        {{ __('learn.getting_started.leads.subtitle') }}
+    </h3>
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.leads.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <p>
+        {{ __('learn.getting_started.leads.after_list') }}
+    </p>
+
+</section>
+
+<section id="oportunidades" class="guide-section">
+
+    <span class="guide-step">06</span>
+
+    <h2>
+        {{ __('learn.getting_started.opportunities.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.opportunities.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <div class="guide-example">
+        <strong>
+            {{ __('learn.getting_started.opportunities.example_title') }}
+        </strong>
+
+        {{ __('learn.getting_started.opportunities.example_text') }}
+    </div>
+
+    <h3>
+        {{ __('learn.getting_started.opportunities.subtitle') }}
+    </h3>
+
+    <p>
+        {{ __('learn.getting_started.opportunities.after_example') }}
+    </p>
+
+</section>
+
+<section id="atividades" class="guide-section">
+
+    <span class="guide-step">07</span>
+
+    <h2>
+        {{ __('learn.getting_started.activities.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.activities.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.activities.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <div class="guide-box">
+        <strong>
+            {{ __('learn.getting_started.activities.box_title') }}
+        </strong>
+
+        <p>
+            {{ __('learn.getting_started.activities.box_text') }}
+        </p>
+    </div>
+
+</section>
+
+<section id="propostas" class="guide-section">
+
+    <span class="guide-step">08</span>
+
+    <h2>
+        {{ __('learn.getting_started.proposals.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.proposals.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <h3>
+        {{ __('learn.getting_started.proposals.subtitle') }}
+    </h3>
+
+    <ul>
+        @foreach (
+            __('learn.getting_started.proposals.items')
+            as $item
+        )
+            <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+
+    <p>
+        {{ __('learn.getting_started.proposals.after_list') }}
+    </p>
+
+</section>
+
+<section id="venda" class="guide-section">
+
+    <span class="guide-step">09</span>
+
+    <h2>
+        {{ __('learn.getting_started.sale.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.sale.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <div class="guide-flow">
+
+        @foreach (
+            __('learn.getting_started.sale.flow')
+            as $item
+        )
+
+            <div class="guide-flow-item">
+                {{ $item }}
+            </div>
+
+            @if (!$loop->last)
+                <div class="guide-flow-arrow">↓</div>
+            @endif
+
+        @endforeach
+
+    </div>
+
+</section>
+
+<section id="evoluir" class="guide-section">
+
+    <span class="guide-step">10</span>
+
+    <h2>
+        {{ __('learn.getting_started.evolve.title') }}
+    </h2>
+
+    @foreach (
+        __('learn.getting_started.evolve.paragraphs')
+        as $paragraph
+    )
+        <p>{{ $paragraph }}</p>
+    @endforeach
+
+    <div class="guide-checklist">
+
+        @foreach (
+            __('learn.getting_started.evolve.checklist')
+            as $item
+        )
+
+            <div class="guide-check">
+
+                <span class="guide-check-icon">
+                    ✓
+                </span>
+
+                <span>
+                    {{ $item }}
+                </span>
+
+            </div>
+
+        @endforeach
+
+    </div>
+
+    <div class="guide-next">
+
+        <h2>
+            {{ __('learn.getting_started.evolve.cta_title') }}
+        </h2>
+
+        <p>
+            {{ __('learn.getting_started.evolve.cta_text') }}
+        </p>
+
+        <div class="guide-actions">
+
+            <a
+                href="{{ route('register') }}"
+                class="button"
+            >
+                {{ __('learn.getting_started.evolve.trial_button') }}
+            </a>
 
             <a
                 href="{{ route('marketing.learn.index') }}"
-                class="guide-back"
+                class="button button-secondary"
             >
-                ← Central de Aprendizado
+                {{ __('learn.getting_started.evolve.guides_button') }}
             </a>
 
-            <span class="guide-eyebrow">
-                Guia 01 • Primeiros passos
-            </span>
-
-            <h1 class="guide-title">
-                Do cadastro à primeira venda
-                organizada no Noobstron.
-            </h1>
-
-            <p class="guide-lead">
-                Este guia mostra como preparar sua empresa,
-                organizar sua equipe, cadastrar clientes,
-                trabalhar com leads e oportunidades e construir
-                um processo comercial que possa evoluir com
-                sua operação.
-            </p>
-
-            <div class="guide-progress">
-                <div class="guide-progress-item">Empresa</div>
-                <div class="guide-progress-item">Equipe</div>
-                <div class="guide-progress-item">Clientes</div>
-                <div class="guide-progress-item">Pipeline</div>
-                <div class="guide-progress-item">Leads</div>
-                <div class="guide-progress-item">Oportunidades</div>
-                <div class="guide-progress-item">Atividades</div>
-                <div class="guide-progress-item">Propostas</div>
-                <div class="guide-progress-item">Venda</div>
-            </div>
-
         </div>
-    </section>
 
-    <section>
-        <div class="container guide-layout">
+    </div>
 
-            <aside class="guide-nav">
+</section>
 
-                <span class="guide-nav-title">
-                    Neste guia
-                </span>
+</main>
 
-                <a href="#visao-geral">
-                    Antes de começar
-                </a>
-
-                <a href="#empresa">
-                    1. Configure sua empresa
-                </a>
-
-                <a href="#equipe">
-                    2. Monte sua equipe
-                </a>
-
-                <a href="#clientes">
-                    3. Organize clientes
-                </a>
-
-                <a href="#pipeline">
-                    4. Crie seu pipeline
-                </a>
-
-                <a href="#leads">
-                    5. Organize seus leads
-                </a>
-
-                <a href="#oportunidades">
-                    6. Crie oportunidades
-                </a>
-
-                <a href="#atividades">
-                    7. Planeje atividades
-                </a>
-
-                <a href="#propostas">
-                    8. Crie propostas
-                </a>
-
-                <a href="#venda">
-                    9. Registre a venda
-                </a>
-
-                <a href="#evoluir">
-                    Como evoluir
-                </a>
-
-            </aside>
-
-            <main class="guide-content">
-
-                <section
-                    id="visao-geral"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        00
-                    </span>
-
-                    <h2>
-                        Antes de começar
-                    </h2>
-
-                    <p>
-                        O Noobstron foi pensado para conectar
-                        informações que normalmente ficam
-                        espalhadas entre planilhas, agendas,
-                        caixas de e-mail, WhatsApp e sistemas
-                        diferentes.
-                    </p>
-
-                    <p>
-                        Você não precisa configurar todos os
-                        recursos no primeiro dia. A melhor
-                        estratégia é construir uma base simples
-                        e confiável e evoluir conforme a equipe
-                        começa a utilizar o sistema.
-                    </p>
-
-                    <div class="guide-flow">
-
-                        <div class="guide-flow-item">
-                            Organize empresa e equipe
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Centralize clientes e leads
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Estruture o processo comercial
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Acompanhe oportunidades e atividades
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Crie propostas e registre vendas
-                        </div>
-
-                    </div>
-
-                    <div class="guide-box">
-                        <strong>
-                            Regra para começar bem
-                        </strong>
-
-                        <p>
-                            Não tente reproduzir toda a complexidade
-                            da empresa imediatamente. Comece pelo
-                            processo comercial que sua equipe realmente
-                            utiliza hoje.
-                        </p>
-                    </div>
-
-                </section>
-
-                <section
-                    id="empresa"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        01
-                    </span>
-
-                    <h2>
-                        Configure sua empresa
-                    </h2>
-
-                    <p>
-                        O primeiro passo é garantir que o workspace
-                        represente corretamente sua organização.
-                        Essas informações ajudam o Noobstron a
-                        preparar o ambiente para sua operação.
-                    </p>
-
-                    <h3>
-                        Revise os dados principais
-                    </h3>
-
-                    <ul>
-                        <li>Nome da empresa.</li>
-                        <li>País de operação.</li>
-                        <li>Idioma principal.</li>
-                        <li>Segmento de atuação.</li>
-                    </ul>
-
-                    <p>
-                        O segmento ajuda a contextualizar o tipo de
-                        operação, enquanto país e idioma influenciam
-                        a experiência apresentada aos usuários.
-                    </p>
-
-                    <div class="guide-example">
-                        <strong>Exemplo</strong>
-
-                        Uma empresa de serviços pode começar
-                        configurando o segmento como Serviços e
-                        posteriormente estruturar um pipeline
-                        específico para orçamento, negociação e
-                        fechamento.
-                    </div>
-
-                </section>
-
-                <section
-                    id="equipe"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        02
-                    </span>
-
-                    <h2>
-                        Monte sua equipe
-                    </h2>
-
-                    <p>
-                        Depois da empresa, cadastre as pessoas que
-                        realmente vão participar do processo.
-                    </p>
-
-                    <p>
-                        Usuários separados permitem identificar
-                        responsáveis, controlar permissões e manter
-                        histórico das ações realizadas.
-                    </p>
-
-                    <h3>
-                        Comece com quem precisa operar
-                    </h3>
-
-                    <ul>
-                        <li>Administradores.</li>
-                        <li>Gestores comerciais.</li>
-                        <li>Vendedores.</li>
-                        <li>Atendimento.</li>
-                        <li>Outros responsáveis necessários.</li>
-                    </ul>
-
-                    <div class="guide-box">
-                        <strong>
-                            Evite compartilhar usuários
-                        </strong>
-
-                        <p>
-                            Cada pessoa deve utilizar sua própria
-                            conta. Isso melhora segurança,
-                            responsabilidade e auditoria.
-                        </p>
-                    </div>
-
-                </section>
-
-                <section
-                    id="clientes"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        03
-                    </span>
-
-                    <h2>
-                        Organize seus clientes
-                    </h2>
-
-                    <p>
-                        O cadastro de clientes é a base do
-                        relacionamento dentro do Noobstron.
-                        É onde informações importantes deixam
-                        de ficar espalhadas.
-                    </p>
-
-                    <h3>
-                        Centralize o contexto
-                    </h3>
-
-                    <ul>
-                        <li>Dados principais do cliente.</li>
-                        <li>Contatos.</li>
-                        <li>Telefones.</li>
-                        <li>E-mails.</li>
-                        <li>Endereços.</li>
-                        <li>Histórico de relacionamento.</li>
-                    </ul>
-
-                    <p>
-                        Quanto mais organizado o cadastro, mais fácil
-                        fica entender quem é o cliente e o que já
-                        aconteceu no relacionamento comercial.
-                    </p>
-
-                    <div class="guide-example">
-                        <strong>Exemplo</strong>
-
-                        Se um vendedor sair de férias, outro membro
-                        da equipe pode consultar o histórico do
-                        cliente e continuar o atendimento com muito
-                        mais contexto.
-                    </div>
-
-                    <h3>
-                        E se eu já tiver muitos clientes?
-                    </h3>
-
-                    <p>
-                        Em vez de cadastrar um por um, utilize o
-                        processo de importação para trazer dados
-                        existentes de forma organizada.
-                    </p>
-
-                </section>
-
-                <section
-                    id="pipeline"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        04
-                    </span>
-
-                    <h2>
-                        Crie seu pipeline de vendas
-                    </h2>
-
-                    <p>
-                        O pipeline representa as etapas que uma
-                        oportunidade percorre até chegar ao
-                        fechamento.
-                    </p>
-
-                    <p>
-                        Não existe um pipeline universal. Ele deve
-                        representar o processo real da sua empresa.
-                    </p>
-
-                    <div class="guide-flow">
-
-                        <div class="guide-flow-item">
-                            Primeiro contato
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Qualificação
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Proposta
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Negociação
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Fechamento
-                        </div>
-
-                    </div>
-
-                    <div class="guide-box">
-                        <strong>
-                            Comece simples
-                        </strong>
-
-                        <p>
-                            Um pipeline com quatro ou cinco etapas
-                            bem definidas costuma ser mais útil que
-                            quinze etapas que ninguém entende.
-                        </p>
-                    </div>
-
-                </section>
-
-                <section
-                    id="leads"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        05
-                    </span>
-
-                    <h2>
-                        Organize seus leads
-                    </h2>
-
-                    <p>
-                        Leads representam potenciais clientes que
-                        ainda estão em processo de identificação
-                        ou qualificação.
-                    </p>
-
-                    <p>
-                        Registrar a origem e o status desses contatos
-                        ajuda a equipe a entender de onde chegam as
-                        oportunidades e quais merecem atenção.
-                    </p>
-
-                    <h3>
-                        Algumas origens possíveis
-                    </h3>
-
-                    <ul>
-                        <li>Site.</li>
-                        <li>Indicação.</li>
-                        <li>Campanha.</li>
-                        <li>WhatsApp.</li>
-                        <li>Prospecção ativa.</li>
-                        <li>Evento.</li>
-                    </ul>
-
-                    <p>
-                        Quando um lead se torna uma oportunidade
-                        comercial real, ele pode avançar para a
-                        próxima etapa do processo.
-                    </p>
-
-                </section>
-
-                <section
-                    id="oportunidades"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        06
-                    </span>
-
-                    <h2>
-                        Transforme interesse em oportunidade
-                    </h2>
-
-                    <p>
-                        Uma oportunidade representa uma negociação
-                        concreta em andamento.
-                    </p>
-
-                    <p>
-                        Nesse momento, você começa a acompanhar
-                        informações como valor esperado, etapa
-                        atual, responsável e evolução da negociação.
-                    </p>
-
-                    <div class="guide-example">
-                        <strong>Exemplo</strong>
-
-                        Um lead solicita uma demonstração e confirma
-                        interesse em contratar. Ele deixa de ser
-                        apenas um contato e passa a representar uma
-                        oportunidade comercial.
-                    </div>
-
-                    <h3>
-                        Mantenha o pipeline atualizado
-                    </h3>
-
-                    <p>
-                        Ao mudar a situação da negociação, mova a
-                        oportunidade para a etapa correspondente.
-                        Isso mantém a visão comercial próxima da
-                        realidade.
-                    </p>
-
-                </section>
-
-                <section
-                    id="atividades"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        07
-                    </span>
-
-                    <h2>
-                        Nunca perca o próximo passo
-                    </h2>
-
-                    <p>
-                        Uma oportunidade sem próxima ação definida
-                        tende a ser esquecida.
-                    </p>
-
-                    <p>
-                        Use atividades para registrar o que precisa
-                        acontecer depois.
-                    </p>
-
-                    <ul>
-                        <li>Ligação.</li>
-                        <li>Reunião.</li>
-                        <li>Enviar proposta.</li>
-                        <li>Retornar ao cliente.</li>
-                        <li>Fazer follow-up.</li>
-                        <li>Confirmar documentação.</li>
-                    </ul>
-
-                    <div class="guide-box">
-                        <strong>
-                            Uma prática simples
-                        </strong>
-
-                        <p>
-                            Sempre que terminar uma interação
-                            importante, pergunte:
-                            “qual é o próximo passo e quando ele
-                            deve acontecer?”
-                        </p>
-                    </div>
-
-                </section>
-
-                <section
-                    id="propostas"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        08
-                    </span>
-
-                    <h2>
-                        Transforme a negociação em proposta
-                    </h2>
-
-                    <p>
-                        Quando a oportunidade estiver madura,
-                        formalize a oferta por meio de uma proposta.
-                    </p>
-
-                    <p>
-                        O catálogo ajuda a manter produtos e serviços
-                        organizados para serem utilizados nas
-                        propostas comerciais.
-                    </p>
-
-                    <h3>
-                        Uma proposta clara deve ajudar o cliente a entender
-                    </h3>
-
-                    <ul>
-                        <li>O que está sendo oferecido.</li>
-                        <li>Quantidade.</li>
-                        <li>Valores.</li>
-                        <li>Condições comerciais.</li>
-                        <li>Contexto da negociação.</li>
-                    </ul>
-
-                    <p>
-                        O objetivo não é apenas gerar um documento,
-                        mas manter a proposta conectada à negociação
-                        que originou aquela venda.
-                    </p>
-
-                </section>
-
-                <section
-                    id="venda"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        09
-                    </span>
-
-                    <h2>
-                        Registre a primeira venda
-                    </h2>
-
-                    <p>
-                        Quando a negociação for concluída, registre
-                        a venda para que o resultado comercial não
-                        fique desconectado do restante do processo.
-                    </p>
-
-                    <p>
-                        A partir daí, informações financeiras e
-                        recebíveis podem continuar o ciclo.
-                    </p>
-
-                    <div class="guide-flow">
-
-                        <div class="guide-flow-item">
-                            Lead
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Oportunidade
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Proposta
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Venda
-                        </div>
-
-                        <div class="guide-flow-arrow">
-                            ↓
-                        </div>
-
-                        <div class="guide-flow-item">
-                            Recebimento e relacionamento
-                        </div>
-
-                    </div>
-
-                </section>
-
-                <section
-                    id="evoluir"
-                    class="guide-section"
-                >
-
-                    <span class="guide-step">
-                        10
-                    </span>
-
-                    <h2>
-                        Agora você pode evoluir
-                    </h2>
-
-                    <p>
-                        Depois que equipe, clientes e processo
-                        comercial estiverem organizados, o próximo
-                        passo é ganhar eficiência.
-                    </p>
-
-                    <div class="guide-checklist">
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Centralizar e-mail e WhatsApp.
-                            </span>
-                        </div>
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Padronizar templates de comunicação.
-                            </span>
-                        </div>
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Automatizar tarefas repetitivas.
-                            </span>
-                        </div>
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Utilizar notificações e lembretes.
-                            </span>
-                        </div>
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Acompanhar indicadores financeiros.
-                            </span>
-                        </div>
-
-                        <div class="guide-check">
-                            <span class="guide-check-icon">
-                                ✓
-                            </span>
-
-                            <span>
-                                Utilizar IA para apoiar atividades
-                                da equipe.
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <div class="guide-next">
-
-                        <h2>
-                            Comece com uma base organizada.
-                        </h2>
-
-                        <p>
-                            Você não precisa dominar todos os recursos
-                            hoje. O importante é colocar o processo
-                            principal para funcionar e evoluir a partir
-                            dele.
-                        </p>
-
-                        <div class="guide-actions">
-
-                            <a
-                                href="{{ route('register') }}"
-                                class="button"
-                            >
-                                Começar meu trial
-                            </a>
-
-                            <a
-                                href="{{ route(
-                                    'marketing.learn.index'
-                                ) }}"
-                                class="button button-secondary"
-                            >
-                                Ver outros guias
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-            </main>
-
-        </div>
-    </section>
+</div>
+</section>
 
 </div>
 
