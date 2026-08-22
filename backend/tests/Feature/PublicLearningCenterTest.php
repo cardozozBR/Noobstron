@@ -12,7 +12,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertOk()
             ->assertSee('Central de Aprendizado Noobstron')
             ->assertSee('Primeiros passos com o Noobstron')
-            ->assertSee('Organize seus clientes');
+            ->assertSee('Organize seus clientes')
+            ->assertSee('Estruture seu processo de vendas');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -33,21 +34,41 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Como aplicar isso no Noobstron');
     }
 
+    public function test_sales_guide_is_public(): void
+    {
+        $this->get('/aprender/processo-de-vendas')
+            ->assertOk()
+            ->assertSee('Como estruturar seu processo de vendas')
+            ->assertSee('Entenda o processo comercial')
+            ->assertSee('Como aplicar esse processo no Noobstron');
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
             ->assertOk()
             ->assertSee('/aprender', false)
             ->assertSee('/aprender/primeiros-passos', false)
-            ->assertSee('/aprender/organizar-clientes', false);
+            ->assertSee('/aprender/organizar-clientes', false)
+            ->assertSee('/aprender/processo-de-vendas', false);
     }
 
-    public function test_learning_center_links_to_customers_guide(): void
+    public function test_learning_center_links_to_published_guides(): void
     {
-        $this->get('/aprender')
+        $response = $this->get('/aprender');
+
+        $response
             ->assertOk()
             ->assertSee(
+                route('marketing.learn.getting-started'),
+                false
+            )
+            ->assertSee(
                 route('marketing.learn.customers'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.sales'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -89,11 +110,14 @@ class PublicLearningCenterTest extends TestCase
             return $keys;
         };
 
-        $base = require lang_path('pt-BR/learn.php');
+        $base = require lang_path(
+            'pt-BR/learn.php'
+        );
+
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            321,
+            441,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -150,6 +174,28 @@ class PublicLearningCenterTest extends TestCase
                     $locale
                 )
                 ->get('/aprender/organizar-clientes')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
+    public function test_sales_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' => 'Como estruturar seu processo de vendas.',
+            'en' => 'How to structure your sales process.',
+            'es' => 'Cómo estructurar tu proceso de ventas.',
+            'zh-CN' => '如何构建销售流程。',
+            'ja' => '営業プロセスを構築する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader(
+                    'Accept-Language',
+                    $locale
+                )
+                ->get('/aprender/processo-de-vendas')
                 ->assertOk()
                 ->assertSee($expected);
         }

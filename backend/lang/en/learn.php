@@ -29,7 +29,7 @@ return [
                 'number' => '03',
                 'title' => 'Structure your sales process',
                 'description' => 'Learn how to work with leads, pipelines, opportunities and activities.',
-                'action' => 'Coming soon',
+                'action' => 'Open guide →',
             ],
             'follow_up' => [
                 'number' => '04',
@@ -500,5 +500,194 @@ return [
             'description' => 'Start by organizing your customer database and build the rest of your commercial process on reliable information.',
             'trial' => 'Start my trial',
             'previous' => 'View getting started guide',
+        ],
+    ],
+    'sales' => [
+        'meta_title' => 'How to structure your sales process — Noobstron',
+        'meta_description' => 'Learn how to organize leads, pipeline, opportunities, activities and follow-up to create a more predictable sales process.',
+
+        'back' => '← Learning Center',
+        'eyebrow' => 'Guide 03 • Sales process',
+        'title' => 'How to structure your sales process.',
+        'lead' => 'An organized sales process helps your team understand where each opportunity stands, what should happen next and where the main bottlenecks are.',
+
+        'nav_title' => 'In this guide',
+
+        'nav' => [
+            'fundamentos' => '1. Understand the sales process',
+            'leads' => '2. Organize your leads',
+            'pipeline' => '3. Create your pipeline',
+            'oportunidades' => '4. Create opportunities',
+            'movimentacao' => '5. Move through the funnel',
+            'atividades' => '6. Plan activities',
+            'follow-up' => '7. Improve follow-up',
+            'previsao' => '8. Track values',
+            'ganhos-perdas' => '9. Record wins and losses',
+            'noobstron' => '10. How to apply it in Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Understand the sales process',
+                'paragraphs' => [
+                    'Before configuring tools, it is worth understanding the stages of the commercial relationship.',
+                    'Contact, lead, opportunity and sale represent different moments and help your team separate initial interest from active negotiations.',
+                ],
+                'box_title' => 'A simple process is easier to maintain',
+                'box_text' => 'The goal is not to create bureaucracy. It is to make clear what is happening and what action should come next.',
+            ],
+            [
+                'id' => 'leads',
+                'title' => 'Organize your leads',
+                'paragraphs' => [
+                    'Leads are contacts that still need to be identified or qualified before becoming a real negotiation.',
+                    'Recording source, owner and context helps you understand which channels generate better opportunities.',
+                ],
+                'subtitle' => 'Useful information',
+                'items' => [
+                    'Lead source.',
+                    'Owner.',
+                    'Interest shown.',
+                    'Qualification status.',
+                    'Next action.',
+                ],
+            ],
+            [
+                'id' => 'pipeline',
+                'title' => 'Create a pipeline that reflects your reality',
+                'paragraphs' => [
+                    'The pipeline represents the stages an opportunity goes through until closing.',
+                    'The stages should reflect your company’s real process instead of a generic model copied from another business.',
+                ],
+                'subtitle' => 'Simple example',
+                'items' => [
+                    'First contact.',
+                    'Qualification.',
+                    'Proposal.',
+                    'Negotiation.',
+                    'Closing.',
+                ],
+                'after_list' => 'If a stage does not change the team’s decision or next action, it may not need to exist.',
+            ],
+            [
+                'id' => 'oportunidades',
+                'title' => 'Turn interest into an opportunity',
+                'paragraphs' => [
+                    'An opportunity should represent a concrete negotiation with real sales potential.',
+                    'This keeps the pipeline from filling up with contacts that have not shown enough intent yet.',
+                ],
+                'example_title' => 'Example',
+                'example_text' => 'A contact who only downloaded a resource may remain a lead. If they request a demo and discuss needs, they can become an opportunity.',
+            ],
+            [
+                'id' => 'movimentacao',
+                'title' => 'Move opportunities through the funnel',
+                'paragraphs' => [
+                    'The pipeline only provides a useful view when it stays updated.',
+                    'Whenever the negotiation advances, moves back or closes, the opportunity should reflect that change.',
+                ],
+                'box_title' => 'A stagnant pipeline loses value',
+                'box_text' => 'If opportunities remain in the same stage for months with no action, the funnel stops representing commercial reality.',
+            ],
+            [
+                'id' => 'atividades',
+                'title' => 'Plan activities and next steps',
+                'paragraphs' => [
+                    'Every active opportunity should have a clear next action.',
+                    'Activities help turn intention into execution and make the team less dependent on memory and personal calendars.',
+                ],
+                'subtitle' => 'Examples',
+                'items' => [
+                    'Phone call.',
+                    'Meeting.',
+                    'Demo.',
+                    'Send proposal.',
+                    'Follow up with the customer.',
+                    'Confirm documentation.',
+                ],
+            ],
+            [
+                'id' => 'follow-up',
+                'title' => 'Improve follow-up discipline',
+                'paragraphs' => [
+                    'Many opportunities are lost not because of lack of interest, but because nobody made the next contact at the right time.',
+                    'A consistent follow-up routine helps keep negotiations moving without relying on improvisation.',
+                ],
+                'box_title' => 'Always define the next step',
+                'box_text' => 'At the end of an important interaction, record what should happen next, who is responsible and when the action should occur.',
+            ],
+            [
+                'id' => 'previsao',
+                'title' => 'Track values and sales forecast',
+                'paragraphs' => [
+                    'Recording the expected value of opportunities lets you see the volume of business currently under negotiation.',
+                    'A forecast is not a promise of revenue, but it helps managers understand the size and maturity of the pipeline.',
+                ],
+                'subtitle' => 'Pay particular attention to',
+                'items' => [
+                    'Total value under negotiation.',
+                    'Opportunities by stage.',
+                    'Negotiations without recent activity.',
+                    'Owners with higher volume.',
+                    'Opportunities close to closing.',
+                ],
+            ],
+            [
+                'id' => 'ganhos-perdas',
+                'title' => 'Record wins and losses',
+                'paragraphs' => [
+                    'Closing opportunities correctly is just as important as creating them.',
+                    'Recording won sales and lost negotiations creates history and helps improve the sales process over time.',
+                ],
+                'subtitle' => 'A loss can also generate learning',
+                'items' => [
+                    'Price.',
+                    'Timeline.',
+                    'Competitor.',
+                    'Lack of priority.',
+                    'Unmet need.',
+                ],
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'How to apply this process in Noobstron',
+                'paragraphs' => [
+                    'In Noobstron, leads, pipelines, opportunities and activities can be used together to keep the sales process connected.',
+                    'The goal is to let the team quickly understand what is under negotiation, who owns it and what needs to happen next.',
+                ],
+                'subtitle' => 'Recommended sequence',
+                'items' => [
+                    'Define a simple pipeline.',
+                    'Create or organize your leads.',
+                    'Convert real negotiations into opportunities.',
+                    'Define the owner and expected value.',
+                    'Record activities and next steps.',
+                    'Update the stage as the negotiation evolves.',
+                    'Record a win or loss when closing.',
+                ],
+                'example_title' => 'Expected result',
+                'example_text' => 'When opening the pipeline, your team should be able to understand which deals are active, where they are and what needs to happen to move them forward.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist for an organized sales process',
+        'checklist_description' => 'Before adding more advanced automation, confirm that the basic process is working.',
+
+        'checklist' => [
+            'Pipeline with clear stages.',
+            'Leads with source and owner.',
+            'Real opportunities separated from initial contacts.',
+            'Next activities defined.',
+            'Negotiation values updated.',
+            'Opportunities moved according to reality.',
+            'Wins and losses recorded.',
+        ],
+
+        'cta' => [
+            'title' => 'Turn your sales process into a clear flow.',
+            'description' => 'Start with a simple pipeline, organize your next steps and evolve as your team becomes more consistent.',
+            'trial' => 'Start my trial',
+            'previous' => 'View customer organization guide',
         ],
     ],];

@@ -29,7 +29,7 @@ return [
                 'number' => '03',
                 'title' => 'Estructura tu proceso de ventas',
                 'description' => 'Aprende a trabajar con leads, pipelines, oportunidades y actividades.',
-                'action' => 'Próximamente',
+                'action' => 'Abrir guía →',
             ],
             'follow_up' => [
                 'number' => '04',
@@ -500,5 +500,194 @@ return [
             'description' => 'Comienza organizando tu base de clientes y construye el resto de tu proceso comercial sobre información confiable.',
             'trial' => 'Comenzar mi prueba',
             'previous' => 'Ver guía de primeros pasos',
+        ],
+    ],
+    'sales' => [
+        'meta_title' => 'Cómo estructurar tu proceso de ventas — Noobstron',
+        'meta_description' => 'Aprende cómo organizar leads, pipeline, oportunidades, actividades y seguimiento para crear un proceso de ventas más predecible.',
+
+        'back' => '← Centro de Aprendizaje',
+        'eyebrow' => 'Guía 03 • Proceso de ventas',
+        'title' => 'Cómo estructurar tu proceso de ventas.',
+        'lead' => 'Un proceso comercial organizado ayuda a tu equipo a entender dónde está cada oportunidad, cuál es el siguiente paso y dónde se encuentran los principales cuellos de botella de la operación.',
+
+        'nav_title' => 'En esta guía',
+
+        'nav' => [
+            'fundamentos' => '1. Entiende el proceso comercial',
+            'leads' => '2. Organiza tus leads',
+            'pipeline' => '3. Crea tu pipeline',
+            'oportunidades' => '4. Crea oportunidades',
+            'movimentacao' => '5. Mueve oportunidades por el embudo',
+            'atividades' => '6. Planifica actividades',
+            'follow-up' => '7. Mejora el seguimiento',
+            'previsao' => '8. Acompaña valores',
+            'ganhos-perdas' => '9. Registra ganancias y pérdidas',
+            'noobstron' => '10. Cómo aplicarlo en Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Entiende el proceso comercial',
+                'paragraphs' => [
+                    'Antes de configurar herramientas, conviene entender las etapas de la relación comercial.',
+                    'Contacto, lead, oportunidad y venta representan momentos diferentes y ayudan a tu equipo a separar el interés inicial de las negociaciones realmente activas.',
+                ],
+                'box_title' => 'Un proceso simple es más fácil de mantener',
+                'box_text' => 'El objetivo no es crear burocracia. Es dejar claro qué está ocurriendo y qué acción debe venir después.',
+            ],
+            [
+                'id' => 'leads',
+                'title' => 'Organiza tus leads',
+                'paragraphs' => [
+                    'Los leads son contactos que todavía necesitan ser identificados o calificados antes de convertirse en una negociación real.',
+                    'Registrar origen, responsable y contexto ayuda a entender qué canales generan mejores oportunidades.',
+                ],
+                'subtitle' => 'Información útil',
+                'items' => [
+                    'Origen del lead.',
+                    'Responsable.',
+                    'Interés demostrado.',
+                    'Estado de calificación.',
+                    'Próxima acción.',
+                ],
+            ],
+            [
+                'id' => 'pipeline',
+                'title' => 'Crea un pipeline que represente tu realidad',
+                'paragraphs' => [
+                    'El pipeline representa las etapas por las que pasa una oportunidad hasta llegar al cierre.',
+                    'Las etapas deben reflejar el proceso real de tu empresa y no simplemente un modelo genérico copiado de otro negocio.',
+                ],
+                'subtitle' => 'Ejemplo simple',
+                'items' => [
+                    'Primer contacto.',
+                    'Calificación.',
+                    'Propuesta.',
+                    'Negociación.',
+                    'Cierre.',
+                ],
+                'after_list' => 'Si una etapa no cambia la decisión o la próxima acción del equipo, quizá no sea necesaria.',
+            ],
+            [
+                'id' => 'oportunidades',
+                'title' => 'Convierte interés en oportunidad',
+                'paragraphs' => [
+                    'Una oportunidad debe representar una negociación concreta con algún potencial real de venta.',
+                    'Esto evita llenar el pipeline con contactos que todavía no demostraron suficiente intención.',
+                ],
+                'example_title' => 'Ejemplo',
+                'example_text' => 'Un contacto que solo descargó un material puede continuar como lead. Si solicita una demostración y conversa sobre necesidades, puede convertirse en una oportunidad.',
+            ],
+            [
+                'id' => 'movimentacao',
+                'title' => 'Mueve oportunidades por el embudo',
+                'paragraphs' => [
+                    'El pipeline solo ofrece una visión útil cuando está actualizado.',
+                    'Cada vez que una negociación avanza, retrocede o termina, la oportunidad debe reflejar ese cambio.',
+                ],
+                'box_title' => 'Un pipeline detenido pierde valor',
+                'box_text' => 'Si las oportunidades permanecen meses en la misma etapa sin ninguna acción, el embudo deja de representar la realidad comercial.',
+            ],
+            [
+                'id' => 'atividades',
+                'title' => 'Planifica actividades y próximos pasos',
+                'paragraphs' => [
+                    'Toda oportunidad activa debería tener una próxima acción clara.',
+                    'Las actividades ayudan a transformar intención en ejecución y hacen que el equipo dependa menos de la memoria y de agendas personales.',
+                ],
+                'subtitle' => 'Ejemplos',
+                'items' => [
+                    'Llamada.',
+                    'Reunión.',
+                    'Demostración.',
+                    'Enviar propuesta.',
+                    'Volver a contactar al cliente.',
+                    'Confirmar documentación.',
+                ],
+            ],
+            [
+                'id' => 'follow-up',
+                'title' => 'Mejora la disciplina de seguimiento',
+                'paragraphs' => [
+                    'Muchas oportunidades se pierden no por falta de interés, sino porque nadie realizó el siguiente contacto en el momento adecuado.',
+                    'Una rutina consistente de seguimiento ayuda a mantener las negociaciones activas sin depender de improvisaciones.',
+                ],
+                'box_title' => 'Define siempre el próximo paso',
+                'box_text' => 'Al terminar una interacción importante, registra qué debe ocurrir después, quién es responsable y cuándo debe realizarse la acción.',
+            ],
+            [
+                'id' => 'previsao',
+                'title' => 'Acompaña valores y previsión comercial',
+                'paragraphs' => [
+                    'Registrar el valor esperado de las oportunidades permite visualizar el volumen de negocio actualmente en negociación.',
+                    'La previsión no es una promesa de ingresos, pero ayuda a los gestores a entender el tamaño y la madurez del pipeline.',
+                ],
+                'subtitle' => 'Observa principalmente',
+                'items' => [
+                    'Valor total en negociación.',
+                    'Oportunidades por etapa.',
+                    'Negociaciones sin actividad reciente.',
+                    'Responsables con mayor volumen.',
+                    'Oportunidades próximas al cierre.',
+                ],
+            ],
+            [
+                'id' => 'ganhos-perdas',
+                'title' => 'Registra ganancias y pérdidas',
+                'paragraphs' => [
+                    'Cerrar oportunidades correctamente es tan importante como crearlas.',
+                    'Registrar ventas ganadas y negociaciones perdidas permite construir historial y mejorar el proceso comercial con el tiempo.',
+                ],
+                'subtitle' => 'Una pérdida también genera aprendizaje',
+                'items' => [
+                    'Precio.',
+                    'Plazo.',
+                    'Competidor.',
+                    'Falta de prioridad.',
+                    'Necesidad no atendida.',
+                ],
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Cómo aplicar este proceso en Noobstron',
+                'paragraphs' => [
+                    'En Noobstron, leads, pipelines, oportunidades y actividades pueden utilizarse en conjunto para mantener conectado el proceso comercial.',
+                    'El objetivo es permitir que el equipo entienda rápidamente qué está en negociación, quién es responsable y qué acción debe ocurrir después.',
+                ],
+                'subtitle' => 'Secuencia recomendada',
+                'items' => [
+                    'Define un pipeline simple.',
+                    'Registra u organiza tus leads.',
+                    'Convierte negociaciones reales en oportunidades.',
+                    'Define responsable y valor esperado.',
+                    'Registra actividades y próximos pasos.',
+                    'Actualiza la etapa conforme evoluciona la negociación.',
+                    'Registra ganancia o pérdida al cerrar.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Al abrir el pipeline, tu equipo debería poder entender qué negocios están activos, dónde se encuentran y qué debe ocurrir para avanzar.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de un proceso comercial organizado',
+        'checklist_description' => 'Antes de añadir automatizaciones más avanzadas, confirma que el proceso básico esté funcionando.',
+
+        'checklist' => [
+            'Pipeline con etapas claras.',
+            'Leads con origen y responsable.',
+            'Oportunidades reales separadas de contactos iniciales.',
+            'Próximas actividades definidas.',
+            'Valores de las negociaciones actualizados.',
+            'Oportunidades movidas según la realidad.',
+            'Ganancias y pérdidas registradas.',
+        ],
+
+        'cta' => [
+            'title' => 'Convierte tu proceso comercial en un flujo claro.',
+            'description' => 'Comienza con un pipeline simple, organiza tus próximos pasos y evoluciona a medida que tu equipo gana consistencia.',
+            'trial' => 'Comenzar mi prueba',
+            'previous' => 'Ver guía de organización de clientes',
         ],
     ],];
