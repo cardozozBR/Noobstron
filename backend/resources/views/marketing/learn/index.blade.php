@@ -260,6 +260,7 @@
                     'automation',
                     'routine',
                     'ai',
+                    'review',
                 ],
                 true
             ))
@@ -293,6 +294,9 @@
 
                             'ai' =>
                                 'marketing.learn.ai',
+
+                            'review' =>
+                                'marketing.learn.review',
                         }
                     ) }}"
                     class="learn-card"

@@ -19,7 +19,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Acompanhe resultados e evolua')
             ->assertSee('Automatize e escale')
             ->assertSee('Organize sua rotina comercial')
-            ->assertSee('Use IA no processo comercial');
+            ->assertSee('Use IA no processo comercial')
+            ->assertSee('Revise e melhore seu processo');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -119,6 +120,14 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_review_guide_is_public(): void
+    {
+        $this->get('/aprender/revisar-e-melhorar-processo')
+            ->assertOk()
+            ->assertSee(
+                'Como revisar e melhorar seu processo comercial'
+            );
+    }
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -132,7 +141,11 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/resultados-e-evolucao', false)
             ->assertSee('/aprender/automatize-e-escale', false)
             ->assertSee('/aprender/rotina-comercial', false)
-            ->assertSee('/aprender/ia-no-processo-comercial', false);
+            ->assertSee('/aprender/ia-no-processo-comercial', false)
+            ->assertSee(
+                '/aprender/revisar-e-melhorar-processo',
+                false
+            );
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -175,6 +188,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.ai'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.review'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -223,7 +240,7 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            1271,
+            1420,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -465,4 +482,31 @@ class PublicLearningCenterTest extends TestCase
                 ->assertSee($expected);
         }
     }
-}
+
+    public function test_review_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como revisar e melhorar seu processo comercial.',
+
+            'en' =>
+                'How to review and improve your sales process.',
+
+            'es' =>
+                'Cómo revisar y mejorar tu proceso comercial.',
+
+            'zh-CN' =>
+                '如何审查并改进销售流程。',
+
+            'ja' =>
+                '営業プロセスを見直して改善する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/revisar-e-melhorar-processo')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }}

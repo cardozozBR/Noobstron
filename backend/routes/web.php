@@ -182,6 +182,17 @@ Route::get('/aprender/ia-no-processo-comercial', function () {
     )
     ->name('marketing.learn.ai');
 
+Route::get('/aprender/revisar-e-melhorar-processo', function () {
+    return view('marketing.learn.review');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.review');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -287,6 +298,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.ai'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.review'),
             'weekly',
             '0.9',
         ],
