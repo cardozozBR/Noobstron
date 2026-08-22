@@ -507,6 +507,10 @@
                     {{ __('public.nav.resources') }}
                 </a>
 
+                <a href="{{ route('marketing.learn.index') }}">
+    Aprender
+</a>
+
                 <a href="{{ route('marketing.home') }}#precos">
                     {{ __('public.nav.pricing') }}
                 </a>

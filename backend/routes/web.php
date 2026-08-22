@@ -72,6 +72,28 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     ->middleware(\App\Http\Middleware\PublicLocale::class)
     ->name('marketing.home');
 
+Route::get('/aprender', function () {
+    return view('marketing.learn.index');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.index');
+
+Route::get('/aprender/primeiros-passos', function () {
+    return view('marketing.learn.getting-started');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.getting-started');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -130,6 +152,16 @@ Route::get('/sitemap.xml', function () {
     $entries = [
         [route('marketing.home'), 'weekly', '1.0'],
         [route('register'), 'weekly', '0.9'],
+        [
+            route('marketing.learn.index'),
+            'weekly',
+            '0.8',
+        ],
+        [
+            route('marketing.learn.getting-started'),
+            'weekly',
+            '0.9',
+        ],
         [route('marketing.terms'), 'monthly', '0.4'],
         [route('marketing.privacy'), 'monthly', '0.4'],
     ];

@@ -1,0 +1,299 @@
+<?php
+
+return [
+    'meta_title' => 'Central de Aprendizado — Noobstron',
+    'meta_description' => 'Aprenda a organizar clientes, vendas, atendimento, automações e gestão comercial com guias práticos do Noobstron.',
+
+    'index' => [
+        'eyebrow' => 'Central de Aprendizado Noobstron',
+        'title' => 'Aprenda a transformar sua operação comercial.',
+        'description' => 'Guias práticos para organizar clientes, melhorar vendas, acompanhar sua equipe, automatizar tarefas e aproveitar melhor os recursos do Noobstron.',
+
+        'start_title' => 'Comece por aqui',
+        'start_description' => 'Uma jornada simples para sair da configuração inicial e chegar à primeira venda organizada dentro do Noobstron.',
+
+        'cards' => [
+            'getting_started' => [
+                'number' => '01',
+                'title' => 'Primeiros passos com o Noobstron',
+                'description' => 'Configure sua empresa, organize sua equipe e prepare o ambiente para começar.',
+                'action' => 'Começar guia →',
+            ],
+            'customers' => [
+                'number' => '02',
+                'title' => 'Organize seus clientes',
+                'description' => 'Centralize contatos, histórico, responsáveis e informações comerciais.',
+                'action' => 'Em breve',
+            ],
+            'sales' => [
+                'number' => '03',
+                'title' => 'Estruture seu processo de vendas',
+                'description' => 'Aprenda a trabalhar com leads, pipelines, oportunidades e atividades.',
+                'action' => 'Em breve',
+            ],
+            'follow_up' => [
+                'number' => '04',
+                'title' => 'Melhore seu follow-up',
+                'description' => 'Organize tarefas e próximos passos para não perder oportunidades.',
+                'action' => 'Em breve',
+            ],
+            'communication' => [
+                'number' => '05',
+                'title' => 'Centralize a comunicação',
+                'description' => 'Conecte e-mail, WhatsApp e conversas ao contexto dos seus clientes.',
+                'action' => 'Em breve',
+            ],
+            'automation' => [
+                'number' => '06',
+                'title' => 'Automatize e escale',
+                'description' => 'Use automações e inteligência artificial para reduzir tarefas repetitivas.',
+                'action' => 'Em breve',
+            ],
+        ],
+
+        'path_title' => 'Evolua passo a passo',
+        'path_description' => 'Comece organizando a base e evolua conforme sua operação amadurece.',
+
+        'path' => [
+            ['title' => '1. Organizar', 'description' => 'Clientes e dados'],
+            ['title' => '2. Vender', 'description' => 'Leads e pipeline'],
+            ['title' => '3. Acompanhar', 'description' => 'Atividades'],
+            ['title' => '4. Comunicar', 'description' => 'E-mail e WhatsApp'],
+            ['title' => '5. Automatizar', 'description' => 'Fluxos e tarefas'],
+            ['title' => '6. Escalar', 'description' => 'IA e indicadores'],
+        ],
+
+        'cta' => [
+            'title' => 'Pronto para colocar em prática?',
+            'description' => 'Crie seu workspace e use nossos guias enquanto organiza sua operação comercial no Noobstron.',
+            'button' => 'Começar meu trial',
+        ],
+    ],
+
+    'getting_started' => [
+        'meta_title' => 'Primeiros passos com o Noobstron',
+        'meta_description' => 'Aprenda passo a passo como configurar o Noobstron, organizar sua equipe, cadastrar clientes, trabalhar com leads, oportunidades, propostas e vendas.',
+
+        'back' => '← Central de Aprendizado',
+        'eyebrow' => 'Guia 01 • Primeiros passos',
+        'title' => 'Do cadastro à primeira venda organizada no Noobstron.',
+        'lead' => 'Este guia mostra como preparar sua empresa, organizar sua equipe, cadastrar clientes, trabalhar com leads e oportunidades e construir um processo comercial que possa evoluir com sua operação.',
+
+        'progress' => [
+            'Empresa',
+            'Equipe',
+            'Clientes',
+            'Pipeline',
+            'Leads',
+            'Oportunidades',
+            'Atividades',
+            'Propostas',
+            'Venda',
+        ],
+
+        'nav_title' => 'Neste guia',
+
+        'nav' => [
+            'overview' => 'Antes de começar',
+            'company' => '1. Configure sua empresa',
+            'team' => '2. Monte sua equipe',
+            'customers' => '3. Organize clientes',
+            'pipeline' => '4. Crie seu pipeline',
+            'leads' => '5. Organize seus leads',
+            'opportunities' => '6. Crie oportunidades',
+            'activities' => '7. Planeje atividades',
+            'proposals' => '8. Crie propostas',
+            'sale' => '9. Registre a venda',
+            'evolve' => 'Como evoluir',
+        ],
+
+        'overview' => [
+            'title' => 'Antes de começar',
+            'paragraphs' => [
+                'O Noobstron foi pensado para conectar informações que normalmente ficam espalhadas entre planilhas, agendas, caixas de e-mail, WhatsApp e sistemas diferentes.',
+                'Você não precisa configurar todos os recursos no primeiro dia. A melhor estratégia é construir uma base simples e confiável e evoluir conforme a equipe começa a utilizar o sistema.',
+            ],
+            'flow' => [
+                'Organize empresa e equipe',
+                'Centralize clientes e leads',
+                'Estruture o processo comercial',
+                'Acompanhe oportunidades e atividades',
+                'Crie propostas e registre vendas',
+            ],
+            'box_title' => 'Regra para começar bem',
+            'box_text' => 'Não tente reproduzir toda a complexidade da empresa imediatamente. Comece pelo processo comercial que sua equipe realmente utiliza hoje.',
+        ],
+
+        'company' => [
+            'title' => 'Configure sua empresa',
+            'paragraphs' => [
+                'O primeiro passo é garantir que o workspace represente corretamente sua organização. Essas informações ajudam o Noobstron a preparar o ambiente para sua operação.',
+            ],
+            'subtitle' => 'Revise os dados principais',
+            'items' => [
+                'Nome da empresa.',
+                'País de operação.',
+                'Idioma principal.',
+                'Segmento de atuação.',
+            ],
+            'after_list' => 'O segmento ajuda a contextualizar o tipo de operação, enquanto país e idioma influenciam a experiência apresentada aos usuários.',
+            'example_title' => 'Exemplo',
+            'example_text' => 'Uma empresa de serviços pode começar configurando o segmento como Serviços e posteriormente estruturar um pipeline específico para orçamento, negociação e fechamento.',
+        ],
+
+        'team' => [
+            'title' => 'Monte sua equipe',
+            'paragraphs' => [
+                'Depois da empresa, cadastre as pessoas que realmente vão participar do processo.',
+                'Usuários separados permitem identificar responsáveis, controlar permissões e manter histórico das ações realizadas.',
+            ],
+            'subtitle' => 'Comece com quem precisa operar',
+            'items' => [
+                'Administradores.',
+                'Gestores comerciais.',
+                'Vendedores.',
+                'Atendimento.',
+                'Outros responsáveis necessários.',
+            ],
+            'box_title' => 'Evite compartilhar usuários',
+            'box_text' => 'Cada pessoa deve utilizar sua própria conta. Isso melhora segurança, responsabilidade e auditoria.',
+        ],
+
+        'customers' => [
+            'title' => 'Organize seus clientes',
+            'paragraphs' => [
+                'O cadastro de clientes é a base do relacionamento dentro do Noobstron. É onde informações importantes deixam de ficar espalhadas.',
+            ],
+            'subtitle' => 'Centralize o contexto',
+            'items' => [
+                'Dados principais do cliente.',
+                'Contatos.',
+                'Telefones.',
+                'E-mails.',
+                'Endereços.',
+                'Histórico de relacionamento.',
+            ],
+            'after_list' => 'Quanto mais organizado o cadastro, mais fácil fica entender quem é o cliente e o que já aconteceu no relacionamento comercial.',
+            'example_title' => 'Exemplo',
+            'example_text' => 'Se um vendedor sair de férias, outro membro da equipe pode consultar o histórico do cliente e continuar o atendimento com muito mais contexto.',
+            'import_title' => 'E se eu já tiver muitos clientes?',
+            'import_text' => 'Em vez de cadastrar um por um, utilize o processo de importação para trazer dados existentes de forma organizada.',
+        ],
+
+        'pipeline' => [
+            'title' => 'Crie seu pipeline de vendas',
+            'paragraphs' => [
+                'O pipeline representa as etapas que uma oportunidade percorre até chegar ao fechamento.',
+                'Não existe um pipeline universal. Ele deve representar o processo real da sua empresa.',
+            ],
+            'flow' => [
+                'Primeiro contato',
+                'Qualificação',
+                'Proposta',
+                'Negociação',
+                'Fechamento',
+            ],
+            'box_title' => 'Comece simples',
+            'box_text' => 'Um pipeline com quatro ou cinco etapas bem definidas costuma ser mais útil que quinze etapas que ninguém entende.',
+        ],
+
+        'leads' => [
+            'title' => 'Organize seus leads',
+            'paragraphs' => [
+                'Leads representam potenciais clientes que ainda estão em processo de identificação ou qualificação.',
+                'Registrar a origem e o status desses contatos ajuda a equipe a entender de onde chegam as oportunidades e quais merecem atenção.',
+            ],
+            'subtitle' => 'Algumas origens possíveis',
+            'items' => [
+                'Site.',
+                'Indicação.',
+                'Campanha.',
+                'WhatsApp.',
+                'Prospecção ativa.',
+                'Evento.',
+            ],
+            'after_list' => 'Quando um lead se torna uma oportunidade comercial real, ele pode avançar para a próxima etapa do processo.',
+        ],
+
+        'opportunities' => [
+            'title' => 'Transforme interesse em oportunidade',
+            'paragraphs' => [
+                'Uma oportunidade representa uma negociação concreta em andamento.',
+                'Nesse momento, você começa a acompanhar informações como valor esperado, etapa atual, responsável e evolução da negociação.',
+            ],
+            'example_title' => 'Exemplo',
+            'example_text' => 'Um lead solicita uma demonstração e confirma interesse em contratar. Ele deixa de ser apenas um contato e passa a representar uma oportunidade comercial.',
+            'subtitle' => 'Mantenha o pipeline atualizado',
+            'after_example' => 'Ao mudar a situação da negociação, mova a oportunidade para a etapa correspondente. Isso mantém a visão comercial próxima da realidade.',
+        ],
+
+        'activities' => [
+            'title' => 'Nunca perca o próximo passo',
+            'paragraphs' => [
+                'Uma oportunidade sem próxima ação definida tende a ser esquecida.',
+                'Use atividades para registrar o que precisa acontecer depois.',
+            ],
+            'items' => [
+                'Ligação.',
+                'Reunião.',
+                'Enviar proposta.',
+                'Retornar ao cliente.',
+                'Fazer follow-up.',
+                'Confirmar documentação.',
+            ],
+            'box_title' => 'Uma prática simples',
+            'box_text' => 'Sempre que terminar uma interação importante, pergunte: “qual é o próximo passo e quando ele deve acontecer?”',
+        ],
+
+        'proposals' => [
+            'title' => 'Transforme a negociação em proposta',
+            'paragraphs' => [
+                'Quando a oportunidade estiver madura, formalize a oferta por meio de uma proposta.',
+                'O catálogo ajuda a manter produtos e serviços organizados para serem utilizados nas propostas comerciais.',
+            ],
+            'subtitle' => 'Uma proposta clara deve ajudar o cliente a entender',
+            'items' => [
+                'O que está sendo oferecido.',
+                'Quantidade.',
+                'Valores.',
+                'Condições comerciais.',
+                'Contexto da negociação.',
+            ],
+            'after_list' => 'O objetivo não é apenas gerar um documento, mas manter a proposta conectada à negociação que originou aquela venda.',
+        ],
+
+        'sale' => [
+            'title' => 'Registre a primeira venda',
+            'paragraphs' => [
+                'Quando a negociação for concluída, registre a venda para que o resultado comercial não fique desconectado do restante do processo.',
+                'A partir daí, informações financeiras e recebíveis podem continuar o ciclo.',
+            ],
+            'flow' => [
+                'Lead',
+                'Oportunidade',
+                'Proposta',
+                'Venda',
+                'Recebimento e relacionamento',
+            ],
+        ],
+
+        'evolve' => [
+            'title' => 'Agora você pode evoluir',
+            'paragraphs' => [
+                'Depois que equipe, clientes e processo comercial estiverem organizados, o próximo passo é ganhar eficiência.',
+            ],
+            'checklist' => [
+                'Centralizar e-mail e WhatsApp.',
+                'Padronizar templates de comunicação.',
+                'Automatizar tarefas repetitivas.',
+                'Utilizar notificações e lembretes.',
+                'Acompanhar indicadores financeiros.',
+                'Utilizar IA para apoiar atividades da equipe.',
+            ],
+            'cta_title' => 'Comece com uma base organizada.',
+            'cta_text' => 'Você não precisa dominar todos os recursos hoje. O importante é colocar o processo principal para funcionar e evoluir a partir dele.',
+            'trial_button' => 'Começar meu trial',
+            'guides_button' => 'Ver outros guias',
+        ],
+    ],
+];
