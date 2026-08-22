@@ -251,6 +251,7 @@
                     'getting_started',
                     'customers',
                     'sales',
+                    'follow_up',
                 ],
                 true
             ))
@@ -266,6 +267,9 @@
 
                             'sales' =>
                                 'marketing.learn.sales',
+
+                            'follow_up' =>
+                                'marketing.learn.follow-up',
                         }
                     ) }}"
                     class="learn-card"

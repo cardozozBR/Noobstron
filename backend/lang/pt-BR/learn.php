@@ -35,7 +35,7 @@ return [
                 'number' => '04',
                 'title' => 'Melhore seu follow-up',
                 'description' => 'Organize tarefas e próximos passos para não perder oportunidades.',
-                'action' => 'Em breve',
+                'action' => 'Abrir guia →',
             ],
             'communication' => [
                 'number' => '05',
@@ -693,4 +693,203 @@ return [
     ],
 ],
     
-    ];
+    
+    'follow_up' => [
+        'meta_title' => 'Como melhorar follow-up e atividades comerciais — Noobstron',
+        'meta_description' => 'Aprenda como organizar follow-ups, tarefas, reuniões, retornos e próximos passos para não perder oportunidades comerciais.',
+
+        'back' => '← Central de Aprendizado',
+        'eyebrow' => 'Guia 04 • Follow-up e atividades',
+        'title' => 'Como melhorar seu follow-up e organizar atividades comerciais.',
+        'lead' => 'Um bom follow-up transforma conversas em próximos passos claros. Neste guia, você vai aprender a organizar atividades, definir responsáveis, acompanhar prazos e evitar que oportunidades importantes sejam esquecidas.',
+
+        'nav_title' => 'Neste guia',
+
+        'nav' => [
+            'fundamentos' => '1. Entenda o follow-up',
+            'proximo-passo' => '2. Sempre defina o próximo passo',
+            'tipos' => '3. Organize os tipos de atividade',
+            'prazos' => '4. Trabalhe com prazos',
+            'responsaveis' => '5. Defina responsáveis',
+            'prioridades' => '6. Priorize corretamente',
+            'contexto' => '7. Registre contexto',
+            'rotina' => '8. Crie uma rotina de acompanhamento',
+            'atrasadas' => '9. Trate atividades atrasadas',
+            'noobstron' => '10. Como aplicar no Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Entenda o papel do follow-up',
+                'paragraphs' => [
+                    'Follow-up é o acompanhamento realizado depois de uma interação comercial para manter uma negociação avançando.',
+                    'Ele não deve ser apenas uma mensagem perguntando se o cliente decidiu. Um bom follow-up tem contexto, objetivo e um próximo passo claro.',
+                ],
+                'box_title' => 'Follow-up não é insistência',
+                'box_text' => 'O objetivo é dar continuidade à conversa no momento adequado, com uma razão clara para o novo contato.',
+            ],
+            [
+                'id' => 'proximo-passo',
+                'title' => 'Sempre defina o próximo passo',
+                'paragraphs' => [
+                    'Uma negociação sem próxima ação definida tem grande chance de ser esquecida.',
+                    'Ao terminar uma ligação, reunião ou troca de mensagens, registre o que precisa acontecer depois.',
+                ],
+                'subtitle' => 'Perguntas úteis',
+                'items' => [
+                    'Qual é a próxima ação?',
+                    'Quem é responsável?',
+                    'Quando ela deve acontecer?',
+                    'O que precisa estar pronto antes?',
+                    'Qual resultado esperamos dessa ação?',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Depois de uma demonstração, em vez de simplesmente aguardar, registre uma atividade para enviar proposta até sexta-feira e outra para fazer follow-up três dias depois.',
+            ],
+            [
+                'id' => 'tipos',
+                'title' => 'Organize os tipos de atividade',
+                'paragraphs' => [
+                    'Nem toda atividade comercial é igual. Separar os tipos ajuda a equipe a entender rapidamente o que precisa ser feito.',
+                ],
+                'subtitle' => 'Atividades comuns',
+                'items' => [
+                    'Ligação.',
+                    'Reunião.',
+                    'Demonstração.',
+                    'Envio de proposta.',
+                    'Follow-up.',
+                    'Retorno solicitado pelo cliente.',
+                    'Confirmação de documentação.',
+                    'Revisão interna.',
+                ],
+                'after_list' => 'Use nomes simples e consistentes. Muitos tipos diferentes podem dificultar mais do que ajudar.',
+            ],
+            [
+                'id' => 'prazos',
+                'title' => 'Trabalhe com prazos realistas',
+                'paragraphs' => [
+                    'Atividades sem prazo acabam competindo com tudo o que parece mais urgente no dia.',
+                    'Definir datas ajuda a transformar intenção em compromisso e permite identificar rapidamente o que está atrasado.',
+                ],
+                'box_title' => 'Evite datas artificiais',
+                'box_text' => 'Não coloque todas as atividades para amanhã apenas para limpar a lista. Use datas que representem o momento real em que a ação deve acontecer.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Defina um responsável para cada atividade',
+                'paragraphs' => [
+                    'Toda tarefa importante deve ter alguém claramente responsável pela execução.',
+                    'Isso evita situações em que várias pessoas sabem que algo precisa ser feito, mas nenhuma entende que a responsabilidade é sua.',
+                ],
+                'subtitle' => 'Responsabilidade clara ajuda a responder',
+                'items' => [
+                    'Quem deve executar?',
+                    'Quem precisa acompanhar?',
+                    'Quem assume se o responsável estiver ausente?',
+                ],
+            ],
+            [
+                'id' => 'prioridades',
+                'title' => 'Priorize atividades pelo impacto',
+                'paragraphs' => [
+                    'Nem todas as tarefas têm o mesmo peso comercial.',
+                    'Atividades ligadas a oportunidades próximas de fechamento ou clientes esperando retorno costumam exigir prioridade maior.',
+                ],
+                'subtitle' => 'Alguns critérios úteis',
+                'items' => [
+                    'Prazo da atividade.',
+                    'Valor da oportunidade.',
+                    'Etapa da negociação.',
+                    'Tempo desde o último contato.',
+                    'Compromisso assumido com o cliente.',
+                ],
+                'after_list' => 'Prioridade não deve ser definida apenas pela ordem em que as tarefas chegaram.',
+            ],
+            [
+                'id' => 'contexto',
+                'title' => 'Registre contexto junto da atividade',
+                'paragraphs' => [
+                    'Uma tarefa chamada apenas “ligar para cliente” pode não dizer nada alguns dias depois.',
+                    'Registre informações suficientes para que o responsável entenda por que aquela atividade existe e o que precisa ser resolvido.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Em vez de “ligar para cliente”, registre “ligar para confirmar aprovação da proposta enviada em 18/08 e validar prazo de implantação”.',
+            ],
+            [
+                'id' => 'rotina',
+                'title' => 'Crie uma rotina de acompanhamento',
+                'paragraphs' => [
+                    'O follow-up funciona melhor quando faz parte da rotina, e não quando depende de lembrar espontaneamente.',
+                    'Reserve momentos para revisar atividades do dia, tarefas futuras e negociações que estão sem movimentação.',
+                ],
+                'subtitle' => 'Uma rotina simples pode incluir',
+                'items' => [
+                    'Revisar atividades vencidas no início do dia.',
+                    'Executar tarefas previstas para hoje.',
+                    'Confirmar próximos passos após reuniões.',
+                    'Revisar oportunidades sem atividade futura.',
+                    'Preparar as ações do próximo dia.',
+                ],
+            ],
+            [
+                'id' => 'atrasadas',
+                'title' => 'Trate atividades atrasadas sem esconder o problema',
+                'paragraphs' => [
+                    'Atividades atrasadas mostram onde o processo perdeu ritmo.',
+                    'Em vez de simplesmente alterar todas as datas, vale entender por que a tarefa não foi realizada e decidir o que realmente deve acontecer.',
+                ],
+                'subtitle' => 'Ao encontrar uma atividade atrasada',
+                'items' => [
+                    'Execute imediatamente se ainda fizer sentido.',
+                    'Reagende com uma nova data realista.',
+                    'Reatribua se houver outro responsável mais adequado.',
+                    'Cancele se a atividade perdeu sentido.',
+                    'Atualize a oportunidade caso a negociação tenha mudado.',
+                ],
+                'box_title' => 'Atraso também gera informação',
+                'box_text' => 'Se muitas atividades do mesmo tipo atrasam, pode existir um problema de capacidade, prioridade ou processo.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Como aplicar follow-up e atividades no Noobstron',
+                'paragraphs' => [
+                    'No Noobstron, atividades podem ser utilizadas para conectar tarefas e próximos passos ao contexto de clientes e oportunidades.',
+                    'Isso ajuda a equipe a entender não apenas o que precisa fazer, mas também por que aquela ação existe.',
+                ],
+                'subtitle' => 'Sequência recomendada',
+                'items' => [
+                    'Abra o cliente ou oportunidade relacionada.',
+                    'Registre a próxima atividade.',
+                    'Defina responsável e prazo.',
+                    'Inclua contexto suficiente para execução.',
+                    'Conclua a atividade quando realizada.',
+                    'Registre imediatamente o próximo passo quando necessário.',
+                    'Revise atividades atrasadas regularmente.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Ao iniciar o dia, cada pessoa deve conseguir identificar rapidamente quais ações precisa executar e quais negociações dependem dessas atividades para avançar.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de um follow-up organizado',
+        'checklist_description' => 'Confira se sua equipe tem um processo simples e consistente para acompanhar próximos passos.',
+
+        'checklist' => [
+            'Oportunidades ativas têm próxima ação definida.',
+            'Atividades possuem responsável.',
+            'Prazos representam datas reais.',
+            'Tarefas incluem contexto suficiente.',
+            'Atividades concluídas são registradas.',
+            'Tarefas atrasadas são revisadas.',
+            'Novos próximos passos são definidos após interações importantes.',
+        ],
+
+        'cta' => [
+            'title' => 'Transforme acompanhamento em consistência comercial.',
+            'description' => 'Organize atividades, mantenha próximos passos claros e reduza as oportunidades perdidas por falta de acompanhamento.',
+            'trial' => 'Começar meu trial',
+            'previous' => 'Ver guia de processo de vendas',
+        ],
+    ],];

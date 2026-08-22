@@ -13,7 +13,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Central de Aprendizado Noobstron')
             ->assertSee('Primeiros passos com o Noobstron')
             ->assertSee('Organize seus clientes')
-            ->assertSee('Estruture seu processo de vendas');
+            ->assertSee('Estruture seu processo de vendas')
+            ->assertSee('Melhore seu follow-up');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -43,6 +44,19 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Como aplicar esse processo no Noobstron');
     }
 
+    public function test_follow_up_guide_is_public(): void
+    {
+        $this->get('/aprender/follow-up-e-atividades')
+            ->assertOk()
+            ->assertSee(
+                'Como melhorar seu follow-up e organizar atividades comerciais'
+            )
+            ->assertSee('Entenda o papel do follow-up')
+            ->assertSee(
+                'Como aplicar follow-up e atividades no Noobstron'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -50,7 +64,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender', false)
             ->assertSee('/aprender/primeiros-passos', false)
             ->assertSee('/aprender/organizar-clientes', false)
-            ->assertSee('/aprender/processo-de-vendas', false);
+            ->assertSee('/aprender/processo-de-vendas', false)
+            ->assertSee('/aprender/follow-up-e-atividades', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -69,6 +84,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.sales'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.follow-up'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -117,7 +136,7 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            441,
+            569,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -196,6 +215,37 @@ class PublicLearningCenterTest extends TestCase
                     $locale
                 )
                 ->get('/aprender/processo-de-vendas')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
+    public function test_follow_up_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como melhorar seu follow-up e organizar atividades comerciais.',
+
+            'en' =>
+                'How to improve follow-up and organize sales activities.',
+
+            'es' =>
+                'Cómo mejorar tu seguimiento y organizar actividades comerciales.',
+
+            'zh-CN' =>
+                '如何改进跟进并组织销售活动。',
+
+            'ja' =>
+                'フォローアップを改善し、営業活動を整理する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader(
+                    'Accept-Language',
+                    $locale
+                )
+                ->get('/aprender/follow-up-e-atividades')
                 ->assertOk()
                 ->assertSee($expected);
         }

@@ -35,7 +35,7 @@ return [
                 'number' => '04',
                 'title' => 'Mejora tu seguimiento',
                 'description' => 'Organiza tareas y próximos pasos para no perder oportunidades.',
-                'action' => 'Próximamente',
+                'action' => 'Abrir guía →',
             ],
             'communication' => [
                 'number' => '05',
@@ -689,5 +689,204 @@ return [
             'description' => 'Comienza con un pipeline simple, organiza tus próximos pasos y evoluciona a medida que tu equipo gana consistencia.',
             'trial' => 'Comenzar mi prueba',
             'previous' => 'Ver guía de organización de clientes',
+        ],
+    ],
+    'follow_up' => [
+        'meta_title' => 'Cómo mejorar el seguimiento y organizar actividades comerciales — Noobstron',
+        'meta_description' => 'Aprende cómo organizar seguimientos, tareas, reuniones, retornos y próximos pasos para no perder oportunidades comerciales.',
+
+        'back' => '← Centro de Aprendizaje',
+        'eyebrow' => 'Guía 04 • Seguimiento y actividades',
+        'title' => 'Cómo mejorar tu seguimiento y organizar actividades comerciales.',
+        'lead' => 'Un buen seguimiento transforma conversaciones en próximos pasos claros. En esta guía aprenderás a organizar actividades, definir responsables, gestionar plazos y evitar que oportunidades importantes sean olvidadas.',
+
+        'nav_title' => 'En esta guía',
+
+        'nav' => [
+            'fundamentos' => '1. Entiende el seguimiento',
+            'proximo-passo' => '2. Define siempre el próximo paso',
+            'tipos' => '3. Organiza los tipos de actividad',
+            'prazos' => '4. Trabaja con plazos',
+            'responsaveis' => '5. Define responsables',
+            'prioridades' => '6. Prioriza correctamente',
+            'contexto' => '7. Registra contexto',
+            'rotina' => '8. Crea una rutina de seguimiento',
+            'atrasadas' => '9. Gestiona actividades atrasadas',
+            'noobstron' => '10. Cómo aplicarlo en Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Entiende el papel del seguimiento',
+                'paragraphs' => [
+                    'El seguimiento es la acción realizada después de una interacción comercial para mantener una negociación avanzando.',
+                    'No debería ser solo un mensaje preguntando si el cliente ya decidió. Un buen seguimiento tiene contexto, objetivo y un próximo paso claro.',
+                ],
+                'box_title' => 'Seguimiento no significa insistencia',
+                'box_text' => 'El objetivo es continuar la conversación en el momento adecuado, con una razón clara para volver a contactar.',
+            ],
+            [
+                'id' => 'proximo-passo',
+                'title' => 'Define siempre el próximo paso',
+                'paragraphs' => [
+                    'Una negociación sin una próxima acción definida tiene una alta probabilidad de ser olvidada.',
+                    'Al terminar una llamada, reunión o intercambio de mensajes, registra qué debe ocurrir después.',
+                ],
+                'subtitle' => 'Preguntas útiles',
+                'items' => [
+                    '¿Cuál es la próxima acción?',
+                    '¿Quién es responsable?',
+                    '¿Cuándo debe ocurrir?',
+                    '¿Qué debe estar listo antes?',
+                    '¿Qué resultado esperamos de esta acción?',
+                ],
+                'example_title' => 'Ejemplo',
+                'example_text' => 'Después de una demostración, en lugar de simplemente esperar, crea una actividad para enviar la propuesta antes del viernes y otra para hacer seguimiento tres días después.',
+            ],
+            [
+                'id' => 'tipos',
+                'title' => 'Organiza los tipos de actividad',
+                'paragraphs' => [
+                    'No todas las actividades comerciales son iguales. Separar los tipos ayuda al equipo a entender rápidamente qué debe hacer.',
+                ],
+                'subtitle' => 'Actividades comunes',
+                'items' => [
+                    'Llamada.',
+                    'Reunión.',
+                    'Demostración.',
+                    'Enviar propuesta.',
+                    'Seguimiento.',
+                    'Retorno solicitado por el cliente.',
+                    'Confirmar documentación.',
+                    'Revisión interna.',
+                ],
+                'after_list' => 'Utiliza nombres simples y consistentes. Demasiados tipos diferentes pueden generar más confusión que valor.',
+            ],
+            [
+                'id' => 'prazos',
+                'title' => 'Trabaja con plazos realistas',
+                'paragraphs' => [
+                    'Las actividades sin plazo terminan compitiendo con todo lo que parece más urgente durante el día.',
+                    'Definir fechas ayuda a transformar intención en compromiso y permite identificar rápidamente lo que está atrasado.',
+                ],
+                'box_title' => 'Evita fechas artificiales',
+                'box_text' => 'No programes todo para mañana solo para limpiar la lista. Utiliza fechas que representen cuándo la acción realmente debería ocurrir.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Define un responsable para cada actividad',
+                'paragraphs' => [
+                    'Toda tarea importante debe tener una persona claramente responsable de ejecutarla.',
+                    'Esto evita situaciones en las que varias personas saben que algo debe hacerse, pero ninguna entiende que la responsabilidad es suya.',
+                ],
+                'subtitle' => 'Una responsabilidad clara ayuda a responder',
+                'items' => [
+                    '¿Quién debe ejecutar la tarea?',
+                    '¿Quién necesita acompañarla?',
+                    '¿Quién asume si el responsable no está disponible?',
+                ],
+            ],
+            [
+                'id' => 'prioridades',
+                'title' => 'Prioriza las actividades por impacto',
+                'paragraphs' => [
+                    'No todas las tareas tienen el mismo peso comercial.',
+                    'Las actividades vinculadas a oportunidades próximas al cierre o a clientes esperando una respuesta suelen necesitar mayor prioridad.',
+                ],
+                'subtitle' => 'Algunos criterios útiles',
+                'items' => [
+                    'Plazo de la actividad.',
+                    'Valor de la oportunidad.',
+                    'Etapa de la negociación.',
+                    'Tiempo desde el último contacto.',
+                    'Compromiso asumido con el cliente.',
+                ],
+                'after_list' => 'La prioridad no debería definirse solamente por el orden en que llegaron las tareas.',
+            ],
+            [
+                'id' => 'contexto',
+                'title' => 'Registra contexto junto a la actividad',
+                'paragraphs' => [
+                    'Una tarea llamada solamente “llamar al cliente” puede no decir mucho unos días después.',
+                    'Registra información suficiente para que el responsable entienda por qué existe esa actividad y qué debe resolverse.',
+                ],
+                'example_title' => 'Ejemplo',
+                'example_text' => 'En lugar de “llamar al cliente”, registra “llamar para confirmar la aprobación de la propuesta enviada el 18/08 y validar el plazo de implementación”.',
+            ],
+            [
+                'id' => 'rotina',
+                'title' => 'Crea una rutina de seguimiento',
+                'paragraphs' => [
+                    'El seguimiento funciona mejor cuando forma parte de la rutina y no cuando depende de recordarlo espontáneamente.',
+                    'Reserva momentos para revisar actividades del día, tareas futuras y negociaciones que están sin movimiento.',
+                ],
+                'subtitle' => 'Una rutina sencilla puede incluir',
+                'items' => [
+                    'Revisar actividades vencidas al comenzar el día.',
+                    'Ejecutar las tareas previstas para hoy.',
+                    'Confirmar próximos pasos después de reuniones.',
+                    'Revisar oportunidades sin actividad futura.',
+                    'Preparar las acciones del día siguiente.',
+                ],
+            ],
+            [
+                'id' => 'atrasadas',
+                'title' => 'Gestiona actividades atrasadas sin ocultar el problema',
+                'paragraphs' => [
+                    'Las actividades atrasadas muestran dónde el proceso perdió ritmo.',
+                    'En lugar de cambiar todas las fechas, entiende por qué la tarea no se realizó y decide qué debería ocurrir realmente.',
+                ],
+                'subtitle' => 'Cuando encuentres una actividad atrasada',
+                'items' => [
+                    'Ejecuta inmediatamente si todavía tiene sentido.',
+                    'Reprograma con una nueva fecha realista.',
+                    'Reasigna si otro responsable es más adecuado.',
+                    'Cancela si la actividad dejó de tener sentido.',
+                    'Actualiza la oportunidad si la negociación cambió.',
+                ],
+                'box_title' => 'Los retrasos también generan información',
+                'box_text' => 'Si muchas actividades del mismo tipo se atrasan, puede existir un problema de capacidad, prioridad o proceso.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Cómo aplicar seguimiento y actividades en Noobstron',
+                'paragraphs' => [
+                    'En Noobstron, las actividades pueden utilizarse para conectar tareas y próximos pasos con el contexto de clientes y oportunidades.',
+                    'Esto ayuda al equipo a entender no solo qué debe hacer, sino también por qué existe esa acción.',
+                ],
+                'subtitle' => 'Secuencia recomendada',
+                'items' => [
+                    'Abre el cliente u oportunidad relacionada.',
+                    'Registra la próxima actividad.',
+                    'Define responsable y plazo.',
+                    'Incluye suficiente contexto para ejecutarla.',
+                    'Completa la actividad cuando se realice.',
+                    'Registra inmediatamente el próximo paso cuando sea necesario.',
+                    'Revisa regularmente las actividades atrasadas.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Al comenzar el día, cada persona debería poder identificar rápidamente qué acciones necesita ejecutar y qué negociaciones dependen de esas actividades para avanzar.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de un seguimiento organizado',
+        'checklist_description' => 'Comprueba si tu equipo tiene un proceso sencillo y consistente para acompañar próximos pasos.',
+
+        'checklist' => [
+            'Las oportunidades activas tienen próxima acción definida.',
+            'Las actividades tienen responsable.',
+            'Los plazos representan fechas reales.',
+            'Las tareas incluyen contexto suficiente.',
+            'Las actividades completadas quedan registradas.',
+            'Las tareas atrasadas son revisadas.',
+            'Se definen nuevos próximos pasos después de interacciones importantes.',
+        ],
+
+        'cta' => [
+            'title' => 'Convierte el seguimiento en consistencia comercial.',
+            'description' => 'Organiza actividades, mantén claros los próximos pasos y reduce oportunidades perdidas por falta de seguimiento.',
+            'trial' => 'Comenzar mi prueba',
+            'previous' => 'Ver guía del proceso de ventas',
         ],
     ],];

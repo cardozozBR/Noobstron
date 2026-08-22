@@ -116,6 +116,17 @@ Route::get('/aprender/processo-de-vendas', function () {
     )
     ->name('marketing.learn.sales');
 
+Route::get('/aprender/follow-up-e-atividades', function () {
+    return view('marketing.learn.follow-up');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.follow-up');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -191,6 +202,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.sales'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.follow-up'),
             'weekly',
             '0.9',
         ],

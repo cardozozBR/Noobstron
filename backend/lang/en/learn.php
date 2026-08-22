@@ -35,7 +35,7 @@ return [
                 'number' => '04',
                 'title' => 'Improve your follow-up',
                 'description' => 'Organize tasks and next steps so opportunities do not get lost.',
-                'action' => 'Coming soon',
+                'action' => 'Open guide →',
             ],
             'communication' => [
                 'number' => '05',
@@ -689,5 +689,204 @@ return [
             'description' => 'Start with a simple pipeline, organize your next steps and evolve as your team becomes more consistent.',
             'trial' => 'Start my trial',
             'previous' => 'View customer organization guide',
+        ],
+    ],
+    'follow_up' => [
+        'meta_title' => 'How to improve follow-up and organize sales activities — Noobstron',
+        'meta_description' => 'Learn how to organize follow-ups, tasks, meetings, customer callbacks and next steps so sales opportunities do not get lost.',
+
+        'back' => '← Learning Center',
+        'eyebrow' => 'Guide 04 • Follow-up and activities',
+        'title' => 'How to improve follow-up and organize sales activities.',
+        'lead' => 'Good follow-up turns conversations into clear next steps. In this guide, you will learn how to organize activities, assign owners, manage deadlines and prevent important opportunities from being forgotten.',
+
+        'nav_title' => 'In this guide',
+
+        'nav' => [
+            'fundamentos' => '1. Understand follow-up',
+            'proximo-passo' => '2. Always define the next step',
+            'tipos' => '3. Organize activity types',
+            'prazos' => '4. Work with deadlines',
+            'responsaveis' => '5. Define owners',
+            'prioridades' => '6. Prioritize correctly',
+            'contexto' => '7. Record context',
+            'rotina' => '8. Create a follow-up routine',
+            'atrasadas' => '9. Handle overdue activities',
+            'noobstron' => '10. How to apply it in Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Understand the role of follow-up',
+                'paragraphs' => [
+                    'Follow-up is the action taken after a commercial interaction to keep a negotiation moving forward.',
+                    'It should not be just a message asking whether the customer has made a decision. Good follow-up has context, purpose and a clear next step.',
+                ],
+                'box_title' => 'Follow-up is not pressure',
+                'box_text' => 'The goal is to continue the conversation at the right time, with a clear reason for making contact again.',
+            ],
+            [
+                'id' => 'proximo-passo',
+                'title' => 'Always define the next step',
+                'paragraphs' => [
+                    'A negotiation without a defined next action has a high chance of being forgotten.',
+                    'At the end of a call, meeting or message exchange, record what needs to happen next.',
+                ],
+                'subtitle' => 'Useful questions',
+                'items' => [
+                    'What is the next action?',
+                    'Who is responsible?',
+                    'When should it happen?',
+                    'What needs to be ready first?',
+                    'What result do we expect from this action?',
+                ],
+                'example_title' => 'Example',
+                'example_text' => 'After a demo, instead of simply waiting, create an activity to send the proposal by Friday and another one to follow up three days later.',
+            ],
+            [
+                'id' => 'tipos',
+                'title' => 'Organize activity types',
+                'paragraphs' => [
+                    'Not every sales activity is the same. Separating activity types helps the team quickly understand what needs to be done.',
+                ],
+                'subtitle' => 'Common activities',
+                'items' => [
+                    'Phone call.',
+                    'Meeting.',
+                    'Demo.',
+                    'Send proposal.',
+                    'Follow-up.',
+                    'Customer-requested callback.',
+                    'Confirm documentation.',
+                    'Internal review.',
+                ],
+                'after_list' => 'Use simple and consistent names. Too many different activity types can create more confusion than value.',
+            ],
+            [
+                'id' => 'prazos',
+                'title' => 'Work with realistic deadlines',
+                'paragraphs' => [
+                    'Activities without deadlines end up competing with everything that appears more urgent during the day.',
+                    'Setting dates helps turn intention into commitment and makes overdue work easier to identify.',
+                ],
+                'box_title' => 'Avoid artificial dates',
+                'box_text' => 'Do not schedule everything for tomorrow just to clear the list. Use dates that represent when the action should realistically happen.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Assign an owner to each activity',
+                'paragraphs' => [
+                    'Every important task should have someone clearly responsible for executing it.',
+                    'This prevents situations where several people know something needs to be done, but nobody understands that they own the task.',
+                ],
+                'subtitle' => 'Clear ownership helps answer',
+                'items' => [
+                    'Who should execute it?',
+                    'Who needs to follow the progress?',
+                    'Who takes over if the owner is unavailable?',
+                ],
+            ],
+            [
+                'id' => 'prioridades',
+                'title' => 'Prioritize activities by impact',
+                'paragraphs' => [
+                    'Not every task has the same commercial importance.',
+                    'Activities tied to opportunities near closing or customers waiting for a response often deserve higher priority.',
+                ],
+                'subtitle' => 'Useful criteria',
+                'items' => [
+                    'Activity deadline.',
+                    'Opportunity value.',
+                    'Negotiation stage.',
+                    'Time since the last contact.',
+                    'Commitment made to the customer.',
+                ],
+                'after_list' => 'Priority should not be based only on the order in which tasks arrived.',
+            ],
+            [
+                'id' => 'contexto',
+                'title' => 'Record context with the activity',
+                'paragraphs' => [
+                    'A task named only “call customer” may not mean much a few days later.',
+                    'Record enough information so the owner understands why the activity exists and what needs to be resolved.',
+                ],
+                'example_title' => 'Example',
+                'example_text' => 'Instead of “call customer,” write “call to confirm approval of the proposal sent on 18/08 and validate the implementation timeline.”',
+            ],
+            [
+                'id' => 'rotina',
+                'title' => 'Create a follow-up routine',
+                'paragraphs' => [
+                    'Follow-up works better when it is part of the routine instead of depending on someone remembering it spontaneously.',
+                    'Set aside time to review today’s activities, future tasks and negotiations that have gone without movement.',
+                ],
+                'subtitle' => 'A simple routine may include',
+                'items' => [
+                    'Review overdue activities at the start of the day.',
+                    'Complete tasks planned for today.',
+                    'Confirm next steps after meetings.',
+                    'Review opportunities without future activities.',
+                    'Prepare actions for the next day.',
+                ],
+            ],
+            [
+                'id' => 'atrasadas',
+                'title' => 'Handle overdue activities without hiding the problem',
+                'paragraphs' => [
+                    'Overdue activities show where the process has lost momentum.',
+                    'Instead of simply changing every date, understand why the task was not completed and decide what actually needs to happen.',
+                ],
+                'subtitle' => 'When you find an overdue activity',
+                'items' => [
+                    'Complete it immediately if it still makes sense.',
+                    'Reschedule it with a realistic new date.',
+                    'Reassign it if another owner is more appropriate.',
+                    'Cancel it if the activity is no longer relevant.',
+                    'Update the opportunity if the negotiation has changed.',
+                ],
+                'box_title' => 'Delays also provide information',
+                'box_text' => 'If many activities of the same type are overdue, there may be a capacity, priority or process issue.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'How to apply follow-up and activities in Noobstron',
+                'paragraphs' => [
+                    'In Noobstron, activities can connect tasks and next steps to the context of customers and opportunities.',
+                    'This helps the team understand not only what needs to be done, but also why that action exists.',
+                ],
+                'subtitle' => 'Recommended sequence',
+                'items' => [
+                    'Open the related customer or opportunity.',
+                    'Create the next activity.',
+                    'Define owner and deadline.',
+                    'Include enough context for execution.',
+                    'Complete the activity when it is done.',
+                    'Immediately record the next step when necessary.',
+                    'Review overdue activities regularly.',
+                ],
+                'example_title' => 'Expected result',
+                'example_text' => 'At the start of the day, each person should be able to quickly identify which actions they need to execute and which negotiations depend on those activities to move forward.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist for organized follow-up',
+        'checklist_description' => 'Check whether your team has a simple and consistent process for managing next steps.',
+
+        'checklist' => [
+            'Active opportunities have a defined next action.',
+            'Activities have an owner.',
+            'Deadlines represent realistic dates.',
+            'Tasks include enough context.',
+            'Completed activities are recorded.',
+            'Overdue tasks are reviewed.',
+            'New next steps are defined after important interactions.',
+        ],
+
+        'cta' => [
+            'title' => 'Turn follow-up into commercial consistency.',
+            'description' => 'Organize activities, keep next steps clear and reduce opportunities lost because of missing follow-up.',
+            'trial' => 'Start my trial',
+            'previous' => 'View sales process guide',
         ],
     ],];
