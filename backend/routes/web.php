@@ -138,6 +138,17 @@ Route::get('/aprender/centralizar-comunicacao', function () {
     )
     ->name('marketing.learn.communication');
 
+Route::get('/aprender/resultados-e-evolucao', function () {
+    return view('marketing.learn.results');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.results');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -223,6 +234,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.communication'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.results'),
             'weekly',
             '0.9',
         ],

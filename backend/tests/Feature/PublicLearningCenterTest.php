@@ -15,7 +15,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Organize seus clientes')
             ->assertSee('Estruture seu processo de vendas')
             ->assertSee('Melhore seu follow-up')
-            ->assertSee('Centralize a comunicação');
+            ->assertSee('Centralize a comunicação')
+            ->assertSee('Automatize e escale');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -73,6 +74,21 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_results_guide_is_public(): void
+    {
+        $this->get('/aprender/resultados-e-evolucao')
+            ->assertOk()
+            ->assertSee(
+                'Como acompanhar resultados e evoluir seu processo comercial'
+            )
+            ->assertSee(
+                'Meça para aprender, não apenas para cobrar'
+            )
+            ->assertSee(
+                'Como acompanhar resultados no Noobstron'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -82,7 +98,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/organizar-clientes', false)
             ->assertSee('/aprender/processo-de-vendas', false)
             ->assertSee('/aprender/follow-up-e-atividades', false)
-            ->assertSee('/aprender/centralizar-comunicacao', false);
+            ->assertSee('/aprender/centralizar-comunicacao', false)
+            ->assertSee('/aprender/resultados-e-evolucao', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -109,6 +126,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.communication'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.results'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -157,7 +178,7 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            691,
+            820,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -283,6 +304,34 @@ class PublicLearningCenterTest extends TestCase
             $this
                 ->withHeader('Accept-Language', $locale)
                 ->get('/aprender/centralizar-comunicacao')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
+    public function test_results_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como acompanhar resultados e evoluir seu processo comercial.',
+
+            'en' =>
+                'How to track results and improve your sales process.',
+
+            'es' =>
+                'Cómo acompañar resultados y mejorar tu proceso comercial.',
+
+            'zh-CN' =>
+                '如何跟踪结果并持续改进销售流程。',
+
+            'ja' =>
+                '営業結果を追跡し、プロセスを改善する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/resultados-e-evolucao')
                 ->assertOk()
                 ->assertSee($expected);
         }

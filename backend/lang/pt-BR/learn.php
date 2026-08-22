@@ -47,7 +47,7 @@ return [
                 'number' => '06',
                 'title' => 'Automatize e escale',
                 'description' => 'Use automações e inteligência artificial para reduzir tarefas repetitivas.',
-                'action' => 'Em breve',
+                'action' => 'Abrir guia →',
             ],
         ],
 
@@ -1082,5 +1082,205 @@ return [
             'description' => 'Centralize contexto, organize seus canais e facilite a continuidade do atendimento e das vendas.',
             'trial' => 'Começar meu trial',
             'previous' => 'Ver guia de follow-up e atividades',
+        ],
+    ],
+    'results' => [
+        'meta_title' => 'Como acompanhar resultados e evoluir seu processo — Noobstron',
+        'meta_description' => 'Aprenda como acompanhar métricas comerciais, conversão, pipeline, produtividade e perdas para evoluir seu processo de vendas.',
+
+        'back' => '← Central de Aprendizado',
+        'eyebrow' => 'Guia 06 • Resultados e evolução',
+        'title' => 'Como acompanhar resultados e evoluir seu processo comercial.',
+        'lead' => 'Organizar o processo é apenas o começo. O próximo passo é entender o que está funcionando, onde estão os gargalos e quais mudanças realmente ajudam sua equipe a vender melhor.',
+
+        'nav_title' => 'Neste guia',
+
+        'nav' => [
+            'fundamentos' => '1. Meça para aprender',
+            'pipeline' => '2. Analise o pipeline',
+            'conversao' => '3. Acompanhe conversão',
+            'velocidade' => '4. Observe o tempo de venda',
+            'atividades' => '5. Analise atividades',
+            'ganhos' => '6. Entenda os ganhos',
+            'perdas' => '7. Aprenda com as perdas',
+            'equipe' => '8. Avalie produtividade',
+            'melhoria' => '9. Melhore continuamente',
+            'noobstron' => '10. Como aplicar no Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Meça para aprender, não apenas para cobrar',
+                'paragraphs' => [
+                    'Métricas comerciais servem para transformar percepção em evidência.',
+                    'Quando os dados são utilizados apenas para cobrança, a equipe tende a enxergar indicadores como pressão. Quando são usados para entender o processo, ajudam a descobrir gargalos e oportunidades de melhoria.',
+                ],
+                'box_title' => 'Nem toda métrica precisa virar meta',
+                'box_text' => 'Alguns números existem apenas para ajudar você a entender o comportamento do processo e tomar decisões melhores.',
+            ],
+            [
+                'id' => 'pipeline',
+                'title' => 'Analise a saúde do pipeline',
+                'paragraphs' => [
+                    'O pipeline mostra o volume e a distribuição das oportunidades em cada etapa do processo comercial.',
+                    'Mais importante do que observar apenas o valor total é entender se as oportunidades estão avançando de forma saudável.',
+                ],
+                'subtitle' => 'Observe principalmente',
+                'items' => [
+                    'Quantidade de oportunidades por etapa.',
+                    'Valor total em negociação.',
+                    'Oportunidades paradas há muito tempo.',
+                    'Negociações sem próxima atividade.',
+                    'Concentração excessiva em uma única etapa.',
+                ],
+                'after_list' => 'Um pipeline cheio não significa necessariamente um pipeline saudável.',
+            ],
+            [
+                'id' => 'conversao',
+                'title' => 'Acompanhe as taxas de conversão',
+                'paragraphs' => [
+                    'A conversão ajuda a entender quantas oportunidades conseguem avançar ou chegar ao fechamento.',
+                    'Ela pode ser observada entre etapas do funil ou no processo completo, do primeiro contato até a venda.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Se muitas oportunidades chegam à proposta, mas poucas avançam para fechamento, pode existir um problema de preço, qualificação, proposta de valor ou negociação.',
+            ],
+            [
+                'id' => 'velocidade',
+                'title' => 'Observe quanto tempo as vendas levam',
+                'paragraphs' => [
+                    'O tempo de venda mostra quanto uma oportunidade demora para atravessar o processo comercial.',
+                    'Quando determinadas etapas ficam muito lentas, isso pode indicar falta de follow-up, dependência de aprovação ou dificuldade na tomada de decisão.',
+                ],
+                'subtitle' => 'Perguntas úteis',
+                'items' => [
+                    'Quanto tempo uma oportunidade permanece em cada etapa?',
+                    'Onde acontecem os maiores atrasos?',
+                    'Quais tipos de negociação levam mais tempo?',
+                    'Existem atividades que poderiam acelerar o avanço?',
+                ],
+            ],
+            [
+                'id' => 'atividades',
+                'title' => 'Analise as atividades comerciais',
+                'paragraphs' => [
+                    'Quantidade de atividades sozinha não mede qualidade, mas ajuda a entender o ritmo da operação.',
+                    'O ideal é relacionar atividades com avanço real das oportunidades e resultados obtidos.',
+                ],
+                'subtitle' => 'Alguns sinais importantes',
+                'items' => [
+                    'Oportunidades sem atividade futura.',
+                    'Grande quantidade de tarefas atrasadas.',
+                    'Muitas atividades sem avanço de etapa.',
+                    'Poucos contatos em oportunidades importantes.',
+                    'Excesso de tarefas administrativas.',
+                ],
+                'box_title' => 'Movimento não é o mesmo que progresso',
+                'box_text' => 'Uma equipe pode executar muitas atividades e ainda assim avançar poucas oportunidades. O objetivo é entender quais ações realmente produzem progresso.',
+            ],
+            [
+                'id' => 'ganhos',
+                'title' => 'Entenda por que sua equipe ganha',
+                'paragraphs' => [
+                    'Vendas ganhas também precisam ser analisadas.',
+                    'Identificar padrões entre clientes que compram ajuda a melhorar qualificação, abordagem, posicionamento e foco comercial.',
+                ],
+                'subtitle' => 'Procure padrões em',
+                'items' => [
+                    'Segmentos com melhor conversão.',
+                    'Fontes de leads mais eficientes.',
+                    'Tipos de problema resolvido.',
+                    'Tempo médio até o fechamento.',
+                    'Etapas que avançam com mais facilidade.',
+                ],
+            ],
+            [
+                'id' => 'perdas',
+                'title' => 'Aprenda com as oportunidades perdidas',
+                'paragraphs' => [
+                    'Uma oportunidade perdida não precisa ser apenas um resultado negativo. Ela pode gerar informação importante para melhorar o processo.',
+                    'Registrar motivos de perda permite identificar padrões que seriam invisíveis se todas as negociações fossem encerradas apenas como “perdidas”.',
+                ],
+                'subtitle' => 'Motivos comuns',
+                'items' => [
+                    'Preço.',
+                    'Concorrente.',
+                    'Prazo.',
+                    'Falta de prioridade do cliente.',
+                    'Necessidade não atendida.',
+                    'Ausência de orçamento.',
+                    'Negociação sem decisão.',
+                ],
+                'after_list' => 'Os motivos devem ser simples o suficiente para a equipe registrar de forma consistente.',
+            ],
+            [
+                'id' => 'equipe',
+                'title' => 'Avalie produtividade com contexto',
+                'paragraphs' => [
+                    'Comparar apenas número de vendas entre pessoas pode gerar conclusões erradas.',
+                    'Carteira, região, tipo de cliente, valor das oportunidades e estágio das negociações também influenciam os resultados.',
+                ],
+                'box_title' => 'Use indicadores para orientar conversas',
+                'box_text' => 'O objetivo é entender onde cada pessoa precisa de apoio, treinamento ou melhores condições para executar o processo.',
+            ],
+            [
+                'id' => 'melhoria',
+                'title' => 'Crie um ciclo de melhoria contínua',
+                'paragraphs' => [
+                    'Um processo comercial não precisa permanecer igual para sempre.',
+                    'Conforme novos dados aparecem, você pode ajustar etapas, atividades, critérios de qualificação e prioridades.',
+                ],
+                'subtitle' => 'Uma rotina simples de melhoria',
+                'items' => [
+                    'Observe os dados.',
+                    'Identifique um gargalo específico.',
+                    'Escolha uma mudança pequena.',
+                    'Aplique por um período.',
+                    'Compare os resultados.',
+                    'Mantenha, ajuste ou descarte a mudança.',
+                ],
+                'after_list' => 'Evite mudar muitas coisas ao mesmo tempo. Quando tudo muda, fica difícil entender o que realmente produziu resultado.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Como acompanhar resultados no Noobstron',
+                'paragraphs' => [
+                    'No Noobstron, as informações registradas ao longo do processo comercial formam a base para acompanhar a evolução da operação.',
+                    'Clientes, leads, oportunidades, atividades, valores, etapas, ganhos e perdas ajudam a construir uma visão mais completa do desempenho comercial.',
+                ],
+                'subtitle' => 'Sequência recomendada',
+                'items' => [
+                    'Mantenha oportunidades e etapas atualizadas.',
+                    'Registre valores de negociação.',
+                    'Conclua atividades corretamente.',
+                    'Registre ganhos e perdas.',
+                    'Revise oportunidades paradas.',
+                    'Observe padrões de conversão e tempo.',
+                    'Use os dados para ajustar o processo.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Sua equipe deixa de trabalhar apenas com sensação e passa a conseguir explicar onde o processo está funcionando, onde está travando e qual melhoria deve ser testada em seguida.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist para evoluir seu processo',
+        'checklist_description' => 'Confira se sua operação já possui dados suficientes para começar um ciclo de melhoria contínua.',
+
+        'checklist' => [
+            'Pipeline está atualizado.',
+            'Valores das oportunidades estão registrados.',
+            'Ganhos e perdas são encerrados corretamente.',
+            'Motivos de perda são registrados.',
+            'Atividades atrasadas são acompanhadas.',
+            'Conversão pode ser observada entre etapas.',
+            'Mudanças no processo são feitas com base em evidências.',
+        ],
+
+        'cta' => [
+            'title' => 'Transforme dados comerciais em decisões melhores.',
+            'description' => 'Organize seu processo, acompanhe resultados e evolua com pequenas melhorias baseadas no que realmente acontece na operação.',
+            'trial' => 'Começar meu trial',
+            'previous' => 'Ver guia de comunicação',
         ],
     ],];

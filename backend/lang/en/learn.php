@@ -47,7 +47,7 @@ return [
                 'number' => '06',
                 'title' => 'Automate and scale',
                 'description' => 'Use automation and artificial intelligence to reduce repetitive work.',
-                'action' => 'Coming soon',
+                'action' => 'Open guide →',
             ],
         ],
 
@@ -1079,5 +1079,205 @@ return [
             'description' => 'Centralize context, organize your channels, and make it easier to maintain continuity across customer service and sales.',
             'trial' => 'Start my trial',
             'previous' => 'View follow-up and activities guide',
+        ],
+    ],
+    'results' => [
+        'meta_title' => 'How to track results and improve your sales process — Noobstron',
+        'meta_description' => 'Learn how to track sales metrics, conversion, pipeline, productivity, and losses to continuously improve your sales process.',
+
+        'back' => '← Learning Center',
+        'eyebrow' => 'Guide 06 • Results and improvement',
+        'title' => 'How to track results and improve your sales process.',
+        'lead' => 'Organizing your process is only the beginning. The next step is understanding what is working, where the bottlenecks are, and which changes actually help your team sell better.',
+
+        'nav_title' => 'In this guide',
+
+        'nav' => [
+            'fundamentos' => '1. Measure to learn',
+            'pipeline' => '2. Analyze your pipeline',
+            'conversao' => '3. Track conversion',
+            'velocidade' => '4. Monitor sales cycle time',
+            'atividades' => '5. Analyze activities',
+            'ganhos' => '6. Understand your wins',
+            'perdas' => '7. Learn from losses',
+            'equipe' => '8. Evaluate productivity',
+            'melhoria' => '9. Improve continuously',
+            'noobstron' => '10. Apply it in Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'fundamentos',
+                'title' => 'Measure to learn, not just to demand results',
+                'paragraphs' => [
+                    'Sales metrics turn perception into evidence.',
+                    'When data is used only to pressure the team, people tend to see metrics as a source of stress. When it is used to understand the process, it helps uncover bottlenecks and opportunities for improvement.',
+                ],
+                'box_title' => 'Not every metric needs to become a target',
+                'box_text' => 'Some numbers exist simply to help you understand how the process behaves and make better decisions.',
+            ],
+            [
+                'id' => 'pipeline',
+                'title' => 'Analyze the health of your pipeline',
+                'paragraphs' => [
+                    'The pipeline shows the volume and distribution of opportunities across each stage of the sales process.',
+                    'More important than looking only at the total value is understanding whether opportunities are progressing in a healthy way.',
+                ],
+                'subtitle' => 'Pay particular attention to',
+                'items' => [
+                    'Number of opportunities at each stage.',
+                    'Total value under negotiation.',
+                    'Opportunities that have been stalled for too long.',
+                    'Deals without a next activity.',
+                    'Too many opportunities concentrated in a single stage.',
+                ],
+                'after_list' => 'A full pipeline does not necessarily mean a healthy pipeline.',
+            ],
+            [
+                'id' => 'conversao',
+                'title' => 'Track conversion rates',
+                'paragraphs' => [
+                    'Conversion helps you understand how many opportunities manage to move forward or reach a successful close.',
+                    'You can measure it between individual funnel stages or across the entire process, from the first contact to the sale.',
+                ],
+                'example_title' => 'Example',
+                'example_text' => 'If many opportunities reach the proposal stage but few move on to closing, there may be an issue with pricing, qualification, value proposition, or negotiation.',
+            ],
+            [
+                'id' => 'velocidade',
+                'title' => 'Monitor how long sales take',
+                'paragraphs' => [
+                    'Sales cycle time shows how long an opportunity takes to move through the sales process.',
+                    'When certain stages become too slow, this may indicate insufficient follow-up, approval dependencies, or difficulty reaching a decision.',
+                ],
+                'subtitle' => 'Useful questions',
+                'items' => [
+                    'How long does an opportunity remain at each stage?',
+                    'Where do the biggest delays occur?',
+                    'Which types of deals take longer?',
+                    'Are there activities that could accelerate progress?',
+                ],
+            ],
+            [
+                'id' => 'atividades',
+                'title' => 'Analyze sales activities',
+                'paragraphs' => [
+                    'The number of activities alone does not measure quality, but it helps you understand the pace of the operation.',
+                    'Ideally, activities should be evaluated in relation to actual opportunity progress and the results achieved.',
+                ],
+                'subtitle' => 'Important signals include',
+                'items' => [
+                    'Opportunities without a future activity.',
+                    'A large number of overdue tasks.',
+                    'Many activities without stage progression.',
+                    'Too few contacts on important opportunities.',
+                    'Too much administrative work.',
+                ],
+                'box_title' => 'Movement is not the same as progress',
+                'box_text' => 'A team can perform many activities while advancing very few opportunities. The goal is to understand which actions actually create progress.',
+            ],
+            [
+                'id' => 'ganhos',
+                'title' => 'Understand why your team wins',
+                'paragraphs' => [
+                    'Won deals should also be analyzed.',
+                    'Identifying patterns among customers who buy helps improve qualification, approach, positioning, and sales focus.',
+                ],
+                'subtitle' => 'Look for patterns in',
+                'items' => [
+                    'Segments with better conversion rates.',
+                    'Lead sources that perform best.',
+                    'Types of problems being solved.',
+                    'Average time to close.',
+                    'Stages that progress more easily.',
+                ],
+            ],
+            [
+                'id' => 'perdas',
+                'title' => 'Learn from lost opportunities',
+                'paragraphs' => [
+                    'A lost opportunity does not have to be only a negative outcome. It can provide valuable information for improving the process.',
+                    'Recording loss reasons allows you to identify patterns that would remain invisible if every unsuccessful deal were simply marked as “lost”.',
+                ],
+                'subtitle' => 'Common reasons',
+                'items' => [
+                    'Price.',
+                    'Competitor.',
+                    'Timing.',
+                    'Lack of customer priority.',
+                    'Unmet need.',
+                    'No available budget.',
+                    'Deal ended without a decision.',
+                ],
+                'after_list' => 'Loss reasons should be simple enough for the team to record them consistently.',
+            ],
+            [
+                'id' => 'equipe',
+                'title' => 'Evaluate productivity with context',
+                'paragraphs' => [
+                    'Comparing only the number of sales between people can lead to incorrect conclusions.',
+                    'Account portfolio, region, customer type, opportunity value, and deal stage also influence results.',
+                ],
+                'box_title' => 'Use indicators to guide conversations',
+                'box_text' => 'The goal is to understand where each person needs support, training, or better conditions to execute the process.',
+            ],
+            [
+                'id' => 'melhoria',
+                'title' => 'Create a continuous improvement cycle',
+                'paragraphs' => [
+                    'A sales process does not need to remain the same forever.',
+                    'As new data becomes available, you can adjust stages, activities, qualification criteria, and priorities.',
+                ],
+                'subtitle' => 'A simple improvement routine',
+                'items' => [
+                    'Review the data.',
+                    'Identify one specific bottleneck.',
+                    'Choose a small change.',
+                    'Apply it for a period of time.',
+                    'Compare the results.',
+                    'Keep, adjust, or discard the change.',
+                ],
+                'after_list' => 'Avoid changing too many things at once. When everything changes, it becomes difficult to understand what actually produced the result.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'How to track results in Noobstron',
+                'paragraphs' => [
+                    'In Noobstron, the information recorded throughout the sales process provides the foundation for tracking how your operation evolves.',
+                    'Customers, leads, opportunities, activities, values, stages, wins, and losses help build a more complete view of sales performance.',
+                ],
+                'subtitle' => 'Recommended sequence',
+                'items' => [
+                    'Keep opportunities and stages up to date.',
+                    'Record deal values.',
+                    'Complete activities correctly.',
+                    'Record wins and losses.',
+                    'Review stalled opportunities.',
+                    'Look for patterns in conversion and cycle time.',
+                    'Use the data to adjust the process.',
+                ],
+                'example_title' => 'Expected outcome',
+                'example_text' => 'Your team stops working based only on intuition and becomes able to explain where the process is working, where it is getting stuck, and which improvement should be tested next.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist for improving your process',
+        'checklist_description' => 'Check whether your operation already has enough data to begin a continuous improvement cycle.',
+
+        'checklist' => [
+            'The pipeline is up to date.',
+            'Opportunity values are recorded.',
+            'Wins and losses are closed correctly.',
+            'Loss reasons are recorded.',
+            'Overdue activities are monitored.',
+            'Conversion can be measured between stages.',
+            'Process changes are based on evidence.',
+        ],
+
+        'cta' => [
+            'title' => 'Turn sales data into better decisions.',
+            'description' => 'Organize your process, track results, and improve through small changes based on what is actually happening in your operation.',
+            'trial' => 'Start my trial',
+            'previous' => 'View communication guide',
         ],
     ],];

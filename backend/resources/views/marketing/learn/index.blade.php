@@ -246,38 +246,42 @@
         )
 
             @if (in_array(
-                $key,
-                [
-                    'getting_started',
-                    'customers',
-                    'sales',
-                    'follow_up',
-                    'communication',
-                ],
-                true
-            ))
+    $key,
+    [
+        'getting_started',
+        'customers',
+        'sales',
+        'follow_up',
+        'communication',
+        'automation',
+    ],
+    true
+))
 
-                <a
-                    href="{{ route(
-                        match ($key) {
-                            'getting_started' =>
-                                'marketing.learn.getting-started',
+    <a
+        href="{{ route(
+            match ($key) {
+                'getting_started' =>
+                    'marketing.learn.getting-started',
 
-                            'customers' =>
-                                'marketing.learn.customers',
+                'customers' =>
+                    'marketing.learn.customers',
 
-                            'sales' =>
-                                'marketing.learn.sales',
+                'sales' =>
+                    'marketing.learn.sales',
 
-                            'follow_up' =>
-                                'marketing.learn.follow-up',
+                'follow_up' =>
+                    'marketing.learn.follow-up',
 
-                            'communication' =>
-                                'marketing.learn.communication',
-                        }
-                    ) }}"
-                    class="learn-card"
-                >
+                'communication' =>
+                    'marketing.learn.communication',
+
+                'automation' =>
+                    'marketing.learn.results',
+            }
+        ) }}"
+        class="learn-card"
+    >
 
                     <span class="learn-card-number">
                         {{ $card['number'] }}
