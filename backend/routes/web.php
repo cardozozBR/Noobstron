@@ -171,6 +171,17 @@ Route::get('/aprender/rotina-comercial', function () {
     )
     ->name('marketing.learn.routine');
 
+Route::get('/aprender/ia-no-processo-comercial', function () {
+    return view('marketing.learn.ai');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.ai');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -271,6 +282,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.routine'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.ai'),
             'weekly',
             '0.9',
         ],

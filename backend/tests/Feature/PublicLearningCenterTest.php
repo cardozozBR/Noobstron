@@ -18,7 +18,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Centralize a comunicação')
             ->assertSee('Acompanhe resultados e evolua')
             ->assertSee('Automatize e escale')
-            ->assertSee('Organize sua rotina comercial');
+            ->assertSee('Organize sua rotina comercial')
+            ->assertSee('Use IA no processo comercial');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -109,6 +110,15 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_ai_guide_is_public(): void
+    {
+        $this->get('/aprender/ia-no-processo-comercial')
+            ->assertOk()
+            ->assertSee(
+                'Como usar IA no processo comercial'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -121,7 +131,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/centralizar-comunicacao', false)
             ->assertSee('/aprender/resultados-e-evolucao', false)
             ->assertSee('/aprender/automatize-e-escale', false)
-            ->assertSee('/aprender/rotina-comercial', false);
+            ->assertSee('/aprender/rotina-comercial', false)
+            ->assertSee('/aprender/ia-no-processo-comercial', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -160,6 +171,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.routine'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.ai'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -208,7 +223,7 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            1119,
+            1271,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -423,4 +438,31 @@ class PublicLearningCenterTest extends TestCase
         }
     }
 
+    public function test_ai_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como usar IA no processo comercial.',
+
+            'en' =>
+                'How to use AI in your sales process.',
+
+            'es' =>
+                'Cómo usar IA en tu proceso comercial.',
+
+            'zh-CN' =>
+                '如何在销售流程中使用人工智能。',
+
+            'ja' =>
+                '営業プロセスでAIを活用する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/ia-no-processo-comercial')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
 }

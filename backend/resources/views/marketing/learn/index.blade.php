@@ -259,6 +259,7 @@
                     'results',
                     'automation',
                     'routine',
+                    'ai',
                 ],
                 true
             ))
@@ -289,6 +290,9 @@
 
                             'routine' =>
                                 'marketing.learn.routine',
+
+                            'ai' =>
+                                'marketing.learn.ai',
                         }
                     ) }}"
                     class="learn-card"
