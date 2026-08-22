@@ -41,7 +41,7 @@ return [
                 'number' => '05',
                 'title' => 'Centralize a comunicação',
                 'description' => 'Conecte e-mail, WhatsApp e conversas ao contexto dos seus clientes.',
-                'action' => 'Em breve',
+                'action' => 'Abrir guia →',
             ],
             'automation' => [
                 'number' => '06',
@@ -891,5 +891,196 @@ return [
             'description' => 'Organize atividades, mantenha próximos passos claros e reduza as oportunidades perdidas por falta de acompanhamento.',
             'trial' => 'Começar meu trial',
             'previous' => 'Ver guia de processo de vendas',
+        ],
+    ],
+    'communication' => [
+        'meta_title' => 'Como centralizar a comunicação com clientes — Noobstron',
+        'meta_description' => 'Aprenda como organizar e-mail, WhatsApp, histórico, contexto e templates para melhorar a comunicação com clientes.',
+
+        'back' => '← Central de Aprendizado',
+        'eyebrow' => 'Guia 05 • Comunicação com clientes',
+        'title' => 'Como centralizar a comunicação com seus clientes.',
+        'lead' => 'Quando conversas ficam espalhadas entre e-mail, WhatsApp e diferentes pessoas da equipe, o contexto se perde. Neste guia, você vai aprender a organizar a comunicação para que todos saibam o que já foi conversado e qual deve ser o próximo passo.',
+
+        'nav_title' => 'Neste guia',
+
+        'nav' => [
+            'problema' => '1. Entenda o problema',
+            'canais' => '2. Organize os canais',
+            'contexto' => '3. Mantenha contexto',
+            'email' => '4. Organize o e-mail',
+            'whatsapp' => '5. Organize o WhatsApp',
+            'templates' => '6. Padronize mensagens',
+            'historico' => '7. Preserve o histórico',
+            'responsaveis' => '8. Defina responsáveis',
+            'boas-praticas' => '9. Evite erros comuns',
+            'noobstron' => '10. Como aplicar no Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'problema',
+                'title' => 'Entenda o problema da comunicação espalhada',
+                'paragraphs' => [
+                    'Quando cada vendedor usa sua própria caixa de e-mail, WhatsApp e anotações, grande parte do relacionamento com o cliente fica presa em conversas individuais.',
+                    'Isso dificulta continuidade, gestão e colaboração, principalmente quando outra pessoa precisa assumir o atendimento.',
+                ],
+                'box_title' => 'Comunicação sem contexto gera retrabalho',
+                'box_text' => 'O cliente não deveria precisar repetir toda a história sempre que fala com alguém diferente da empresa.',
+            ],
+            [
+                'id' => 'canais',
+                'title' => 'Organize os canais de comunicação',
+                'paragraphs' => [
+                    'Cada canal pode ter um papel diferente no relacionamento com o cliente.',
+                    'O importante é evitar que informações relevantes fiquem completamente separadas do cadastro e do processo comercial.',
+                ],
+                'subtitle' => 'Canais comuns',
+                'items' => [
+                    'E-mail.',
+                    'WhatsApp.',
+                    'Telefone.',
+                    'Reuniões.',
+                    'Formulários do site.',
+                    'Outros canais utilizados pela operação.',
+                ],
+                'after_list' => 'Você não precisa eliminar canais. Precisa garantir que o contexto importante consiga chegar ao restante da equipe.',
+            ],
+            [
+                'id' => 'contexto',
+                'title' => 'Mantenha a comunicação ligada ao contexto',
+                'paragraphs' => [
+                    'Uma mensagem isolada diz pouco. A mesma mensagem ligada ao cliente, à oportunidade e ao histórico comercial passa a ter muito mais valor.',
+                    'Sempre que possível, conecte a comunicação ao registro que explica por que aquela conversa está acontecendo.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Uma resposta sobre preço faz muito mais sentido quando a equipe consegue ver a proposta enviada, a oportunidade relacionada e as atividades anteriores.',
+            ],
+            [
+                'id' => 'email',
+                'title' => 'Organize o uso do e-mail',
+                'paragraphs' => [
+                    'O e-mail continua sendo um canal importante para propostas, documentos, confirmações e comunicações formais.',
+                    'O problema aparece quando decisões importantes ficam apenas em caixas de entrada pessoais.',
+                ],
+                'subtitle' => 'Boas práticas',
+                'items' => [
+                    'Use assuntos claros.',
+                    'Mantenha o cliente identificado.',
+                    'Evite informações críticas apenas em caixas pessoais.',
+                    'Registre decisões importantes no contexto comercial.',
+                    'Use templates quando mensagens se repetem.',
+                ],
+            ],
+            [
+                'id' => 'whatsapp',
+                'title' => 'Organize conversas no WhatsApp',
+                'paragraphs' => [
+                    'O WhatsApp é rápido e conveniente, mas também pode fragmentar muito o histórico quando cada conversa fica somente no aparelho de uma pessoa.',
+                    'Mensagens importantes devem continuar conectadas ao relacionamento com o cliente sempre que possível.',
+                ],
+                'box_title' => 'Rapidez sem organização vira dependência',
+                'box_text' => 'Se apenas uma pessoa sabe o que foi conversado pelo WhatsApp, a empresa fica dependente daquela pessoa para continuar o atendimento.',
+            ],
+            [
+                'id' => 'templates',
+                'title' => 'Padronize mensagens repetitivas',
+                'paragraphs' => [
+                    'Templates ajudam a ganhar velocidade e manter qualidade em mensagens que seguem uma estrutura parecida.',
+                    'Eles não devem transformar a comunicação em algo robótico. O ideal é usar uma base pronta e adaptar ao contexto do cliente.',
+                ],
+                'subtitle' => 'Templates podem ajudar em',
+                'items' => [
+                    'Primeiro contato.',
+                    'Confirmação de reunião.',
+                    'Envio de proposta.',
+                    'Follow-up.',
+                    'Solicitação de documentos.',
+                    'Retorno após atendimento.',
+                ],
+                'after_list' => 'Revise templates periodicamente para garantir que continuem claros e atuais.',
+            ],
+            [
+                'id' => 'historico',
+                'title' => 'Preserve o histórico de relacionamento',
+                'paragraphs' => [
+                    'O histórico permite que a equipe entenda como o relacionamento evoluiu ao longo do tempo.',
+                    'Isso é especialmente importante quando existem vários contatos, diferentes responsáveis ou negociações recorrentes.',
+                ],
+                'example_title' => 'Exemplo',
+                'example_text' => 'Antes de responder um cliente, uma pessoa pode consultar mensagens anteriores, propostas, atividades e decisões para evitar respostas contraditórias.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Defina responsabilidades na comunicação',
+                'paragraphs' => [
+                    'Quando várias pessoas podem responder ao mesmo cliente, é importante saber quem está conduzindo aquele contato.',
+                    'Responsabilidade clara reduz respostas duplicadas e evita que mensagens importantes fiquem sem retorno.',
+                ],
+                'subtitle' => 'Defina principalmente',
+                'items' => [
+                    'Quem responde primeiro.',
+                    'Quem acompanha o relacionamento.',
+                    'Quem assume quando o responsável está ausente.',
+                    'Quando uma conversa deve ser escalada.',
+                ],
+            ],
+            [
+                'id' => 'boas-praticas',
+                'title' => 'Evite erros comuns na comunicação',
+                'paragraphs' => [
+                    'Centralizar não significa apenas juntar mensagens. É preciso manter um padrão de uso que preserve clareza e contexto.',
+                ],
+                'subtitle' => 'Erros que vale evitar',
+                'items' => [
+                    'Responder sem consultar o histórico.',
+                    'Manter decisões importantes somente em conversas privadas.',
+                    'Usar templates sem adaptar ao cliente.',
+                    'Enviar mensagens duplicadas por falta de responsável.',
+                    'Deixar mensagens sem próximo passo.',
+                    'Misturar vários assuntos diferentes na mesma conversa sem contexto.',
+                ],
+                'after_list' => 'A melhor comunicação é aquela que permanece compreensível para o cliente e para a equipe.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Como aplicar comunicação centralizada no Noobstron',
+                'paragraphs' => [
+                    'No Noobstron, a comunicação pode ser organizada junto ao contexto comercial de clientes, atividades e oportunidades.',
+                    'E-mail, WhatsApp, templates e histórico podem trabalhar em conjunto para reduzir perda de contexto e melhorar continuidade.',
+                ],
+                'subtitle' => 'Sequência recomendada',
+                'items' => [
+                    'Organize o cadastro do cliente.',
+                    'Mantenha contatos e canais atualizados.',
+                    'Use e-mail e WhatsApp de forma conectada ao contexto.',
+                    'Registre atividades importantes.',
+                    'Utilize templates para mensagens recorrentes.',
+                    'Consulte o histórico antes de novos contatos.',
+                    'Defina o próximo passo após conversas relevantes.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Qualquer pessoa autorizada deve conseguir entender rapidamente o que já foi conversado, quem está conduzindo o relacionamento e qual ação precisa acontecer depois.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de uma comunicação organizada',
+        'checklist_description' => 'Confira se sua equipe consegue manter contexto mesmo quando o cliente usa diferentes canais.',
+
+        'checklist' => [
+            'Canais principais estão identificados.',
+            'Informações importantes não ficam somente em conversas privadas.',
+            'Histórico pode ser consultado pela equipe autorizada.',
+            'Responsáveis pela comunicação estão claros.',
+            'Templates são usados com personalização.',
+            'Mensagens importantes geram próximos passos.',
+            'Cliente não precisa repetir o contexto a cada novo contato.',
+        ],
+
+        'cta' => [
+            'title' => 'Transforme conversas em relacionamento organizado.',
+            'description' => 'Centralize contexto, organize seus canais e facilite a continuidade do atendimento e das vendas.',
+            'trial' => 'Começar meu trial',
+            'previous' => 'Ver guia de follow-up e atividades',
         ],
     ],];

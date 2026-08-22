@@ -41,7 +41,7 @@ return [
                 'number' => '05',
                 'title' => 'Centraliza la comunicación',
                 'description' => 'Conecta correo, WhatsApp y conversaciones con el contexto de tus clientes.',
-                'action' => 'Próximamente',
+                'action' => 'Abrir guía →',
             ],
             'automation' => [
                 'number' => '06',
@@ -888,5 +888,196 @@ return [
             'description' => 'Organiza actividades, mantén claros los próximos pasos y reduce oportunidades perdidas por falta de seguimiento.',
             'trial' => 'Comenzar mi prueba',
             'previous' => 'Ver guía del proceso de ventas',
+        ],
+    ],
+    'communication' => [
+        'meta_title' => 'Cómo centralizar la comunicación con clientes — Noobstron',
+        'meta_description' => 'Aprende cómo organizar correo electrónico, WhatsApp, historial, contexto y plantillas para mejorar la comunicación con clientes.',
+
+        'back' => '← Centro de Aprendizaje',
+        'eyebrow' => 'Guía 05 • Comunicación con clientes',
+        'title' => 'Cómo centralizar la comunicación con tus clientes.',
+        'lead' => 'Cuando las conversaciones quedan dispersas entre correo electrónico, WhatsApp y diferentes personas del equipo, el contexto se pierde. En esta guía aprenderás a organizar la comunicación para que todos sepan qué se ha hablado y cuál debe ser el próximo paso.',
+
+        'nav_title' => 'En esta guía',
+
+        'nav' => [
+            'problema' => '1. Entiende el problema',
+            'canais' => '2. Organiza los canales',
+            'contexto' => '3. Mantén el contexto',
+            'email' => '4. Organiza el correo electrónico',
+            'whatsapp' => '5. Organiza WhatsApp',
+            'templates' => '6. Estandariza mensajes',
+            'historico' => '7. Conserva el historial',
+            'responsaveis' => '8. Define responsables',
+            'boas-praticas' => '9. Evita errores comunes',
+            'noobstron' => '10. Cómo aplicarlo en Noobstron',
+        ],
+
+        'sections' => [
+            [
+                'id' => 'problema',
+                'title' => 'Entiende el problema de la comunicación dispersa',
+                'paragraphs' => [
+                    'Cuando cada vendedor utiliza su propia bandeja de correo, WhatsApp y notas, gran parte de la relación con el cliente queda atrapada en conversaciones individuales.',
+                    'Esto dificulta la continuidad, la gestión y la colaboración, especialmente cuando otra persona necesita asumir la atención.',
+                ],
+                'box_title' => 'La comunicación sin contexto genera retrabajo',
+                'box_text' => 'El cliente no debería tener que repetir toda su historia cada vez que habla con una persona diferente de la empresa.',
+            ],
+            [
+                'id' => 'canais',
+                'title' => 'Organiza los canales de comunicación',
+                'paragraphs' => [
+                    'Cada canal puede tener un papel diferente en la relación con el cliente.',
+                    'Lo importante es evitar que la información relevante quede completamente separada del registro del cliente y del proceso comercial.',
+                ],
+                'subtitle' => 'Canales comunes',
+                'items' => [
+                    'Correo electrónico.',
+                    'WhatsApp.',
+                    'Teléfono.',
+                    'Reuniones.',
+                    'Formularios del sitio web.',
+                    'Otros canales utilizados por la operación.',
+                ],
+                'after_list' => 'No necesitas eliminar canales. Necesitas garantizar que el contexto importante pueda llegar al resto del equipo.',
+            ],
+            [
+                'id' => 'contexto',
+                'title' => 'Mantén la comunicación conectada con el contexto',
+                'paragraphs' => [
+                    'Un mensaje aislado dice poco. El mismo mensaje conectado con el cliente, la oportunidad y el historial comercial adquiere mucho más valor.',
+                    'Siempre que sea posible, conecta la comunicación con el registro que explica por qué está ocurriendo esa conversación.',
+                ],
+                'example_title' => 'Ejemplo',
+                'example_text' => 'Una respuesta sobre precio tiene mucho más sentido cuando el equipo puede ver la propuesta enviada, la oportunidad relacionada y las actividades anteriores.',
+            ],
+            [
+                'id' => 'email',
+                'title' => 'Organiza el uso del correo electrónico',
+                'paragraphs' => [
+                    'El correo electrónico continúa siendo un canal importante para propuestas, documentos, confirmaciones y comunicaciones formales.',
+                    'El problema aparece cuando las decisiones importantes quedan únicamente en bandejas personales.',
+                ],
+                'subtitle' => 'Buenas prácticas',
+                'items' => [
+                    'Utiliza asuntos claros.',
+                    'Mantén identificado al cliente.',
+                    'Evita dejar información crítica solamente en bandejas personales.',
+                    'Registra decisiones importantes dentro del contexto comercial.',
+                    'Utiliza plantillas cuando los mensajes se repiten.',
+                ],
+            ],
+            [
+                'id' => 'whatsapp',
+                'title' => 'Organiza las conversaciones de WhatsApp',
+                'paragraphs' => [
+                    'WhatsApp es rápido y cómodo, pero también puede fragmentar mucho el historial cuando cada conversación queda solamente en el dispositivo de una persona.',
+                    'Los mensajes importantes deberían continuar conectados con la relación del cliente siempre que sea posible.',
+                ],
+                'box_title' => 'La velocidad sin organización genera dependencia',
+                'box_text' => 'Si solamente una persona sabe qué se habló por WhatsApp, la empresa depende de esa persona para continuar la atención.',
+            ],
+            [
+                'id' => 'templates',
+                'title' => 'Estandariza los mensajes repetitivos',
+                'paragraphs' => [
+                    'Las plantillas ayudan a ganar velocidad y mantener calidad cuando los mensajes siguen una estructura parecida.',
+                    'No deberían transformar la comunicación en algo robótico. Lo ideal es utilizar una base preparada y adaptarla al contexto del cliente.',
+                ],
+                'subtitle' => 'Las plantillas pueden ayudar en',
+                'items' => [
+                    'Primer contacto.',
+                    'Confirmación de reunión.',
+                    'Envío de propuesta.',
+                    'Seguimiento.',
+                    'Solicitud de documentos.',
+                    'Retorno después de la atención.',
+                ],
+                'after_list' => 'Revisa las plantillas periódicamente para garantizar que sigan siendo claras y actuales.',
+            ],
+            [
+                'id' => 'historico',
+                'title' => 'Conserva el historial de la relación',
+                'paragraphs' => [
+                    'El historial permite al equipo entender cómo evolucionó la relación a lo largo del tiempo.',
+                    'Esto es especialmente importante cuando existen varios contactos, diferentes responsables o negociaciones recurrentes.',
+                ],
+                'example_title' => 'Ejemplo',
+                'example_text' => 'Antes de responder a un cliente, una persona puede revisar mensajes anteriores, propuestas, actividades y decisiones para evitar respuestas contradictorias.',
+            ],
+            [
+                'id' => 'responsaveis',
+                'title' => 'Define responsabilidades en la comunicación',
+                'paragraphs' => [
+                    'Cuando varias personas pueden responder al mismo cliente, es importante saber quién está conduciendo ese contacto.',
+                    'Una responsabilidad clara reduce respuestas duplicadas y evita que mensajes importantes queden sin respuesta.',
+                ],
+                'subtitle' => 'Define principalmente',
+                'items' => [
+                    'Quién responde primero.',
+                    'Quién acompaña la relación.',
+                    'Quién asume cuando el responsable no está disponible.',
+                    'Cuándo una conversación debe escalarse.',
+                ],
+            ],
+            [
+                'id' => 'boas-praticas',
+                'title' => 'Evita errores comunes en la comunicación',
+                'paragraphs' => [
+                    'Centralizar no significa simplemente reunir mensajes. También es necesario mantener un estándar de uso que preserve claridad y contexto.',
+                ],
+                'subtitle' => 'Errores que conviene evitar',
+                'items' => [
+                    'Responder sin consultar el historial.',
+                    'Mantener decisiones importantes solamente en conversaciones privadas.',
+                    'Utilizar plantillas sin adaptarlas al cliente.',
+                    'Enviar mensajes duplicados por falta de responsable.',
+                    'Dejar mensajes sin un próximo paso.',
+                    'Mezclar varios temas diferentes en la misma conversación sin contexto.',
+                ],
+                'after_list' => 'La mejor comunicación es aquella que permanece comprensible tanto para el cliente como para el equipo.',
+            ],
+            [
+                'id' => 'noobstron',
+                'title' => 'Cómo centralizar la comunicación en Noobstron',
+                'paragraphs' => [
+                    'En Noobstron, la comunicación puede organizarse junto al contexto comercial de clientes, actividades y oportunidades.',
+                    'Correo electrónico, WhatsApp, plantillas e historial pueden trabajar juntos para reducir la pérdida de contexto y mejorar la continuidad.',
+                ],
+                'subtitle' => 'Secuencia recomendada',
+                'items' => [
+                    'Organiza el registro del cliente.',
+                    'Mantén actualizados contactos y canales.',
+                    'Utiliza correo electrónico y WhatsApp conectados con el contexto correspondiente.',
+                    'Registra actividades importantes.',
+                    'Utiliza plantillas para mensajes recurrentes.',
+                    'Consulta el historial antes de realizar nuevos contactos.',
+                    'Define el próximo paso después de conversaciones relevantes.',
+                ],
+                'example_title' => 'Resultado esperado',
+                'example_text' => 'Cualquier persona autorizada debería poder entender rápidamente qué se ha hablado, quién está conduciendo la relación y qué acción debe ocurrir después.',
+            ],
+        ],
+
+        'checklist_title' => 'Checklist de una comunicación organizada',
+        'checklist_description' => 'Comprueba si tu equipo puede mantener el contexto incluso cuando el cliente utiliza diferentes canales.',
+
+        'checklist' => [
+            'Los principales canales de comunicación están identificados.',
+            'La información importante no queda solamente en conversaciones privadas.',
+            'El equipo autorizado puede consultar el historial.',
+            'Las responsabilidades de comunicación están claras.',
+            'Las plantillas se utilizan con personalización.',
+            'Los mensajes importantes generan próximos pasos.',
+            'El cliente no necesita repetir el contexto en cada nuevo contacto.',
+        ],
+
+        'cta' => [
+            'title' => 'Convierte conversaciones en relaciones organizadas.',
+            'description' => 'Centraliza el contexto, organiza tus canales y facilita la continuidad de la atención y las ventas.',
+            'trial' => 'Comenzar mi prueba',
+            'previous' => 'Ver guía de seguimiento y actividades',
         ],
     ],];

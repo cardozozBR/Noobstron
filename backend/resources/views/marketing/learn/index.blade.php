@@ -252,6 +252,7 @@
                     'customers',
                     'sales',
                     'follow_up',
+                    'communication',
                 ],
                 true
             ))
@@ -270,6 +271,9 @@
 
                             'follow_up' =>
                                 'marketing.learn.follow-up',
+
+                            'communication' =>
+                                'marketing.learn.communication',
                         }
                     ) }}"
                     class="learn-card"

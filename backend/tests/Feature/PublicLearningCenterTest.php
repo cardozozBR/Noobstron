@@ -14,7 +14,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Primeiros passos com o Noobstron')
             ->assertSee('Organize seus clientes')
             ->assertSee('Estruture seu processo de vendas')
-            ->assertSee('Melhore seu follow-up');
+            ->assertSee('Melhore seu follow-up')
+            ->assertSee('Centralize a comunicação');
     }
 
     public function test_getting_started_guide_is_public(): void
@@ -57,6 +58,21 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_communication_guide_is_public(): void
+    {
+        $this->get('/aprender/centralizar-comunicacao')
+            ->assertOk()
+            ->assertSee(
+                'Como centralizar a comunicação com seus clientes'
+            )
+            ->assertSee(
+                'Entenda o problema da comunicação espalhada'
+            )
+            ->assertSee(
+                'Como aplicar comunicação centralizada no Noobstron'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -65,7 +81,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/primeiros-passos', false)
             ->assertSee('/aprender/organizar-clientes', false)
             ->assertSee('/aprender/processo-de-vendas', false)
-            ->assertSee('/aprender/follow-up-e-atividades', false);
+            ->assertSee('/aprender/follow-up-e-atividades', false)
+            ->assertSee('/aprender/centralizar-comunicacao', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -88,6 +105,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.follow-up'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.communication'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -136,7 +157,7 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            569,
+            691,
             $baseKeys,
             'A quantidade de chaves do learn.php pt-BR mudou.'
         );
@@ -166,10 +187,7 @@ class PublicLearningCenterTest extends TestCase
 
         foreach ($cases as $locale => $expected) {
             $this
-                ->withHeader(
-                    'Accept-Language',
-                    $locale
-                )
+                ->withHeader('Accept-Language', $locale)
                 ->get('/aprender')
                 ->assertOk()
                 ->assertSee($expected);
@@ -188,10 +206,7 @@ class PublicLearningCenterTest extends TestCase
 
         foreach ($cases as $locale => $expected) {
             $this
-                ->withHeader(
-                    'Accept-Language',
-                    $locale
-                )
+                ->withHeader('Accept-Language', $locale)
                 ->get('/aprender/organizar-clientes')
                 ->assertOk()
                 ->assertSee($expected);
@@ -210,10 +225,7 @@ class PublicLearningCenterTest extends TestCase
 
         foreach ($cases as $locale => $expected) {
             $this
-                ->withHeader(
-                    'Accept-Language',
-                    $locale
-                )
+                ->withHeader('Accept-Language', $locale)
                 ->get('/aprender/processo-de-vendas')
                 ->assertOk()
                 ->assertSee($expected);
@@ -241,11 +253,36 @@ class PublicLearningCenterTest extends TestCase
 
         foreach ($cases as $locale => $expected) {
             $this
-                ->withHeader(
-                    'Accept-Language',
-                    $locale
-                )
+                ->withHeader('Accept-Language', $locale)
                 ->get('/aprender/follow-up-e-atividades')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
+    public function test_communication_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como centralizar a comunicação com seus clientes.',
+
+            'en' =>
+                'How to centralize communication with your customers.',
+
+            'es' =>
+                'Cómo centralizar la comunicación con tus clientes.',
+
+            'zh-CN' =>
+                '如何集中管理与客户的沟通。',
+
+            'ja' =>
+                '顧客とのコミュニケーションを一元管理する方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/centralizar-comunicacao')
                 ->assertOk()
                 ->assertSee($expected);
         }
