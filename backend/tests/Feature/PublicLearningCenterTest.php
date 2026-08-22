@@ -16,6 +16,7 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('Estruture seu processo de vendas')
             ->assertSee('Melhore seu follow-up')
             ->assertSee('Centralize a comunicação')
+            ->assertSee('Acompanhe resultados e evolua')
             ->assertSee('Automatize e escale');
     }
 
@@ -89,6 +90,15 @@ class PublicLearningCenterTest extends TestCase
             );
     }
 
+    public function test_automation_guide_is_public(): void
+    {
+        $this->get('/aprender/automatize-e-escale')
+            ->assertOk()
+            ->assertSee(
+                'Como automatizar e escalar seu processo comercial'
+            );
+    }
+
     public function test_learning_pages_are_in_sitemap(): void
     {
         $this->get('/sitemap.xml')
@@ -99,7 +109,8 @@ class PublicLearningCenterTest extends TestCase
             ->assertSee('/aprender/processo-de-vendas', false)
             ->assertSee('/aprender/follow-up-e-atividades', false)
             ->assertSee('/aprender/centralizar-comunicacao', false)
-            ->assertSee('/aprender/resultados-e-evolucao', false);
+            ->assertSee('/aprender/resultados-e-evolucao', false)
+            ->assertSee('/aprender/automatize-e-escale', false);
     }
 
     public function test_learning_center_links_to_published_guides(): void
@@ -130,6 +141,10 @@ class PublicLearningCenterTest extends TestCase
             )
             ->assertSee(
                 route('marketing.learn.results'),
+                false
+            )
+            ->assertSee(
+                route('marketing.learn.automation'),
                 false
             )
             ->assertSee('Abrir guia');
@@ -178,10 +193,10 @@ class PublicLearningCenterTest extends TestCase
         $baseKeys = $flatten($base);
 
         $this->assertCount(
-            820,
-            $baseKeys,
-            'A quantidade de chaves do learn.php pt-BR mudou.'
-        );
+    962,
+    $baseKeys,
+    'A quantidade de chaves do learn.php pt-BR mudou.'
+);
 
         foreach ($locales as $locale) {
             $data = require lang_path(
@@ -332,6 +347,34 @@ class PublicLearningCenterTest extends TestCase
             $this
                 ->withHeader('Accept-Language', $locale)
                 ->get('/aprender/resultados-e-evolucao')
+                ->assertOk()
+                ->assertSee($expected);
+        }
+    }
+
+    public function test_automation_guide_renders_in_supported_locales(): void
+    {
+        $cases = [
+            'pt-BR' =>
+                'Como automatizar e escalar seu processo comercial.',
+
+            'en' =>
+                'How to automate and scale your sales process.',
+
+            'es' =>
+                'Cómo automatizar y escalar tu proceso comercial.',
+
+            'zh-CN' =>
+                '如何自动化并扩展销售流程。',
+
+            'ja' =>
+                '営業プロセスを自動化し、スケールする方法。',
+        ];
+
+        foreach ($cases as $locale => $expected) {
+            $this
+                ->withHeader('Accept-Language', $locale)
+                ->get('/aprender/automatize-e-escale')
                 ->assertOk()
                 ->assertSee($expected);
         }

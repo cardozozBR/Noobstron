@@ -149,6 +149,17 @@ Route::get('/aprender/resultados-e-evolucao', function () {
     )
     ->name('marketing.learn.results');
 
+Route::get('/aprender/automatize-e-escale', function () {
+    return view('marketing.learn.automation');
+})
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware(
+        \App\Http\Middleware\PublicLocale::class
+    )
+    ->name('marketing.learn.automation');
+
 Route::get('/terms', function () {
     return view('marketing.legal', [
         'document' => 'terms',
@@ -239,6 +250,11 @@ Route::get('/sitemap.xml', function () {
         ],
         [
             route('marketing.learn.results'),
+            'weekly',
+            '0.9',
+        ],
+        [
+            route('marketing.learn.automation'),
             'weekly',
             '0.9',
         ],
