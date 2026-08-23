@@ -523,9 +523,21 @@ private function processSubscriptionDeleted(
         return;
     }
 
+    $canceledAt =
+        $stripeSubscription['canceled_at']
+        ?? null;
+
     $subscription->forceFill([
         'status' =>
             \App\Enums\SubscriptionStatus::CANCELLED,
+        'cancel_at' => null,
+        'canceled_at' =>
+            is_numeric($canceledAt)
+                ? CarbonImmutable::createFromTimestampUTC(
+                    (int) $canceledAt
+                )
+                : ($subscription->canceled_at
+                    ?? CarbonImmutable::now('UTC')),
     ])->save();
 }
 
@@ -572,6 +584,19 @@ private function processSubscriptionUpdated(
     $cancelAt =
         $stripeSubscription['cancel_at']
         ?? null;
+
+    if (
+        ! is_numeric($cancelAt)
+        && ($stripeSubscription['cancel_at_period_end'] ?? false) === true
+    ) {
+        $periodEnd =
+            $stripeSubscription['current_period_end']
+            ?? null;
+
+        if (is_numeric($periodEnd)) {
+            $cancelAt = $periodEnd;
+        }
+    }
 
     $canceledAt =
         $stripeSubscription['canceled_at']

@@ -42,10 +42,18 @@
 
         $trialEndsAt = $tenant->trial_ends_at;
 
+        $isSubscriptionActive =
+            isset($isActive)
+                ? $isActive
+                : $subscription->status->value === 'active';
+
+        $isCurrentPaidSubscription =
+            $isPaid && $isSubscriptionActive;
+
         $trialActive =
-    ! $isPaid
-    && $trialEndsAt !== null
-    && now()->lessThan($trialEndsAt);
+            ! $isPaid
+            && $trialEndsAt !== null
+            && now()->lessThan($trialEndsAt);
 
         $trialDaysRemaining = $trialActive
             ? max(
@@ -66,22 +74,21 @@
             )
             : null;
 
-           $subscriptionStatusLabel = match (
-    $subscription->status->value
-) {
-    'active' => $subscription->cancel_at !== null
-        ? __('billing.status.active_until', [
-            'date' => $subscription->cancel_at->format('d/m/Y'),
-        ])
-        : __('billing.status.active'),
-    'suspended' => __('billing.status.suspended'),
-    'cancelled' => __('billing.status.cancelled'),
-    'expired' => __('billing.status.expired'),
-    default => ucfirst(
-        $subscription->status->value
-    ),
-};
-
+        $subscriptionStatusLabel = match (
+            $subscription->status->value
+        ) {
+            'active' => $subscription->cancel_at !== null
+                ? __('billing.status.active_until', [
+                    'date' => $subscription->cancel_at->format('d/m/Y'),
+                ])
+                : __('billing.status.active'),
+            'suspended' => __('billing.status.suspended'),
+            'cancelled' => __('billing.status.cancelled'),
+            'expired' => __('billing.status.expired'),
+            default => ucfirst(
+                $subscription->status->value
+            ),
+        };
     @endphp
 
     <div class="billing-grid">
@@ -119,23 +126,23 @@
                         {{ __('billing.subscription_status') }}
                     </span>
 
-                   <strong>
-    {{ $subscriptionStatusLabel }}
-</strong>
+                    <strong>
+                        {{ $subscriptionStatusLabel }}
+                    </strong>
                 </div>
 
-@if ($subscription->cancel_at !== null)
-    <div>
-        <span class="billing-label">
-            {{ __('billing.cancellation') }}
-        </span>
+                @if ($isSubscriptionActive && $subscription->cancel_at !== null)
+                    <div>
+                        <span class="billing-label">
+                            {{ __('billing.cancellation') }}
+                        </span>
 
-        <strong>
-            {{ __('billing.scheduled_for') }}
-            {{ $subscription->cancel_at->format('d/m/Y H:i') }}
-        </strong>
-    </div>
-@endif
+                        <strong>
+                            {{ __('billing.scheduled_for') }}
+                            {{ $subscription->cancel_at->format('d/m/Y H:i') }}
+                        </strong>
+                    </div>
+                @endif
 
                 <div>
                     <span class="billing-label">
@@ -155,12 +162,12 @@
 
                         <strong>
                             {{
-    match ($subscription->payment_provider) {
-        'stripe' => 'Stripe',
-        'mercado_pago' => 'Mercado Pago',
-        default => $subscription->payment_provider,
-    }
-}}
+                                match ($subscription->payment_provider) {
+                                    'stripe' => 'Stripe',
+                                    'mercado_pago' => 'Mercado Pago',
+                                    default => $subscription->payment_provider,
+                                }
+                            }}
                         </strong>
                     </div>
 
@@ -198,73 +205,85 @@
                     </span>
 
                     <h2>
-    @if ($isPaid)
-        {{ __('billing.subscription_activated') }}
-    @elseif ($trialActive)
-        {{ __('billing.trial_active') }}
-    @else
-        {{ __('billing.trial_ended') }}
-    @endif
-</h2>
+                        @if ($isCurrentPaidSubscription)
+                            {{ __('billing.subscription_activated') }}
+                        @elseif ($isPaid)
+                            {{ $subscriptionStatusLabel }}
+                        @elseif ($trialActive)
+                            {{ __('billing.trial_active') }}
+                        @else
+                            {{ __('billing.trial_ended') }}
+                        @endif
+                    </h2>
                 </div>
             </div>
 
-            @if ($isPaid)
-    <p>
-        {{ __('billing.trial_converted') }}
-    </p>
+            @if ($isCurrentPaidSubscription)
+                <p>
+                    {{ __('billing.trial_converted') }}
+                </p>
 
-    @if ($subscription->paid_at !== null)
-        <p class="form-help">
-            {{ __('billing.subscription_activated') }} em
-            {{ $subscription->paid_at->format('d/m/Y H:i') }}.
-        </p>
-    @endif
-@elseif ($trialActive)
-    <p>
-        {{ __('billing.trial_ends_at') }}
-        <strong>
-            {{ $trialEndsAt->format('d/m/Y') }}
-        </strong>.
-    </p>
+                @if ($subscription->paid_at !== null)
+                    <p class="form-help">
+                        {{ __('billing.subscription_activated') }} em
+                        {{ $subscription->paid_at->format('d/m/Y H:i') }}.
+                    </p>
+                @endif
+            @elseif ($isPaid)
+                <p>
+                    {{ __('billing.payment_registered') }}
+                </p>
 
-    <p class="form-help">
-        {{ __('billing.approximately') }}
-        {{ $trialDaysRemaining }}
-        {{ __('billing.days_remaining') }}
-    </p>
-@else
-    <p>
-        {{ __('billing.trial_already_ended') }}
-    </p>
-@endif
+                @if ($subscription->paid_at !== null)
+                    <p class="form-help">
+                        {{ __('billing.paid_at') }}:
+                        {{ $subscription->paid_at->format('d/m/Y H:i') }}.
+                    </p>
+                @endif
+            @elseif ($trialActive)
+                <p>
+                    {{ __('billing.trial_ends_at') }}
+                    <strong>
+                        {{ $trialEndsAt->format('d/m/Y') }}
+                    </strong>.
+                </p>
+
+                <p class="form-help">
+                    {{ __('billing.approximately') }}
+                    {{ $trialDaysRemaining }}
+                    {{ __('billing.days_remaining') }}
+                </p>
+            @else
+                <p>
+                    {{ __('billing.trial_already_ended') }}
+                </p>
+            @endif
         </div>
     </div>
 
-@if (
-    $isPaid
-    && $subscription->payment_provider === 'stripe'
-)
-    <form
-        method="POST"
-        action="{{ route('billing.portal') }}"
-        class="billing-portal-form"
-    >
-        @csrf
+    @if (
+        $isCurrentPaidSubscription
+        && $subscription->payment_provider === 'stripe'
+    )
+        <form
+            method="POST"
+            action="{{ route('billing.portal') }}"
+            class="billing-portal-form"
+        >
+            @csrf
 
-        <button
-    type="submit"
-    class="btn btn-secondary"
->
-    @if ($subscription->cancel_at !== null)
-        {{ __('billing.manage_billing') }}
-    @else
-        {{ __('billing.manage_subscription') }}
+            <button
+                type="submit"
+                class="btn btn-secondary"
+            >
+                @if ($subscription->cancel_at !== null)
+                    {{ __('billing.manage_billing') }}
+                @else
+                    {{ __('billing.manage_subscription') }}
+                @endif
+            </button>
+        </form>
     @endif
-</button>
-    </form>
-@endif
-
 
     <div class="card billing-payment-card">
         <div class="section-header">
@@ -274,26 +293,30 @@
                 </span>
 
                 <h2>
-                    {{ $isPaid ? __('billing.subscription_paid') : __('billing.subscribe_now') }}
+                    {{
+                        $isCurrentPaidSubscription
+                            ? __('billing.subscription_paid')
+                            : __('billing.subscribe_now')
+                    }}
                 </h2>
 
                 <p>
-    @if ($subscription->cancel_at !== null)
-        {{ __('billing.subscription_active_until') }}
-        <strong>
-            {{ $subscription->cancel_at->format('d/m/Y') }}
-        </strong>.
-        {{ __('billing.ends_after_date') }}
-    @elseif ($isPaid)
-        {{ __('billing.payment_registered') }}
-    @else
-        {{ __('billing.continue_secure_payment') }}
-    @endif
-</p>
+                    @if ($isCurrentPaidSubscription && $subscription->cancel_at !== null)
+                        {{ __('billing.subscription_active_until') }}
+                        <strong>
+                            {{ $subscription->cancel_at->format('d/m/Y') }}
+                        </strong>.
+                        {{ __('billing.ends_after_date') }}
+                    @elseif ($isCurrentPaidSubscription)
+                        {{ __('billing.payment_registered') }}
+                    @else
+                        {{ __('billing.continue_secure_payment') }}
+                    @endif
+                </p>
             </div>
         </div>
 
-        @if (! $isPaid)
+        @if (! $isCurrentPaidSubscription)
             @if ($price === null)
                 <div class="alert alert-error">
                     {{ __('billing.no_price_for_currency') }}
@@ -301,42 +324,42 @@
                 </div>
             @else
                 <form
-    method="POST"
-    action="{{ route('billing.checkout') }}"
->
-    @csrf
+                    method="POST"
+                    action="{{ route('billing.checkout') }}"
+                >
+                    @csrf
 
-    <div class="billing-provider-actions">
-        <button
-            type="submit"
-            name="provider"
-            value="stripe"
-            class="btn btn-primary"
-        >
-            {{ __('billing.pay_with_stripe') }}
-        </button>
+                    <div class="billing-provider-actions">
+                        <button
+                            type="submit"
+                            name="provider"
+                            value="stripe"
+                            class="btn btn-primary"
+                        >
+                            {{ __('billing.pay_with_stripe') }}
+                        </button>
 
-        <button
-            type="submit"
-            name="provider"
-            value="mercado_pago"
-            class="btn btn-secondary"
-        >
-            {{ __('billing.pay_with_mercado_pago') }}
-        </button>
-    </div>
-</form>
+                        <button
+                            type="submit"
+                            name="provider"
+                            value="mercado_pago"
+                            class="btn btn-secondary"
+                        >
+                            {{ __('billing.pay_with_mercado_pago') }}
+                        </button>
+                    </div>
+                </form>
 
-<p class="form-help billing-help">
-    {{ __('billing.provider_help') }}
-</p>
+                <p class="form-help billing-help">
+                    {{ __('billing.provider_help') }}
+                </p>
             @endif
         @endif
     </div>
 @endif
 
 @if (
-    $isPaid
+    $isCurrentPaidSubscription
     && $subscription->payment_provider === 'stripe'
     && isset($availablePlans)
     && $availablePlans->isNotEmpty()
@@ -549,8 +572,7 @@
 @endif
 
 <style>
-
-    .billing-invoices-card {
+.billing-invoices-card {
     margin-top: 20px;
 }
 
@@ -588,18 +610,7 @@
     justify-content: flex-end;
 }
 
-@media (max-width: 800px) {
-    .billing-invoice-item {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .billing-invoice-actions {
-        justify-content: flex-start;
-    }
-}
-
-    .billing-plans-card {
+.billing-plans-card {
     margin-top: 20px;
 }
 
@@ -631,12 +642,6 @@
 .billing-plan-price {
     margin-top: 6px;
     color: #6b7280;
-}
-
-@media (max-width: 800px) {
-    .billing-plan-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .billing-grid {
@@ -692,6 +697,19 @@
 }
 
 @media (max-width: 800px) {
+    .billing-invoice-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .billing-invoice-actions {
+        justify-content: flex-start;
+    }
+
+    .billing-plan-grid {
+        grid-template-columns: 1fr;
+    }
+
     .billing-grid {
         grid-template-columns: 1fr;
     }

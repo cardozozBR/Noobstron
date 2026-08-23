@@ -369,6 +369,50 @@ class StripeSubscriptionWebhookServiceTest extends TestCase
         );
     }
 
+    public function test_subscription_updated_derives_cancel_at_from_period_end(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription(
+            'sub_cancel_period_end_123',
+            'active'
+        );
+
+        $periodEnd = CarbonImmutable::parse(
+            '2026-09-20 23:53:21 UTC'
+        );
+
+        $processed = $this->handle([
+            'type' => 'customer.subscription.updated',
+            'data' => [
+                'object' => [
+                    'id' => 'sub_cancel_period_end_123',
+                    'status' => 'active',
+                    'cancel_at' => null,
+                    'cancel_at_period_end' => true,
+                    'current_period_end' => $periodEnd->timestamp,
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($processed);
+
+        $subscription->refresh();
+
+        $this->assertSame(
+            'active',
+            $subscription->status->value
+        );
+
+        $this->assertSame(
+            '2026-09-20 23:53:21',
+            $subscription
+                ->cancel_at
+                ->utc()
+                ->format('Y-m-d H:i:s')
+        );
+    }
+
     public function test_subscription_updated_clears_scheduled_cancellation(): void
     {
         $this->configureWebhook();

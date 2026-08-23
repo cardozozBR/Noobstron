@@ -79,6 +79,79 @@ class StripeSubscriptionWebhookHttpTest
         );
     }
 
+    public function test_deleted_webhook_cancels_matching_subscription(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription();
+
+        $subscription->forceFill([
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub_http_deleted_123',
+            'paid_at' => CarbonImmutable::parse(
+                '2026-08-20 10:00:00 UTC'
+            ),
+        ])->save();
+
+        $payload = [
+            'type' => 'customer.subscription.deleted',
+            'data' => [
+                'object' => [
+                    'id' => 'sub_http_deleted_123',
+                    'status' => 'canceled',
+                    'canceled_at' => CarbonImmutable::parse(
+                        '2026-08-23 12:00:00 UTC'
+                    )->timestamp,
+                ],
+            ],
+        ];
+
+        $json = json_encode(
+            $payload,
+            JSON_UNESCAPED_SLASHES
+        );
+
+        $response = $this->call(
+            'POST',
+            '/webhooks/subscription/stripe',
+            [],
+            [],
+            [],
+            [
+                'HTTP_STRIPE_SIGNATURE' =>
+                    $this->signature($json),
+                'CONTENT_TYPE' =>
+                    'application/json',
+            ],
+            $json
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'ok' => true,
+            ]);
+
+        $subscription->refresh();
+
+        $this->assertSame(
+            'cancelled',
+            $subscription->status->value
+        );
+
+        $this->assertNull(
+            $subscription->cancel_at
+        );
+
+        $this->assertSame(
+            '2026-08-23 12:00:00',
+            $subscription
+                ->canceled_at
+                ->utc()
+                ->format('Y-m-d H:i:s')
+        );
+    }
+
     public function test_invalid_signature_is_rejected(): void
     {
         $this->configureWebhook();

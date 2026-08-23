@@ -48,6 +48,9 @@ class SubscriptionBillingController extends Controller
         $isPaid = $subscription !== null
             && $billing->isPaid($subscription);
 
+            $isActive = $subscription !== null
+    && $subscription->status === SubscriptionStatus::ACTIVE;
+
             $availablePlans = Plan::query()
     ->where('active', true)
     ->with([
@@ -73,6 +76,7 @@ class SubscriptionBillingController extends Controller
     'tenant' => $tenant,
     'subscription' => $subscription,
     'isPaid' => $isPaid,
+    'isActive' => $isActive,
     'availablePlans' => $availablePlans,
 ]
         );
@@ -324,6 +328,7 @@ class SubscriptionBillingController extends Controller
 
         if (
             $subscription === null
+            || $subscription->status !== SubscriptionStatus::ACTIVE
             || $subscription->payment_provider !== 'stripe'
             || $subscription->paid_at === null
         ) {
