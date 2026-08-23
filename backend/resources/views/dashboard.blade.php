@@ -320,13 +320,13 @@
     <div class="actions">
         @if (auth()->user()->hasPermission(Permission::USERS_VIEW))
             <a class="btn btn-primary" href="{{ route('users.index') }}">
-                {{ __('ui.nav.users') }}
+                {{ __('ui.navigation.users') }}
             </a>
         @endif
 
         @if (auth()->user()->hasPermission(Permission::AUDIT_VIEW))
             <a class="btn btn-secondary" href="{{ route('audit.index') }}">
-                {{ __('ui.nav.audit') }}
+                {{ __('ui.navigation.audit') }}
             </a>
         @endif
     </div>
