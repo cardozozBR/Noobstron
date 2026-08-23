@@ -1,5 +1,5 @@
 @echo off
-docker compose -p nossa-plataforma-rc3 exec -T ^
+docker compose -p nossa-plataforma exec -T ^
   -e APP_ENV=testing ^
   -e DB_CONNECTION=sqlite ^
   -e DB_DATABASE=:memory: ^

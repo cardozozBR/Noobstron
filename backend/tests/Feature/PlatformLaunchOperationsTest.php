@@ -42,12 +42,17 @@ class PlatformLaunchOperationsTest extends TestCase
         ]);
 
         Subscription::query()->create([
-            'tenant_id' => $tenant->id,
-            'plan_id' => $plan->id,
-            'status' => 'active',
-            'current_period_start' => now()->subDay(),
-            'current_period_end' => now()->addMonth(),
-        ]);
+    'tenant_id' => $tenant->id,
+    'plan_id' => $plan->id,
+    'status' => 'active',
+    'payment_provider' => 'stripe',
+    'external_reference' => 'sub_launch_test',
+    'paid_at' => now()->subDay(),
+    'current_period_start' => now()->subDay(),
+    'current_period_end' => now()->addMonth(),
+    'currency' => 'BRL',
+    'amount_minor' => 19900,
+]);
 
         $this->actingAs($admin, 'platform')
             ->get('http://localhost/platform')

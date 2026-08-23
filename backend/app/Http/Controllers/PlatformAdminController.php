@@ -89,15 +89,57 @@ class PlatformAdminController extends Controller
             ->count();
 
         $mrr = (clone $current)
-            ->where('subscriptions.status', 'active')
-            ->join('tenants', 'tenants.id', '=', 'subscriptions.tenant_id')
-            ->join('plan_prices', function ($join): void {
-                $join->on('plan_prices.plan_id', '=', 'subscriptions.plan_id')
-                    ->on('plan_prices.currency', '=', 'tenants.currency');
-            })
-            ->select('plan_prices.currency', DB::raw('SUM(plan_prices.amount_minor) as aggregate'))
-            ->groupBy('plan_prices.currency')
-            ->pluck('aggregate', 'plan_prices.currency');
+    ->where('subscriptions.status', 'active')
+    ->whereNotNull('subscriptions.paid_at')
+    ->join(
+        'tenants',
+        'tenants.id',
+        '=',
+        'subscriptions.tenant_id'
+    )
+    ->leftJoin(
+        'plan_prices',
+        function ($join): void {
+            $join
+                ->on(
+                    'plan_prices.plan_id',
+                    '=',
+                    'subscriptions.plan_id'
+                )
+                ->on(
+                    'plan_prices.currency',
+                    '=',
+                    'tenants.currency'
+                );
+        }
+    )
+    ->selectRaw(
+        '
+        COALESCE(
+            subscriptions.currency,
+            tenants.currency
+        ) as billing_currency,
+        SUM(
+            COALESCE(
+                subscriptions.amount_minor,
+                plan_prices.amount_minor,
+                0
+            )
+        ) as aggregate
+        '
+    )
+    ->groupByRaw(
+        '
+        COALESCE(
+            subscriptions.currency,
+            tenants.currency
+        )
+        '
+    )
+    ->pluck(
+        'aggregate',
+        'billing_currency'
+    );
 
         $usage = [
             'users' => (int) DB::table('users')->count(),

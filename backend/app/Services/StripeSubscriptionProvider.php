@@ -100,7 +100,7 @@ class StripeSubscriptionProvider
             );
         }
 
-            $scheme = parse_url(
+        $scheme = parse_url(
             $returnUrl,
             PHP_URL_SCHEME
         ) ?: 'https';
@@ -177,6 +177,7 @@ class StripeSubscriptionProvider
                 [
                     'subscription_id' =>
                         $subscription->id,
+
                     'exception' =>
                         $exception->getMessage(),
                 ]
@@ -193,8 +194,10 @@ class StripeSubscriptionProvider
                 [
                     'subscription_id' =>
                         $subscription->id,
+
                     'status' =>
                         $response->status(),
+
                     'response' =>
                         $response->json(),
                 ]
@@ -221,6 +224,11 @@ class StripeSubscriptionProvider
                 'Stripe returned an invalid checkout response.'
             );
         }
+
+        $subscription->forceFill([
+            'currency' => $currency,
+            'amount_minor' => (int) $price->amount_minor,
+        ])->save();
 
         return SubscriptionCheckoutResult::success(
             $sessionId,

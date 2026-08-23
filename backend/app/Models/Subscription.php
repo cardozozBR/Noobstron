@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\SubscriptionStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subscription extends Model
 {
@@ -22,6 +21,8 @@ class Subscription extends Model
         'current_period_end',
         'cancel_at',
         'canceled_at',
+        'currency',
+        'amount_minor',
     ];
 
     protected function casts(): array
@@ -33,6 +34,7 @@ class Subscription extends Model
             'current_period_end' => 'immutable_datetime',
             'cancel_at' => 'immutable_datetime',
             'canceled_at' => 'immutable_datetime',
+            'amount_minor' => 'integer',
         ];
     }
 
@@ -49,10 +51,11 @@ class Subscription extends Model
             Plan::class
         );
     }
+
     public function invoices(): HasMany
-{
-    return $this->hasMany(
-        SubscriptionInvoice::class
-    );
-}
+    {
+        return $this->hasMany(
+            SubscriptionInvoice::class
+        );
+    }
 }

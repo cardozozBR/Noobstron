@@ -159,17 +159,22 @@ if ($payerEmail === '') {
         );
 
         if (
-            $providerId === ''
-            || $checkoutUrl === ''
-        ) {
-            return SubscriptionCheckoutResult::failure(
-                'Mercado Pago returned an invalid checkout response.'
-            );
-        }
+    $providerId === ''
+    || $checkoutUrl === ''
+) {
+    return SubscriptionCheckoutResult::failure(
+        'Mercado Pago returned an invalid checkout response.'
+    );
+}
 
-        return SubscriptionCheckoutResult::success(
-            $providerId,
-            $checkoutUrl,
-        );
+$subscription->forceFill([
+    'currency' => $currency,
+    'amount_minor' => (int) $price->amount_minor,
+])->save();
+
+return SubscriptionCheckoutResult::success(
+    $providerId,
+    $checkoutUrl,
+);
     }
 }

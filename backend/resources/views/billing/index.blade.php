@@ -72,14 +72,24 @@
             )
             : 0;
 
-        $amountFormatted = $price
-            ? number_format(
-                $price->amount_minor / 100,
-                2,
-                ',',
-                '.'
-            )
-            : null;
+        $subscriptionAmountMinor =
+    $subscription->amount_minor
+    ?? $price?->amount_minor;
+
+$subscriptionCurrency =
+    $subscription->currency
+    ?? $price?->currency
+    ?? $tenant->currency;
+
+$amountFormatted =
+    $subscriptionAmountMinor !== null
+        ? number_format(
+            $subscriptionAmountMinor / 100,
+            2,
+            ',',
+            '.'
+        )
+        : null;
 
         $subscriptionStatusLabel = match (
             $subscription->status->value
@@ -120,10 +130,10 @@
 
                     <strong>
                         @if ($amountFormatted !== null)
-                            {{ $tenant->currency }}
-                            {{ $amountFormatted }}
+                          {{ $subscriptionCurrency }}
+                          {{ $amountFormatted }}
                         @else
-                            {{ __('billing.not_configured') }}
+                          {{ __('billing.not_configured') }}
                         @endif
                     </strong>
                 </div>

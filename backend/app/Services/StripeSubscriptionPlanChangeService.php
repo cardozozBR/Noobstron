@@ -193,41 +193,49 @@ class StripeSubscriptionPlanChangeService
         }
 
         if (! $updateResponse->successful()) {
-    logger()->warning(
-        'Stripe rejected subscription plan change.',
-        [
-            'subscription_id' =>
-                $subscription->id,
+            logger()->warning(
+                'Stripe rejected subscription plan change.',
+                [
+                    'subscription_id' =>
+                        $subscription->id,
 
-            'stripe_subscription_id' =>
-                $stripeSubscriptionId,
+                    'stripe_subscription_id' =>
+                        $stripeSubscriptionId,
 
-            'stripe_subscription_item_id' =>
-                $subscriptionItemId,
+                    'stripe_subscription_item_id' =>
+                        $subscriptionItemId,
 
-            'target_plan_id' =>
-                $targetPlan->id,
+                    'target_plan_id' =>
+                        $targetPlan->id,
 
-            'stripe_price_id' =>
-                $stripePriceId,
+                    'stripe_price_id' =>
+                        $stripePriceId,
 
-            'status' =>
-                $updateResponse->status(),
+                    'status' =>
+                        $updateResponse->status(),
 
-            'response' =>
-                $updateResponse->json(),
-        ]
-    );
+                    'response' =>
+                        $updateResponse->json(),
+                ]
+            );
 
-    throw new RuntimeException(
-        'Stripe rejected subscription plan change.'
-    );
-}
+            throw new RuntimeException(
+                'Stripe rejected subscription plan change.'
+            );
+        }
 
-        return $this->subscriptions
+        $updatedSubscription = $this->subscriptions
             ->changePlan(
                 $subscription,
                 $targetPlan
             );
+
+        $updatedSubscription->forceFill([
+            'currency' => $currency,
+            'amount_minor' =>
+                (int) $targetPrice->amount_minor,
+        ])->save();
+
+        return $updatedSubscription->refresh();
     }
 }
