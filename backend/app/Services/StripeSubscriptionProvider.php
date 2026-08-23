@@ -100,7 +100,7 @@ class StripeSubscriptionProvider
             );
         }
 
-               $scheme = parse_url(
+            $scheme = parse_url(
             $returnUrl,
             PHP_URL_SCHEME
         ) ?: 'https';
