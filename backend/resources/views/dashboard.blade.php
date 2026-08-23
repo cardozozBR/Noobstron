@@ -243,6 +243,41 @@
         letter-spacing: 0.12em;
     }
 
+    .dashboard-page .billing-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 20px;
+        border: 1px solid #dbeafe;
+        border-radius: 14px;
+        background: #eff6ff;
+    }
+
+    .dashboard-page .billing-banner.is-inactive {
+        border-color: #fde68a;
+        background: #fffbeb;
+    }
+
+    .dashboard-page .billing-banner-copy {
+        min-width: 0;
+    }
+
+    .dashboard-page .billing-banner-title {
+        display: block;
+        margin-bottom: 4px;
+        color: #111827;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .dashboard-page .billing-banner p {
+        margin: 0;
+        color: #4b5563;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
     @media (max-width: 900px) {
         .dashboard-page .dashboard-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -271,6 +306,15 @@
 
         .dashboard-page .page-header h1 {
             font-size: 26px;
+        }
+
+        .dashboard-page .billing-banner {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .dashboard-page .billing-banner .btn {
+            width: 100%;
         }
     }
 
@@ -330,6 +374,63 @@
             </a>
         @endif
     </div>
+</div>
+
+<div
+    class="billing-banner{{ $billingState === 'inactive' ? ' is-inactive' : '' }}"
+>
+    <div class="billing-banner-copy">
+        @if ($billingState === 'trial')
+            <strong class="billing-banner-title">
+                Período de teste ativo
+            </strong>
+
+            <p>
+                @if ($billingPlanName)
+                    Plano selecionado: {{ $billingPlanName }}.
+                @endif
+
+                @if ($trialDaysRemaining !== null)
+                    Restam aproximadamente
+                    {{ $trialDaysRemaining }}
+                    {{ __('billing.days_remaining') }}.
+                @endif
+            </p>
+        @elseif ($billingState === 'active')
+            <strong class="billing-banner-title">
+                Assinatura ativa
+            </strong>
+
+            <p>
+                @if ($billingPlanName)
+                    Seu plano atual é {{ $billingPlanName }}.
+                @endif
+                Gerencie cobrança ou altere seu plano quando precisar.
+            </p>
+        @else
+            <strong class="billing-banner-title">
+                Assinatura inativa
+            </strong>
+
+            <p>
+                Você pode consultar seus dados.
+                Assine novamente para voltar a criar e alterar registros.
+            </p>
+        @endif
+    </div>
+
+    <a
+        class="btn {{ $billingState === 'inactive' ? 'btn-primary' : 'btn-secondary' }}"
+        href="{{ route('billing.index') }}"
+    >
+        @if ($billingState === 'trial')
+            Ver planos
+        @elseif ($billingState === 'active')
+            {{ __('billing.manage_subscription') }}
+        @else
+            Assinar novamente
+        @endif
+    </a>
 </div>
 
 <div class="card">

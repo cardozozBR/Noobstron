@@ -4,11 +4,16 @@ namespace Tests\Feature;
 
 use App\Enums\Feature;
 use App\Enums\Permission as PermissionEnum;
+use App\Enums\SubscriptionStatus;
 use App\Models\Permission;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Services\SubscriptionBillingService;
 use App\Services\TenantContext;
 use App\Support\TenantCapabilities;
+use Carbon\CarbonImmutable;
 use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -511,4 +516,148 @@ class DashboardHttpTest extends TestCase
             route('verification.notice')
         );
     }
+
+    public function test_dashboard_shows_trial_cta_for_unpaid_trial(): void
+    {
+        $tenant = $this->tenant('dashboard-trial-cta');
+        $user = $this->user($tenant, 'dashboard-trial-cta-user');
+
+        $tenant->forceFill([
+            'trial_started_at' =>
+                CarbonImmutable::parse(
+                    '2026-08-20 00:00:00 UTC'
+                ),
+            'trial_ends_at' =>
+                CarbonImmutable::parse(
+                    '2026-08-30 00:00:00 UTC'
+                ),
+        ])->save();
+
+        $this->subscription(
+            $tenant,
+            SubscriptionStatus::ACTIVE
+        );
+
+        CarbonImmutable::setTestNow(
+            CarbonImmutable::parse(
+                '2026-08-23 12:00:00 UTC'
+            )
+        );
+
+        try {
+            $this->dashboard($tenant, $user)
+                ->assertOk()
+                ->assertSee('Período de teste ativo')
+                ->assertSee('Ver planos');
+        } finally {
+            CarbonImmutable::setTestNow();
+        }
+    }
+
+    public function test_dashboard_shows_manage_subscription_for_active_paid_subscription(): void
+    {
+        $tenant = $this->tenant('dashboard-active-cta');
+        $user = $this->user($tenant, 'dashboard-active-cta-user');
+
+        $subscription = $this->subscription(
+            $tenant,
+            SubscriptionStatus::ACTIVE
+        );
+
+        app(SubscriptionBillingService::class)
+            ->markPaid(
+                $subscription,
+                'stripe',
+                'sub_dashboard_active',
+                'card',
+            );
+
+        $this->dashboard($tenant, $user)
+            ->assertOk()
+            ->assertSee('Assinatura ativa')
+            ->assertSee(
+                __('billing.manage_subscription')
+            );
+    }
+
+    public function test_dashboard_shows_resubscribe_for_cancelled_paid_subscription_even_with_trial_dates(): void
+    {
+        $tenant = $this->tenant('dashboard-cancelled-cta');
+        $user = $this->user(
+            $tenant,
+            'dashboard-cancelled-cta-user'
+        );
+
+        $tenant->forceFill([
+            'trial_started_at' =>
+                CarbonImmutable::parse(
+                    '2026-08-20 00:00:00 UTC'
+                ),
+            'trial_ends_at' =>
+                CarbonImmutable::parse(
+                    '2026-09-06 00:00:00 UTC'
+                ),
+        ])->save();
+
+        $subscription = $this->subscription(
+            $tenant,
+            SubscriptionStatus::ACTIVE
+        );
+
+        app(SubscriptionBillingService::class)
+            ->markPaid(
+                $subscription,
+                'stripe',
+                'sub_dashboard_cancelled',
+                'card',
+            );
+
+        $subscription->forceFill([
+            'status' => SubscriptionStatus::CANCELLED,
+        ])->save();
+
+        CarbonImmutable::setTestNow(
+            CarbonImmutable::parse(
+                '2026-08-23 12:00:00 UTC'
+            )
+        );
+
+        try {
+            $this->dashboard($tenant, $user)
+                ->assertOk()
+                ->assertSee('Assinatura inativa')
+                ->assertSee('Assinar novamente')
+                ->assertDontSee('Período de teste ativo');
+        } finally {
+            CarbonImmutable::setTestNow();
+        }
+    }
+
+    private function subscription(
+        Tenant $tenant,
+        SubscriptionStatus $status,
+    ): Subscription {
+        $plan = Plan::query()->create([
+            'code' => $tenant->slug . '-plan',
+            'name' => 'Start',
+            'active' => true,
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        return Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => $status,
+            'current_period_start' =>
+                CarbonImmutable::parse(
+                    '2026-08-01 00:00:00 UTC'
+                ),
+            'current_period_end' =>
+                CarbonImmutable::parse(
+                    '2026-09-01 00:00:00 UTC'
+                ),
+        ]);
+    }
+
 }
