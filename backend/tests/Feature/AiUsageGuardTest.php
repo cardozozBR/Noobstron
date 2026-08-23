@@ -347,6 +347,41 @@ class AiUsageGuardTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function test_cancelled_subscription_does_not_receive_legacy_ai_access(): void
+    {
+        [$tenant, $plan] =
+            $this->subscribedTenant(
+                'ai-guard-cancelled'
+            );
+
+        $this->aiLimit(
+            $plan,
+            1000
+        );
+
+        DB::table('subscriptions')
+            ->where(
+                'tenant_id',
+                $tenant->id
+            )
+            ->update([
+                'status' =>
+                    SubscriptionStatus::CANCELLED
+                        ->value,
+            ]);
+
+        $this->expectException(
+            UsageBlockedException::class
+        );
+
+        app(
+            AiUsageGuard::class
+        )->assertCanRequest(
+            $tenant,
+            100
+        );
+    }
+
     public function test_ai_guard_does_not_record_estimated_tokens(): void
     {
         [$tenant, $plan] =

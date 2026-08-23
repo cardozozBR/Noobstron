@@ -50,6 +50,10 @@ class AiUsageGuard
             if (
                 $exception->reason ===
                 'unavailable'
+                && ! $tenant
+                    ->subscriptions()
+                    ->withoutGlobalScopes()
+                    ->exists()
             ) {
                 return;
             }

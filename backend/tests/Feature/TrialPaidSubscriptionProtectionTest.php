@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\SubscriptionStatus;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
@@ -126,6 +127,53 @@ class TrialPaidSubscriptionProtectionTest extends TestCase
         $tenant->refresh()->status
     );
 }
+
+    public function test_expired_trial_with_cancelled_paid_subscription_blocks_tenant(): void
+    {
+        $tenant = $this->tenantWithTrial(
+            CarbonImmutable::parse(
+                '2026-08-01 00:00:00 UTC'
+            ),
+            CarbonImmutable::parse(
+                '2026-08-15 00:00:00 UTC'
+            ),
+        );
+
+        $subscription = $this->subscription($tenant);
+
+        app(
+            SubscriptionBillingService::class
+        )->markPaid(
+            $subscription,
+            'stripe',
+            'sub_cancelled_paid_123',
+            'card',
+            CarbonImmutable::parse(
+                '2026-08-10 12:00:00 UTC'
+            ),
+        );
+
+        $subscription->forceFill([
+            'status' =>
+                SubscriptionStatus::CANCELLED,
+        ])->save();
+
+        $blocked = app(
+            TrialService::class
+        )->blockIfExpired(
+            $tenant,
+            CarbonImmutable::parse(
+                '2026-08-20 00:00:00 UTC'
+            ),
+        );
+
+        $this->assertTrue($blocked);
+
+        $this->assertSame(
+            'blocked',
+            $tenant->refresh()->status
+        );
+    }
 
     public function test_active_trial_does_not_block_tenant(): void
     {

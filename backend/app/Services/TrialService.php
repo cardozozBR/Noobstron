@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\SubscriptionStatus;
 use App\Models\Tenant;
 use App\Support\TrialPeriod;
 use Carbon\CarbonImmutable;
@@ -109,6 +110,10 @@ class TrialService
 
         $paidSubscription = $tenant
             ->subscriptions()
+            ->where(
+                'status',
+                SubscriptionStatus::ACTIVE->value
+            )
             ->whereNotNull('paid_at')
             ->latest('id')
             ->first();
