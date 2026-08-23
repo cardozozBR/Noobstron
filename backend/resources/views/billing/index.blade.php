@@ -50,6 +50,13 @@
         $isCurrentPaidSubscription =
             $isPaid && $isSubscriptionActive;
 
+        $isCancelledSubscription =
+            in_array(
+                $subscription->status->value,
+                ['cancelled', 'expired'],
+                true
+            );
+
         $trialActive =
             ! $isPaid
             && $trialEndsAt !== null
@@ -201,12 +208,18 @@
             <div class="section-header">
                 <div>
                     <span class="eyebrow">
-                        {{ __('billing.trial_period') }}
+                        @if ($isCancelledSubscription)
+                            {{ __('billing.subscription_status') }}
+                        @else
+                            {{ __('billing.trial_period') }}
+                        @endif
                     </span>
 
                     <h2>
                         @if ($isCurrentPaidSubscription)
                             {{ __('billing.subscription_activated') }}
+                        @elseif ($isCancelledSubscription)
+                            {{ __('billing.status.cancelled') }}
                         @elseif ($isPaid)
                             {{ $subscriptionStatusLabel }}
                         @elseif ($trialActive)
@@ -226,6 +239,18 @@
                 @if ($subscription->paid_at !== null)
                     <p class="form-help">
                         {{ __('billing.subscription_activated') }} em
+                        {{ $subscription->paid_at->format('d/m/Y H:i') }}.
+                    </p>
+                @endif
+            @elseif ($isCancelledSubscription)
+                <p>
+                    Esta assinatura foi cancelada.
+                    Você pode assinar novamente a qualquer momento.
+                </p>
+
+                @if ($subscription->paid_at !== null)
+                    <p class="form-help">
+                        Último pagamento:
                         {{ $subscription->paid_at->format('d/m/Y H:i') }}.
                     </p>
                 @endif
