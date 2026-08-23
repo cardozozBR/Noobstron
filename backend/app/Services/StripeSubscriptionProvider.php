@@ -100,12 +100,41 @@ class StripeSubscriptionProvider
             );
         }
 
+               $scheme = parse_url(
+            $returnUrl,
+            PHP_URL_SCHEME
+        ) ?: 'https';
+
+        $host = parse_url(
+            $returnUrl,
+            PHP_URL_HOST
+        );
+
+        $port = parse_url(
+            $returnUrl,
+            PHP_URL_PORT
+        );
+
+        if (!$host) {
+            return SubscriptionCheckoutResult::failure(
+                'Stripe return URL must contain a valid host.'
+            );
+        }
+
+        $tenantReturnUrl =
+            $scheme
+            . '://'
+            . $tenant->slug
+            . '.'
+            . $host
+            . ($port ? ':' . $port : '');
+
         $successUrl =
-            $returnUrl
+            $tenantReturnUrl
             . '/billing?checkout=stripe-success';
 
         $cancelUrl =
-            $returnUrl
+            $tenantReturnUrl
             . '/billing?checkout=stripe-cancel';
 
         try {
