@@ -6,6 +6,18 @@
 )
 
 @section('content')
+@php
+    $tenantWriteAllowed = app(
+        \App\Services\TenantWriteAccessService::class
+    )->allowed(
+        app(\App\Services\TenantContext::class)->get()
+    );
+@endphp
+
+@if (! $tenantWriteAllowed)
+    @include('components.subscription-read-only-notice')
+@endif
+
 
 
 <style>
@@ -233,6 +245,7 @@
             auth()->user()->hasPermission(
                 \App\Enums\Permission::ACTIVITIES_CREATE
             )
+            && $tenantWriteAllowed
         )
             <div class="actions">
                 <a
@@ -500,7 +513,8 @@
 
                                 <td class="nowrap">
                                     @if (
-                                        auth()->user()->hasPermission(
+                                        $tenantWriteAllowed
+                                        && auth()->user()->hasPermission(
                                             \App\Enums\Permission::ACTIVITIES_UPDATE
                                         )
                                     )
@@ -565,7 +579,8 @@
                                     @endif
 
                                     @if (
-                                        auth()->user()->hasPermission(
+                                        $tenantWriteAllowed
+                                        && auth()->user()->hasPermission(
                                             \App\Enums\Permission::ACTIVITIES_DELETE
                                         )
                                     )

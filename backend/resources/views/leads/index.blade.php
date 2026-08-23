@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $tenantWriteAllowed = app(
+        \App\Services\TenantWriteAccessService::class
+    )->allowed(
+        app(\App\Services\TenantContext::class)->get()
+    );
+@endphp
+
+@if (! $tenantWriteAllowed)
+    @include('components.subscription-read-only-notice')
+@endif
+
 <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
@@ -13,12 +25,14 @@
             </h1>
         </div>
 
+        @if ($tenantWriteAllowed)
         <a
             href="{{ route('leads.create') }}"
             class="inline-flex items-center justify-center rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="color: white;"
         >
             {{ __('leads.new') }}
         </a>
+        @endif
     </div>
 
     @if (session('success'))
@@ -166,12 +180,14 @@
                 {{ __('leads.empty') }}
             </h2>
 
+            @if ($tenantWriteAllowed)
             <a
                 href="{{ route('leads.create') }}"
                 class="mt-5 inline-flex items-center justify-center rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:opacity-90" style="color: white;"
             >
                 {{ __('leads.new') }}
             </a>
+            @endif
         </div>
     @else
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -257,6 +273,7 @@
                                 </td>
 
                                 <td class="whitespace-nowrap px-5 py-4 text-right">
+                                    @if ($tenantWriteAllowed)
                                     <div class="inline-flex items-center gap-2">
                                         <a
                                             href="{{ route('leads.edit', $lead->id) }}"
@@ -281,6 +298,9 @@
                                             </button>
                                         </form>
                                     </div>
+                                    @else
+                                        <span class="text-xs text-gray-400">Somente leitura</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

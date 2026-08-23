@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $tenantWriteAllowed = app(
+        \App\Services\TenantWriteAccessService::class
+    )->allowed(
+        app(\App\Services\TenantContext::class)->get()
+    );
+@endphp
+
+@if (! $tenantWriteAllowed)
+    @include('components.subscription-read-only-notice')
+@endif
+
 <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -21,6 +33,7 @@
             auth()->user()->hasPermission(
                 \App\Enums\Permission::CUSTOMERS_CREATE
             )
+            && $tenantWriteAllowed
         )
             <a
                 href="{{ route('customers.create') }}"
@@ -230,6 +243,7 @@
                                             auth()->user()->hasPermission(
                                                 \App\Enums\Permission::CUSTOMERS_UPDATE
                                             )
+                                            && $tenantWriteAllowed
                                         )
                                             <a
                                                 href="{{ route(
@@ -247,6 +261,7 @@
                                             auth()->user()->hasPermission(
                                                 \App\Enums\Permission::CUSTOMERS_DELETE
                                             )
+                                            && $tenantWriteAllowed
                                         )
                                             <form
                                                 method="POST"

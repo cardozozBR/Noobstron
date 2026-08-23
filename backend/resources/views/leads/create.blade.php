@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $tenantWriteAllowed = app(
+        \App\Services\TenantWriteAccessService::class
+    )->allowed(
+        app(\App\Services\TenantContext::class)->get()
+    );
+@endphp
+
+@if (! $tenantWriteAllowed)
+    @include('components.subscription-read-only-notice')
+@endif
+
 <div>
     <div>
         <h1>{{ __('leads.new') }}</h1>
@@ -10,6 +22,7 @@
         </a>
     </div>
 
+    @if ($tenantWriteAllowed)
     <form
         method="POST"
         action="{{ route('leads.store') }}"
@@ -26,5 +39,6 @@
             {{ __('leads.actions.cancel') }}
         </a>
     </form>
+    @endif
 </div>
 @endsection
