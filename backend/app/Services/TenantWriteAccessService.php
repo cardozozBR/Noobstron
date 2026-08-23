@@ -16,12 +16,14 @@ class TenantWriteAccessService
 
     public function allowed(Tenant $tenant): bool
     {
-        if (
-            $this->trials->status($tenant)
-            === TrialService::STATUS_ACTIVE
-        ) {
-            return true;
-        }
+        $hasPaidSubscriptionHistory = Subscription::query()
+            ->withoutGlobalScopes()
+            ->where(
+                'tenant_id',
+                $tenant->id
+            )
+            ->whereNotNull('paid_at')
+            ->exists();
 
         $activeSubscription = Subscription::query()
             ->withoutGlobalScopes()
@@ -41,6 +43,22 @@ class TenantWriteAccessService
             && $this->billing->isPaid(
                 $activeSubscription
             )
+        ) {
+            return true;
+        }
+
+        /*
+         * Once the tenant has paid for a subscription, historical
+         * trial dates must never restore write access after that
+         * subscription is cancelled or expires.
+         */
+        if ($hasPaidSubscriptionHistory) {
+            return false;
+        }
+
+        if (
+            $this->trials->status($tenant)
+            === TrialService::STATUS_ACTIVE
         ) {
             return true;
         }

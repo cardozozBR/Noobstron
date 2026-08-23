@@ -120,6 +120,54 @@ class TenantWriteAccessTest extends TestCase
         );
     }
 
+    public function test_cancelled_paid_subscription_does_not_regain_write_access_from_old_active_trial_dates(): void
+    {
+        $tenant = $this->tenant(
+            'write-cancelled-old-trial',
+            trialStartsAt: CarbonImmutable::parse(
+                '2026-08-23 00:43:53 America/Sao_Paulo'
+            ),
+            trialEndsAt: CarbonImmutable::parse(
+                '2026-09-06 00:43:53 America/Sao_Paulo'
+            ),
+        );
+
+        $subscription = $this->subscription(
+            $tenant,
+            SubscriptionStatus::ACTIVE
+        );
+
+        app(SubscriptionBillingService::class)
+            ->markPaid(
+                $subscription,
+                'stripe',
+                'sub_write_cancelled_old_trial',
+                'card',
+                CarbonImmutable::parse(
+                    '2026-08-23 15:17:13 America/Sao_Paulo'
+                ),
+            );
+
+        $subscription->forceFill([
+            'status' => SubscriptionStatus::CANCELLED,
+        ])->save();
+
+        CarbonImmutable::setTestNow(
+            CarbonImmutable::parse(
+                '2026-08-23 20:30:00 America/Sao_Paulo'
+            )
+        );
+
+        try {
+            $this->assertFalse(
+                app(TenantWriteAccessService::class)
+                    ->allowed($tenant->refresh())
+            );
+        } finally {
+            CarbonImmutable::setTestNow();
+        }
+    }
+
     public function test_expired_paid_subscription_cannot_write(): void
     {
         $tenant = $this->tenant('write-expired');
