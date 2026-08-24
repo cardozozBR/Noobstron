@@ -42,17 +42,17 @@ class PlatformLaunchOperationsTest extends TestCase
         ]);
 
         Subscription::query()->create([
-    'tenant_id' => $tenant->id,
-    'plan_id' => $plan->id,
-    'status' => 'active',
-    'payment_provider' => 'stripe',
-    'external_reference' => 'sub_launch_test',
-    'paid_at' => now()->subDay(),
-    'current_period_start' => now()->subDay(),
-    'current_period_end' => now()->addMonth(),
-    'currency' => 'BRL',
-    'amount_minor' => 19900,
-]);
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub_launch_test',
+            'paid_at' => now()->subDay(),
+            'current_period_start' => now()->subDay(),
+            'current_period_end' => now()->addMonth(),
+            'currency' => 'BRL',
+            'amount_minor' => 19900,
+        ]);
 
         $this->actingAs($admin, 'platform')
             ->get('http://localhost/platform')
@@ -62,6 +62,50 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('MRR contratual')
             ->assertSee('BRL 199,00')
             ->assertSee('Uso global');
+    }
+
+    public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $plan = Plan::query()->create([
+            'code' => 'cancelled-mrr-plan',
+            'name' => 'Cancelled MRR Plan',
+            'active' => true,
+        ]);
+
+        PlanPrice::query()->create([
+            'plan_id' => $plan->id,
+            'currency' => 'BRL',
+            'amount_minor' => 49900,
+        ]);
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Cancelled MRR Tenant',
+            'slug' => 'cancelled-mrr-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'cancelled',
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub_cancelled_mrr_test',
+            'paid_at' => now()->subMonth(),
+            'current_period_start' => now()->subMonth(),
+            'current_period_end' => now(),
+            'canceled_at' => now(),
+            'currency' => 'BRL',
+            'amount_minor' => 49900,
+        ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform')
+            ->assertOk()
+            ->assertSee('MRR contratual')
+            ->assertDontSee('BRL 499,00');
     }
 
     public function test_platform_admin_can_view_operational_health_and_commercial_contacts(): void

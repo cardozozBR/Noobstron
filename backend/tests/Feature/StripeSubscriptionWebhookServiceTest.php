@@ -404,6 +404,74 @@ class StripeSubscriptionWebhookServiceTest extends TestCase
         );
     }
 
+
+    public function test_subscription_deleted_blocks_write_access_for_paid_tenant(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription(
+            'sub_deleted_access_123',
+            'active'
+        );
+
+        $subscription->forceFill([
+            'paid_at' => CarbonImmutable::parse(
+                '2026-08-20 00:01:00 UTC'
+            ),
+        ])->save();
+
+        $tenant = $subscription->tenant;
+
+        $this->assertTrue(
+            app(
+                \App\Services\TenantWriteAccessService::class
+            )->allowed($tenant)
+        );
+
+        $canceledAt = CarbonImmutable::parse(
+            '2026-09-20 00:00:00 UTC'
+        );
+
+        $processed = $this->handle([
+            'type' => 'customer.subscription.deleted',
+            'data' => [
+                'object' => [
+                    'id' => 'sub_deleted_access_123',
+                    'status' => 'canceled',
+                    'canceled_at' =>
+                        $canceledAt->timestamp,
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($processed);
+
+        $subscription->refresh();
+
+        $this->assertSame(
+            'cancelled',
+            $subscription->status->value
+        );
+
+        $this->assertNull(
+            $subscription->cancel_at
+        );
+
+        $this->assertSame(
+            '2026-09-20 00:00:00',
+            $subscription
+                ->canceled_at
+                ->utc()
+                ->format('Y-m-d H:i:s')
+        );
+
+        $this->assertFalse(
+            app(
+                \App\Services\TenantWriteAccessService::class
+            )->allowed($tenant)
+        );
+    }
+
     public function test_subscription_updated_suspends_past_due_subscription(): void
     {
         $this->configureWebhook();
