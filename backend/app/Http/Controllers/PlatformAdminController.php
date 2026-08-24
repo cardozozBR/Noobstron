@@ -160,18 +160,16 @@ class PlatformAdminController extends Controller
         $usage = [
             'users' => (int) DB::table('users')->count(),
 
-            'messages' =>
-                (int) EmailMessage::query()
-                    ->withoutGlobalScopes()
-                    ->count()
+            'messages' => (int) EmailMessage::query()
+                ->withoutGlobalScopes()
+                ->count()
                 + (int) WhatsAppMessage::query()
                     ->withoutGlobalScopes()
                     ->where('direction', 'outbound')
                     ->count(),
 
-            'ai_tokens' =>
-                (int) AiUsageRecord::query()
-                    ->sum('total_tokens'),
+            'ai_tokens' => (int) AiUsageRecord::query()
+                ->sum('total_tokens'),
         ];
 
         return view('platform.dashboard', [
@@ -184,15 +182,38 @@ class PlatformAdminController extends Controller
         ]);
     }
 
-    public function webhooks(): View
+    public function webhooks(Request $request): View
     {
+        $status = trim(
+            (string) $request->query('status', '')
+        );
+
+        $allowedStatuses = [
+            'processed',
+            'processing',
+            'failed',
+        ];
+
         $receipts = PaymentEventReceipt::query()
+            ->when(
+                in_array(
+                    $status,
+                    $allowedStatuses,
+                    true
+                ),
+                fn ($query) => $query->where(
+                    'status',
+                    $status
+                )
+            )
             ->orderByDesc('processed_at')
             ->orderByDesc('id')
-            ->paginate(50);
+            ->paginate(50)
+            ->withQueryString();
 
         return view('platform.webhooks', [
             'receipts' => $receipts,
+            'status' => $status,
         ]);
     }
 
@@ -217,18 +238,15 @@ class PlatformAdminController extends Controller
         return view('platform.health', [
             'checks' => [
                 'database' => $databaseOk,
-                'storage' =>
-                    is_writable(storage_path()),
+                'storage' => is_writable(storage_path()),
                 'queue_pending' => $queuePending,
                 'queue_failed' => $queueFailed,
-                'mail_configured' =>
-                    config('mail.default') !== 'log',
-                'contact_recipient' =>
-                    trim(
-                        (string) config(
-                            'marketing.contact_recipient'
-                        )
-                    ) !== '',
+                'mail_configured' => config('mail.default') !== 'log',
+                'contact_recipient' => trim(
+                    (string) config(
+                        'marketing.contact_recipient'
+                    )
+                ) !== '',
             ],
         ]);
     }

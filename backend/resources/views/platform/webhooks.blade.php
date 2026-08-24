@@ -108,6 +108,32 @@
     font-size: 12px;
 }
 
+.platform-webhooks-page .webhook-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.platform-webhooks-page .webhook-filter {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background: white;
+    color: #374151;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.platform-webhooks-page .webhook-filter--active {
+    background: #111827;
+    border-color: #111827;
+    color: white;
+}
+
 @media (max-width: 1000px) {
     .platform-webhooks-page .platform-table {
         min-width: 1050px;
@@ -173,6 +199,40 @@
                 {{ __('platform.back_dashboard') }}
             </a>
         </div>
+
+        <div class="webhook-filters">
+    <a
+        href="{{ route('platform.webhooks') }}"
+        class="webhook-filter
+        {{ $status === '' ? 'webhook-filter--active' : '' }}"
+    >
+        Todos
+    </a>
+
+    <a
+        href="{{ route('platform.webhooks', ['status' => 'processed']) }}"
+        class="webhook-filter
+        {{ $status === 'processed' ? 'webhook-filter--active' : '' }}"
+    >
+        Processados
+    </a>
+
+    <a
+        href="{{ route('platform.webhooks', ['status' => 'processing']) }}"
+        class="webhook-filter
+        {{ $status === 'processing' ? 'webhook-filter--active' : '' }}"
+    >
+        Em processamento
+    </a>
+
+    <a
+        href="{{ route('platform.webhooks', ['status' => 'failed']) }}"
+        class="webhook-filter
+        {{ $status === 'failed' ? 'webhook-filter--active' : '' }}"
+    >
+        Falhos
+    </a>
+</div>
 
         <section class="platform-card platform-card--table">
             <div class="table-wrap">

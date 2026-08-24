@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\PaymentEventReceipt;
 use App\Models\CommercialContact;
+use App\Models\PaymentEventReceipt;
 use App\Models\Plan;
 use App\Models\PlanPrice;
 use App\Models\PlatformAdmin;
@@ -109,38 +109,77 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertDontSee('BRL 499,00');
     }
 
-public function test_platform_admin_can_view_payment_webhook_receipts(): void
-{
-    $admin = $this->platformAdmin();
+    public function test_platform_admin_can_view_payment_webhook_receipts(): void
+    {
+        $admin = $this->platformAdmin();
 
-    PaymentEventReceipt::query()->create([
-        'provider' => 'stripe',
-        'event_id' => 'evt_platform_webhook_123',
-        'event_type' =>
-            'customer.subscription.updated',
-        'external_reference' =>
-            'sub_platform_webhook_123',
-        'status' => 'processed',
-        'attempts' => 1,
-        'last_error' => null,
-        'processed_at' => now(),
-    ]);
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_platform_webhook_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_platform_webhook_123',
+            'status' => 'processed',
+            'attempts' => 1,
+            'last_error' => null,
+            'processed_at' => now(),
+        ]);
 
-    $this->actingAs($admin, 'platform')
-        ->get('http://localhost/platform/webhooks')
-        ->assertOk()
-        ->assertSee('Webhooks')
-        ->assertSee('STRIPE')
-        ->assertSee('evt_platform_webhook_123')
-        ->assertSee(
-            'customer.subscription.updated'
-        )
-        ->assertSee(
-            'sub_platform_webhook_123'
-        )
-        ->assertSee('PROCESSED')
-        ->assertSee('1');
-}
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform/webhooks')
+            ->assertOk()
+            ->assertSee('Webhooks')
+            ->assertSee('STRIPE')
+            ->assertSee('evt_platform_webhook_123')
+            ->assertSee(
+                'customer.subscription.updated'
+            )
+            ->assertSee(
+                'sub_platform_webhook_123'
+            )
+            ->assertSee('PROCESSED')
+            ->assertSee('1');
+    }
+
+    public function test_platform_admin_can_filter_failed_payment_webhook_receipts(): void
+    {
+        $admin = $this->platformAdmin();
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_platform_processed_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_platform_processed_123',
+            'status' => 'processed',
+            'attempts' => 1,
+            'last_error' => null,
+            'processed_at' => now(),
+        ]);
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_platform_failed_123',
+            'event_type' => 'invoice.payment_failed',
+            'external_reference' => 'sub_platform_failed_123',
+            'status' => 'failed',
+            'attempts' => 2,
+            'last_error' => 'Test webhook processing failure.',
+            'processed_at' => null,
+        ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('/platform/webhooks?status=failed')
+            ->assertOk()
+            ->assertSee('Falhos')
+            ->assertSee('evt_platform_failed_123')
+            ->assertSee('invoice.payment_failed')
+            ->assertSee('FAILED')
+            ->assertSee(
+                'Test webhook processing failure.'
+            )
+            ->assertDontSee(
+                'evt_platform_processed_123'
+            );
+    }
 
     public function test_platform_admin_can_view_operational_health_and_commercial_contacts(): void
     {
