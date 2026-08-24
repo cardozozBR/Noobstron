@@ -37,10 +37,34 @@
                 <p class="platform-muted">{{ __('platform.dashboard.description') }}</p>
             </div>
             <div class="quick-actions">
-                <a class="button" href="{{ route('platform.tenants.index') }}">{{ __('platform.dashboard.tenants') }}</a>
-                <a class="button" href="{{ route('platform.contacts.index') }}">{{ __('platform.dashboard.contacts') }}</a>
-                <a class="button" href="{{ route('platform.health') }}">{{ __('platform.dashboard.health') }}</a>
-            </div>
+    <a
+        class="button"
+        href="{{ route('platform.tenants.index') }}"
+    >
+        {{ __('platform.dashboard.tenants') }}
+    </a>
+
+    <a
+        class="button"
+        href="{{ route('platform.contacts.index') }}"
+    >
+        {{ __('platform.dashboard.contacts') }}
+    </a>
+
+    <a
+        class="button"
+        href="{{ route('platform.health') }}"
+    >
+        {{ __('platform.dashboard.health') }}
+    </a>
+
+    <a
+        class="button"
+        href="{{ route('platform.webhooks') }}"
+    >
+        Webhooks
+    </a>
+</div>
         </div>
 
         <div class="metric-grid">

@@ -62,7 +62,8 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Trials vencendo em 7 dias')
             ->assertSee('MRR contratual')
             ->assertSee('BRL 199,00')
-            ->assertSee('Uso global');
+            ->assertSee('Uso global')
+            ->assertSee('Webhooks');
     }
 
     public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void
