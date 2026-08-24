@@ -85,50 +85,105 @@ class StripeSubscriptionWebhookService
                 $object
             );
 
-        return DB::transaction(
-            function () use (
-                $eventId,
-                $type,
-                $object,
-                $externalReference
-            ): bool {
-                $now = now();
+        try {
+            return DB::transaction(
+                function () use (
+                    $eventId,
+                    $type,
+                    $object,
+                    $externalReference
+                ): bool {
+                    $now = now();
 
-                /*
-                 * O índice unique(provider, event_id) garante
-                 * que um reenvio da Stripe não seja processado
-                 * duas vezes.
-                 *
-                 * O insert e o processamento ficam na mesma
-                 * transação. Se o processamento lançar exceção,
-                 * o recibo também sofre rollback.
-                 */
-                $inserted =
-                    PaymentEventReceipt::query()
-                        ->insertOrIgnore([
+                    $receipt = PaymentEventReceipt::query()
+                        ->where('provider', 'stripe')
+                        ->where('event_id', $eventId)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (
+                        $receipt !== null
+                        && $receipt->status === 'processed'
+                    ) {
+                        return true;
+                    }
+
+                    if ($receipt === null) {
+                        $receipt = PaymentEventReceipt::query()->create([
                             'provider' => 'stripe',
                             'event_id' => $eventId,
                             'event_type' => $type !== ''
                                 ? $type
                                 : 'unknown',
                             'external_reference' => $externalReference,
-                            'processed_at' => $now,
-                            'created_at' => $now,
-                            'updated_at' => $now,
+                            'status' => 'processing',
+                            'attempts' => 1,
+                            'last_error' => null,
+                            'processed_at' => null,
                         ]);
+                    } else {
+                        $receipt->forceFill([
+                            'event_type' => $type !== ''
+                                ? $type
+                                : 'unknown',
+                            'external_reference' => $externalReference,
+                            'status' => 'processing',
+                            'attempts' => ((int) $receipt->attempts) + 1,
+                            'last_error' => null,
+                        ])->save();
+                    }
 
-                if ($inserted === 0) {
+                    $this->processEvent(
+                        $type,
+                        $object
+                    );
+
+                    $receipt->forceFill([
+                        'status' => 'processed',
+                        'processed_at' => $now,
+                        'last_error' => null,
+                    ])->save();
+
                     return true;
                 }
+            );
+        } catch (Throwable $exception) {
+            $receipt = PaymentEventReceipt::query()
+                ->where('provider', 'stripe')
+                ->where('event_id', $eventId)
+                ->first();
 
-                $this->processEvent(
-                    $type,
-                    $object
-                );
-
-                return true;
+            if ($receipt === null) {
+                PaymentEventReceipt::query()->create([
+                    'provider' => 'stripe',
+                    'event_id' => $eventId,
+                    'event_type' => $type !== ''
+                        ? $type
+                        : 'unknown',
+                    'external_reference' => $externalReference,
+                    'status' => 'failed',
+                    'attempts' => 1,
+                    'last_error' => mb_substr(
+                        $exception->getMessage(),
+                        0,
+                        2000
+                    ),
+                    'processed_at' => null,
+                ]);
+            } else {
+                $receipt->forceFill([
+                    'status' => 'failed',
+                    'last_error' => mb_substr(
+                        $exception->getMessage(),
+                        0,
+                        2000
+                    ),
+                    'processed_at' => null,
+                ])->save();
             }
-        );
+
+            throw $exception;
+        }
     }
 
     private function processCheckoutSession(
