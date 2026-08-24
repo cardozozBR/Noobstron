@@ -16,10 +16,69 @@
     letter-spacing: -.03em;
 }
 
+.platform-webhooks-page .platform-card--table {
+    padding: 22px;
+}
+
+.platform-webhooks-page .platform-table {
+    table-layout: fixed;
+    min-width: 100%;
+}
+
+.platform-webhooks-page .platform-table th,
+.platform-webhooks-page .platform-table td {
+    padding: 13px 10px;
+}
+
+.platform-webhooks-page .col-provider {
+    width: 9%;
+}
+
+.platform-webhooks-page .col-event {
+    width: 18%;
+}
+
+.platform-webhooks-page .col-type {
+    width: 20%;
+}
+
+.platform-webhooks-page .col-reference {
+    width: 18%;
+}
+
+.platform-webhooks-page .col-status {
+    width: 10%;
+}
+
+.platform-webhooks-page .col-attempts {
+    width: 8%;
+}
+
+.platform-webhooks-page .col-error {
+    width: 9%;
+}
+
+.platform-webhooks-page .col-processed {
+    width: 13%;
+}
+
 .platform-webhooks-page .webhook-event-id,
 .platform-webhooks-page .webhook-reference {
     font-family: monospace;
-    font-size: 13px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.platform-webhooks-page .webhook-type {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.platform-webhooks-page .webhook-status,
+.platform-webhooks-page .webhook-attempts,
+.platform-webhooks-page .webhook-processed {
+    white-space: nowrap;
 }
 
 .platform-webhooks-page .status-badge--stripe {
@@ -42,17 +101,41 @@
 }
 
 .platform-webhooks-page .webhook-error {
-    max-width: 320px;
     white-space: normal;
+    overflow-wrap: anywhere;
     word-break: break-word;
     color: #991b1b;
-    font-size: 13px;
+    font-size: 12px;
+}
+
+@media (max-width: 1000px) {
+    .platform-webhooks-page .platform-table {
+        min-width: 1050px;
+        table-layout: auto;
+    }
+
+    .platform-webhooks-page .webhook-event-id,
+    .platform-webhooks-page .webhook-reference {
+        min-width: 170px;
+    }
+
+    .platform-webhooks-page .webhook-type {
+        min-width: 190px;
+    }
+
+    .platform-webhooks-page .webhook-processed {
+        min-width: 145px;
+    }
 }
 
 @media (max-width: 800px) {
     .platform-webhooks-page .platform-toolbar {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .platform-webhooks-page .platform-card--table {
+        padding: 16px;
     }
 }
 </style>
@@ -96,14 +179,14 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th>Provedor</th>
-                            <th>Evento</th>
-                            <th>Tipo</th>
-                            <th>Referência</th>
-                            <th>Status</th>
-                            <th>Tentativas</th>
-                            <th>Último erro</th>
-                            <th>Processado em</th>
+                            <th class="col-provider">Provedor</th>
+                            <th class="col-event">Evento</th>
+                            <th class="col-type">Tipo</th>
+                            <th class="col-reference">Referência</th>
+                            <th class="col-status">Status</th>
+                            <th class="col-attempts">Tentativas</th>
+                            <th class="col-error">Último erro</th>
+                            <th class="col-processed">Processado em</th>
                         </tr>
                     </thead>
 
@@ -125,7 +208,7 @@
                                     {{ $receipt->event_id }}
                                 </td>
 
-                                <td>
+                                <td class="webhook-type">
                                     {{ $receipt->event_type }}
                                 </td>
 
@@ -133,7 +216,7 @@
                                     {{ $receipt->external_reference }}
                                 </td>
 
-                                <td>
+                                <td class="webhook-status">
                                     <span
                                         class="status-badge
                                         status-badge--{{ $receipt->status }}"
@@ -142,7 +225,7 @@
                                     </span>
                                 </td>
 
-                                <td>
+                                <td class="webhook-attempts">
                                     {{ $receipt->attempts }}
                                 </td>
 
@@ -150,7 +233,7 @@
                                     {{ $receipt->last_error ?: '—' }}
                                 </td>
 
-                                <td>
+                                <td class="webhook-processed">
                                     {{ $receipt->processed_at?->format('d/m/Y H:i:s') ?? '—' }}
                                 </td>
                             </tr>
