@@ -181,6 +181,165 @@ class PlatformLaunchOperationsTest extends TestCase
             );
     }
 
+    public function test_platform_webhooks_show_retry_only_for_failed_receipt_with_payload(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $failedReceipt = PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_retry_visible_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_retry_visible_123',
+            'status' => 'failed',
+            'attempts' => 2,
+            'last_error' => 'Temporary failure.',
+            'payload' => [
+                'type' => 'customer.subscription.updated',
+                'data' => [
+                    'object' => [
+                        'id' => 'sub_retry_visible_123',
+                        'status' => 'active',
+                    ],
+                ],
+            ],
+            'processed_at' => null,
+        ]);
+
+        $processedReceipt = PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_retry_hidden_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_retry_hidden_123',
+            'status' => 'processed',
+            'attempts' => 1,
+            'last_error' => null,
+            'payload' => [
+                'type' => 'customer.subscription.updated',
+                'data' => [
+                    'object' => [
+                        'id' => 'sub_retry_hidden_123',
+                        'status' => 'active',
+                    ],
+                ],
+            ],
+            'processed_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get('/platform/webhooks');
+
+        $response
+            ->assertOk()
+            ->assertSee('evt_retry_visible_123')
+            ->assertSee('evt_retry_hidden_123')
+            ->assertSee('Reprocessar')
+            ->assertSee(
+                route(
+                    'platform.webhooks.retry',
+                    $failedReceipt
+                )
+            )
+            ->assertDontSee(
+                route(
+                    'platform.webhooks.retry',
+                    $processedReceipt
+                )
+            );
+    }
+
+    public function test_platform_admin_can_retry_failed_payment_webhook(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $plan = Plan::query()->create([
+            'code' => 'retry-webhook-plan',
+            'name' => 'Retry Webhook Plan',
+            'active' => true,
+        ]);
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Retry Webhook Tenant',
+            'slug' => 'retry-webhook-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        $subscription = Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub_platform_retry_123',
+            'paid_at' => now()->subDay(),
+            'current_period_start' => now()->subDay(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+        $receipt = PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_platform_retry_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_platform_retry_123',
+            'status' => 'failed',
+            'attempts' => 1,
+            'last_error' => 'Temporary failure.',
+            'payload' => [
+                'type' => 'customer.subscription.updated',
+                'data' => [
+                    'object' => [
+                        'id' => 'sub_platform_retry_123',
+                        'status' => 'active',
+                        'cancel_at' => null,
+                        'canceled_at' => null,
+                        'cancel_at_period_end' => false,
+                    ],
+                ],
+            ],
+            'processed_at' => null,
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                "/platform/webhooks/{$receipt->id}/retry"
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.webhooks')
+            )
+            ->assertSessionHas(
+                'success',
+                'Webhook reprocessado com sucesso.'
+            );
+
+        $receipt->refresh();
+
+        $this->assertSame(
+            'processed',
+            $receipt->status
+        );
+
+        $this->assertSame(
+            2,
+            $receipt->attempts
+        );
+
+        $this->assertNull(
+            $receipt->last_error
+        );
+
+        $this->assertNotNull(
+            $receipt->processed_at
+        );
+
+        $this->assertSame(
+            'active',
+            $subscription->refresh()->status->value
+        );
+    }
+
     public function test_platform_admin_can_view_operational_health_and_commercial_contacts(): void
     {
         $admin = $this->platformAdmin();

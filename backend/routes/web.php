@@ -486,6 +486,20 @@ Route::get(
     )
     ->middleware('platform.admin')
     ->name('platform.webhooks');
+
+Route::post(
+    '/platform/webhooks/{receipt}/retry',
+    [
+        PlatformAdminController::class,
+        'retryWebhook',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.webhooks.retry');
+
 Route::get(
     '/platform/contacts',
     [PlatformCommercialContactController::class, 'index']

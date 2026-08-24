@@ -775,6 +775,160 @@ class StripeSubscriptionWebhookServiceTest extends TestCase
         );
     }
 
+    public function test_failed_receipt_retry_succeeds_and_increments_attempts(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription(
+            'sub_manual_retry_123',
+            'active'
+        );
+
+        $receipt = PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_manual_retry_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_manual_retry_123',
+            'status' => 'failed',
+            'attempts' => 1,
+            'last_error' => 'Previous failure.',
+            'payload' => [
+                'type' => 'customer.subscription.updated',
+                'data' => [
+                    'object' => [
+                        'id' => 'sub_manual_retry_123',
+                        'status' => 'active',
+                        'cancel_at' => null,
+                        'canceled_at' => null,
+                        'cancel_at_period_end' => false,
+                    ],
+                ],
+            ],
+            'processed_at' => null,
+        ]);
+
+        $processed = app(
+            StripeSubscriptionWebhookService::class
+        )->retry($receipt);
+
+        $this->assertTrue($processed);
+
+        $receipt->refresh();
+
+        $this->assertSame(
+            'processed',
+            $receipt->status
+        );
+
+        $this->assertSame(
+            2,
+            $receipt->attempts
+        );
+
+        $this->assertNull(
+            $receipt->last_error
+        );
+
+        $this->assertNotNull(
+            $receipt->processed_at
+        );
+
+        $this->assertSame(
+            'active',
+            $subscription->refresh()->status->value
+        );
+    }
+
+    public function test_failed_receipt_retry_failure_preserves_new_attempt_and_error(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription(
+            null,
+            'active'
+        );
+
+        $billing = $this->mock(
+            SubscriptionBillingService::class
+        );
+
+        $billing
+            ->shouldReceive('isPaid')
+            ->once()
+            ->andReturn(false);
+
+        $billing
+            ->shouldReceive('markPaid')
+            ->once()
+            ->andThrow(
+                new \RuntimeException(
+                    'Retry processing failed.'
+                )
+            );
+
+        $receipt = PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_manual_retry_failure_123',
+            'event_type' => 'checkout.session.completed',
+            'external_reference' => 'sub_manual_retry_failure_123',
+            'status' => 'failed',
+            'attempts' => 1,
+            'last_error' => 'Previous failure.',
+            'payload' => [
+                'type' => 'checkout.session.completed',
+                'data' => [
+                    'object' => [
+                        'payment_status' => 'paid',
+                        'subscription' => 'sub_manual_retry_failure_123',
+                        'client_reference_id' => (string) $subscription->id,
+                        'metadata' => [
+                            'subscription_id' => (string) $subscription->id,
+                        ],
+                    ],
+                ],
+            ],
+            'processed_at' => null,
+        ]);
+
+        $service = app(
+            StripeSubscriptionWebhookService::class
+        );
+
+        try {
+            $service->retry($receipt);
+
+            $this->fail(
+                'Expected retry exception was not thrown.'
+            );
+        } catch (\RuntimeException $exception) {
+            $this->assertSame(
+                'Retry processing failed.',
+                $exception->getMessage()
+            );
+        }
+
+        $receipt->refresh();
+
+        $this->assertSame(
+            'failed',
+            $receipt->status
+        );
+
+        $this->assertSame(
+            2,
+            $receipt->attempts
+        );
+
+        $this->assertSame(
+            'Retry processing failed.',
+            $receipt->last_error
+        );
+
+        $this->assertNull(
+            $receipt->processed_at
+        );
+    }
+
     public function test_invalid_signature_is_rejected(): void
     {
         $this->configureWebhook();
@@ -1032,19 +1186,19 @@ class StripeSubscriptionWebhookServiceTest extends TestCase
                         )->timestamp,
                     ],
                     'lines' => [
-                    'data' => [
-                        [
-                            'period' => [
-                                'start' => CarbonImmutable::parse(
-                                    '2026-09-20 00:00:00 UTC'
-                                )->timestamp,
-                                'end' => CarbonImmutable::parse(
-                                    '2026-10-20 00:00:00 UTC'
-                                )->timestamp,
+                        'data' => [
+                            [
+                                'period' => [
+                                    'start' => CarbonImmutable::parse(
+                                        '2026-09-20 00:00:00 UTC'
+                                    )->timestamp,
+                                    'end' => CarbonImmutable::parse(
+                                        '2026-10-20 00:00:00 UTC'
+                                    )->timestamp,
+                                ],
                             ],
                         ],
                     ],
-                ],
                 ],
             ],
         ];

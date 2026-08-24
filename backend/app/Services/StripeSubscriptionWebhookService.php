@@ -207,6 +207,104 @@ class StripeSubscriptionWebhookService
         }
     }
 
+    public function retry(
+        PaymentEventReceipt $receipt
+    ): bool {
+        if ($receipt->provider !== 'stripe') {
+            return false;
+        }
+
+        if ($receipt->status !== 'failed') {
+            return false;
+        }
+
+        $payload = $receipt->payload;
+
+        if (! is_array($payload)) {
+            return false;
+        }
+
+        $type = trim(
+            (string) ($payload['type'] ?? '')
+        );
+
+        $object = $payload['data']['object']
+            ?? null;
+
+        if (
+            $type === ''
+            || ! is_array($object)
+        ) {
+            return false;
+        }
+
+        $failure = null;
+
+        $processed = DB::transaction(
+            function () use (
+                $receipt,
+                $type,
+                $object,
+                &$failure
+            ): bool {
+                $locked = PaymentEventReceipt::query()
+                    ->whereKey($receipt->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($locked === null) {
+                    return false;
+                }
+
+                if ($locked->status !== 'failed') {
+                    return false;
+                }
+
+                $locked->forceFill([
+                    'status' => 'processing',
+                    'attempts' => ((int) $locked->attempts) + 1,
+                    'last_error' => null,
+                    'processed_at' => null,
+                ])->save();
+
+                try {
+                    $this->processEvent(
+                        $type,
+                        $object
+                    );
+
+                    $locked->forceFill([
+                        'status' => 'processed',
+                        'last_error' => null,
+                        'processed_at' => now(),
+                    ])->save();
+
+                    return true;
+                } catch (Throwable $exception) {
+                    $locked->forceFill([
+                        'status' => 'failed',
+                        'last_error' => mb_substr(
+                            $exception->getMessage(),
+                            0,
+                            2000
+                        ),
+                        'processed_at' => null,
+                    ])->save();
+
+                    $failure = $exception;
+
+                    return false;
+                }
+            }
+        );
+
+        if ($failure instanceof Throwable) {
+            throw $failure;
+        }
+
+        return $processed;
+    }
+
     private function processCheckoutSession(
         array $session
     ): void {

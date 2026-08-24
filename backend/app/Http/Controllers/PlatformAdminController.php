@@ -8,6 +8,7 @@ use App\Models\PaymentEventReceipt;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\WhatsAppMessage;
+use App\Services\StripeSubscriptionWebhookService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -215,6 +216,58 @@ class PlatformAdminController extends Controller
             'receipts' => $receipts,
             'status' => $status,
         ]);
+    }
+
+    public function retryWebhook(
+        PaymentEventReceipt $receipt,
+        StripeSubscriptionWebhookService $webhook,
+    ): RedirectResponse {
+        if (
+            $receipt->provider !== 'stripe'
+            || $receipt->status !== 'failed'
+            || ! is_array($receipt->payload)
+        ) {
+            return redirect()
+                ->route('platform.webhooks')
+                ->with(
+                    'error',
+                    'Este webhook não pode ser reprocessado.'
+                );
+        }
+
+        try {
+            $processed = $webhook->retry($receipt);
+
+            if (! $processed) {
+                return redirect()
+                    ->route(
+                        'platform.webhooks',
+                        ['status' => 'failed']
+                    )
+                    ->with(
+                        'error',
+                        'O webhook não pôde ser reprocessado.'
+                    );
+            }
+        } catch (\Throwable $exception) {
+            return redirect()
+                ->route(
+                    'platform.webhooks',
+                    ['status' => 'failed']
+                )
+                ->with(
+                    'error',
+                    'O reprocessamento falhou: '
+                    .$exception->getMessage()
+                );
+        }
+
+        return redirect()
+            ->route('platform.webhooks')
+            ->with(
+                'success',
+                'Webhook reprocessado com sucesso.'
+            );
     }
 
     public function health(): View

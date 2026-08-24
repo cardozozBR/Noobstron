@@ -31,23 +31,23 @@
 }
 
 .platform-webhooks-page .col-provider {
-    width: 9%;
+    width: 8%;
 }
 
 .platform-webhooks-page .col-event {
-    width: 18%;
+    width: 16%;
 }
 
 .platform-webhooks-page .col-type {
-    width: 20%;
-}
-
-.platform-webhooks-page .col-reference {
     width: 18%;
 }
 
+.platform-webhooks-page .col-reference {
+    width: 16%;
+}
+
 .platform-webhooks-page .col-status {
-    width: 10%;
+    width: 9%;
 }
 
 .platform-webhooks-page .col-attempts {
@@ -55,11 +55,15 @@
 }
 
 .platform-webhooks-page .col-error {
-    width: 9%;
+    width: 8%;
 }
 
 .platform-webhooks-page .col-processed {
-    width: 13%;
+    width: 11%;
+}
+
+.platform-webhooks-page .col-action {
+    width: 10%;
 }
 
 .platform-webhooks-page .webhook-event-id,
@@ -134,9 +138,34 @@
     color: white;
 }
 
-@media (max-width: 1000px) {
+.platform-webhooks-page .webhook-feedback {
+    margin-bottom: 16px;
+}
+
+.platform-webhooks-page .webhook-feedback--success {
+    color: #166534;
+}
+
+.platform-webhooks-page .webhook-feedback--error {
+    color: #991b1b;
+}
+
+.platform-webhooks-page .webhook-action {
+    white-space: nowrap;
+}
+
+.platform-webhooks-page .webhook-action form {
+    margin: 0;
+}
+
+.platform-webhooks-page .webhook-action .button {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+@media (max-width: 1100px) {
     .platform-webhooks-page .platform-table {
-        min-width: 1050px;
+        min-width: 1180px;
         table-layout: auto;
     }
 
@@ -200,53 +229,109 @@
             </a>
         </div>
 
+        @if (session('success'))
+            <div
+                class="platform-card
+                webhook-feedback
+                webhook-feedback--success"
+            >
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div
+                class="platform-card
+                webhook-feedback
+                webhook-feedback--error"
+            >
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="webhook-filters">
-    <a
-        href="{{ route('platform.webhooks') }}"
-        class="webhook-filter
-        {{ $status === '' ? 'webhook-filter--active' : '' }}"
-    >
-        Todos
-    </a>
+            <a
+                href="{{ route('platform.webhooks') }}"
+                class="webhook-filter
+                {{ $status === ''
+                    ? 'webhook-filter--active'
+                    : '' }}"
+            >
+                Todos
+            </a>
 
-    <a
-        href="{{ route('platform.webhooks', ['status' => 'processed']) }}"
-        class="webhook-filter
-        {{ $status === 'processed' ? 'webhook-filter--active' : '' }}"
-    >
-        Processados
-    </a>
+            <a
+                href="{{ route(
+                    'platform.webhooks',
+                    ['status' => 'processed']
+                ) }}"
+                class="webhook-filter
+                {{ $status === 'processed'
+                    ? 'webhook-filter--active'
+                    : '' }}"
+            >
+                Processados
+            </a>
 
-    <a
-        href="{{ route('platform.webhooks', ['status' => 'processing']) }}"
-        class="webhook-filter
-        {{ $status === 'processing' ? 'webhook-filter--active' : '' }}"
-    >
-        Em processamento
-    </a>
+            <a
+                href="{{ route(
+                    'platform.webhooks',
+                    ['status' => 'processing']
+                ) }}"
+                class="webhook-filter
+                {{ $status === 'processing'
+                    ? 'webhook-filter--active'
+                    : '' }}"
+            >
+                Em processamento
+            </a>
 
-    <a
-        href="{{ route('platform.webhooks', ['status' => 'failed']) }}"
-        class="webhook-filter
-        {{ $status === 'failed' ? 'webhook-filter--active' : '' }}"
-    >
-        Falhos
-    </a>
-</div>
+            <a
+                href="{{ route(
+                    'platform.webhooks',
+                    ['status' => 'failed']
+                ) }}"
+                class="webhook-filter
+                {{ $status === 'failed'
+                    ? 'webhook-filter--active'
+                    : '' }}"
+            >
+                Falhos
+            </a>
+        </div>
 
         <section class="platform-card platform-card--table">
             <div class="table-wrap">
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th class="col-provider">Provedor</th>
-                            <th class="col-event">Evento</th>
-                            <th class="col-type">Tipo</th>
-                            <th class="col-reference">Referência</th>
-                            <th class="col-status">Status</th>
-                            <th class="col-attempts">Tentativas</th>
-                            <th class="col-error">Último erro</th>
-                            <th class="col-processed">Processado em</th>
+                            <th class="col-provider">
+                                Provedor
+                            </th>
+                            <th class="col-event">
+                                Evento
+                            </th>
+                            <th class="col-type">
+                                Tipo
+                            </th>
+                            <th class="col-reference">
+                                Referência
+                            </th>
+                            <th class="col-status">
+                                Status
+                            </th>
+                            <th class="col-attempts">
+                                Tentativas
+                            </th>
+                            <th class="col-error">
+                                Último erro
+                            </th>
+                            <th class="col-processed">
+                                Processado em
+                            </th>
+                            <th class="col-action">
+                                Ação
+                            </th>
                         </tr>
                     </thead>
 
@@ -294,12 +379,45 @@
                                 </td>
 
                                 <td class="webhook-processed">
-                                    {{ $receipt->processed_at?->format('d/m/Y H:i:s') ?? '—' }}
+                                    {{
+                                        $receipt->processed_at
+                                            ?->format('d/m/Y H:i:s')
+                                        ?? '—'
+                                    }}
+                                </td>
+
+                                <td class="webhook-action">
+                                    @if (
+                                        $receipt->status === 'failed'
+                                        && is_array($receipt->payload)
+                                    )
+                                        <form
+                                            method="POST"
+                                            action="{{ route(
+                                                'platform.webhooks.retry',
+                                                $receipt
+                                            ) }}"
+                                        >
+                                            @csrf
+
+                                            <button
+                                                type="submit"
+                                                class="button"
+                                                onclick="return confirm(
+                                                    'Reprocessar este webhook?'
+                                                )"
+                                            >
+                                                Reprocessar
+                                            </button>
+                                        </form>
+                                    @else
+                                        —
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8">
+                                <td colspan="9">
                                     Nenhum webhook processado ainda.
                                 </td>
                             </tr>
