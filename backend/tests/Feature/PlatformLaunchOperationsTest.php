@@ -97,7 +97,19 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertOk()
             ->assertSee('Webhooks falhos')
             ->assertSee('Webhooks em processamento')
-            ->assertSee('1');
+            ->assertSee('1')
+            ->assertSee(
+                route(
+                    'platform.webhooks',
+                    ['status' => 'failed']
+                )
+            )
+            ->assertSee(
+                route(
+                    'platform.webhooks',
+                    ['status' => 'processing']
+                )
+            );
     }
 
     public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void
