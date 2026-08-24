@@ -14,6 +14,7 @@ class PaymentEventReceipt extends Model
         'status',
         'attempts',
         'last_error',
+        'payload',
         'processed_at',
     ];
 
@@ -21,6 +22,7 @@ class PaymentEventReceipt extends Model
     {
         return [
             'attempts' => 'integer',
+            'payload' => 'array',
             'processed_at' => 'immutable_datetime',
         ];
     }

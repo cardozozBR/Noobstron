@@ -85,13 +85,28 @@ class StripeSubscriptionWebhookService
                 $object
             );
 
+        /*
+         * Armazena somente os dados necessários para
+         * permitir um reprocessamento posterior.
+         *
+         * O payload só chega até este ponto depois que
+         * a assinatura Stripe foi validada.
+         */
+        $storedPayload = [
+            'type' => $type,
+            'data' => [
+                'object' => $object,
+            ],
+        ];
+
         try {
             return DB::transaction(
                 function () use (
                     $eventId,
                     $type,
                     $object,
-                    $externalReference
+                    $externalReference,
+                    $storedPayload
                 ): bool {
                     $now = now();
 
@@ -109,18 +124,20 @@ class StripeSubscriptionWebhookService
                     }
 
                     if ($receipt === null) {
-                        $receipt = PaymentEventReceipt::query()->create([
-                            'provider' => 'stripe',
-                            'event_id' => $eventId,
-                            'event_type' => $type !== ''
-                                ? $type
-                                : 'unknown',
-                            'external_reference' => $externalReference,
-                            'status' => 'processing',
-                            'attempts' => 1,
-                            'last_error' => null,
-                            'processed_at' => null,
-                        ]);
+                        $receipt =
+                            PaymentEventReceipt::query()->create([
+                                'provider' => 'stripe',
+                                'event_id' => $eventId,
+                                'event_type' => $type !== ''
+                                    ? $type
+                                    : 'unknown',
+                                'external_reference' => $externalReference,
+                                'status' => 'processing',
+                                'attempts' => 1,
+                                'last_error' => null,
+                                'payload' => $storedPayload,
+                                'processed_at' => null,
+                            ]);
                     } else {
                         $receipt->forceFill([
                             'event_type' => $type !== ''
@@ -130,6 +147,8 @@ class StripeSubscriptionWebhookService
                             'status' => 'processing',
                             'attempts' => ((int) $receipt->attempts) + 1,
                             'last_error' => null,
+                            'payload' => $storedPayload,
+                            'processed_at' => null,
                         ])->save();
                     }
 
@@ -168,6 +187,7 @@ class StripeSubscriptionWebhookService
                         0,
                         2000
                     ),
+                    'payload' => $storedPayload,
                     'processed_at' => null,
                 ]);
             } else {
@@ -178,6 +198,7 @@ class StripeSubscriptionWebhookService
                         0,
                         2000
                     ),
+                    'payload' => $storedPayload,
                     'processed_at' => null,
                 ])->save();
             }
