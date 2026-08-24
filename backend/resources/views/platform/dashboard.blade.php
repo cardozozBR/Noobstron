@@ -63,6 +63,11 @@
     margin-top: 0;
 }
 
+.platform-dashboard-page a.metric-card {
+    text-decoration: none;
+    color: inherit;
+}
+
 @media (max-width: 800px) {
     .platform-dashboard-page .platform-toolbar {
         align-items: flex-start;
@@ -145,134 +150,35 @@
         </div>
 
         <div class="metric-grid">
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.tenants') }}
-        </div>
+            <div class="metric-card">
+                <div class="metric-label">
+                    {{ __('platform.dashboard.tenants') }}
+                </div>
 
-        <div class="metric-value">
-            {{ $tenantCount }}
-        </div>
-    </div>
+                <div class="metric-value">
+                    {{ $tenantCount }}
+                </div>
+            </div>
 
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.active_subscriptions') }}
-        </div>
+            <div class="metric-card">
+                <div class="metric-label">
+                    {{ __('platform.dashboard.active_subscriptions') }}
+                </div>
 
-        <div class="metric-value">
-            {{ (int) ($subscriptionCounts['active'] ?? 0) }}
-        </div>
-    </div>
+                <div class="metric-value">
+                    {{ (int) ($subscriptionCounts['active'] ?? 0) }}
+                </div>
+            </div>
 
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.suspended') }}
-        </div>
+            <div class="metric-card">
+                <div class="metric-label">
+                    {{ __('platform.dashboard.suspended') }}
+                </div>
 
-        <div class="metric-value">
-            {{ (int) ($subscriptionCounts['suspended'] ?? 0) }}
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.active_trials') }}
-        </div>
-
-        <div class="metric-value">
-            {{ $trialActive }}
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.trials_expiring') }}
-        </div>
-
-        <div class="metric-value">
-            {{ $trialExpiring }}
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-label">
-            {{ __('platform.dashboard.global_users') }}
-        </div>
-
-        <div class="metric-value">
-            {{ $usage['users'] }}
-        </div>
-    </div>
-
-    <a
-        class="metric-card"
-        href="{{ route(
-            'platform.webhooks',
-            ['status' => 'failed']
-        ) }}"
-        style="text-decoration:none;color:inherit;"
-    >
-        <div class="metric-label">
-            Webhooks falhos
-        </div>
-
-        <div class="metric-value">
-            {{ (int) ($webhookCounts['failed'] ?? 0) }}
-        </div>
-    </a>
-
-    <a
-        class="metric-card"
-        href="{{ route(
-            'platform.webhooks',
-            ['status' => 'processing']
-        ) }}"
-        style="text-decoration:none;color:inherit;"
-    >
-        <div class="metric-label">
-            Webhooks em processamento
-        </div>
-
-        <div class="metric-value">
-            {{ (int) ($webhookCounts['processing'] ?? 0) }}
-        </div>
-    </a>
-</div>
-
-            <a
-    class="metric-card"
-    href="{{ route(
-        'platform.webhooks',
-        ['status' => 'failed']
-    ) }}"
-    style="text-decoration:none;color:inherit;"
->
-    <div class="metric-label">
-        Webhooks falhos
-    </div>
-
-    <div class="metric-value">
-        {{ (int) ($webhookCounts['failed'] ?? 0) }}
-    </div>
-</a>
-
-<a
-    class="metric-card"
-    href="{{ route(
-        'platform.webhooks',
-        ['status' => 'processing']
-    ) }}"
-    style="text-decoration:none;color:inherit;"
->
-    <div class="metric-label">
-        Webhooks em processamento
-    </div>
-
-    <div class="metric-value">
-        {{ (int) ($webhookCounts['processing'] ?? 0) }}
-    </div>
-</a>
+                <div class="metric-value">
+                    {{ (int) ($subscriptionCounts['suspended'] ?? 0) }}
+                </div>
+            </div>
 
             <div class="metric-card">
                 <div class="metric-label">
@@ -304,7 +210,13 @@
                 </div>
             </div>
 
-            <div class="metric-card">
+            <a
+                class="metric-card"
+                href="{{ route(
+                    'platform.webhooks',
+                    ['status' => 'failed']
+                ) }}"
+            >
                 <div class="metric-label">
                     Webhooks falhos
                 </div>
@@ -312,9 +224,15 @@
                 <div class="metric-value">
                     {{ (int) ($webhookCounts['failed'] ?? 0) }}
                 </div>
-            </div>
+            </a>
 
-            <div class="metric-card">
+            <a
+                class="metric-card"
+                href="{{ route(
+                    'platform.webhooks',
+                    ['status' => 'processing']
+                ) }}"
+            >
                 <div class="metric-label">
                     Webhooks em processamento
                 </div>
@@ -322,7 +240,7 @@
                 <div class="metric-value">
                     {{ (int) ($webhookCounts['processing'] ?? 0) }}
                 </div>
-            </div>
+            </a>
         </div>
 
         <div
@@ -336,7 +254,9 @@
 
                 @forelse ($mrr as $currency => $minor)
                     <p>
-                        <strong>{{ $currency }} {{ number_format(((int) $minor) / 100, 2, ',', '.') }}</strong>
+                        <strong>
+                            {{ $currency }} {{ number_format(((int) $minor) / 100, 2, ',', '.') }}
+                        </strong>
                     </p>
 
                     <p class="platform-muted">
