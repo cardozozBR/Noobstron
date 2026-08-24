@@ -199,6 +199,18 @@ class PlatformAdminController extends Controller
             'failed' => (int) DB::table('failed_jobs')->count(),
         ];
 
+        $messageFailureCounts = [
+            'email' => (int) EmailMessage::query()
+                ->withoutGlobalScopes()
+                ->where('status', 'failed')
+                ->count(),
+
+            'whatsapp' => (int) WhatsAppMessage::query()
+                ->withoutGlobalScopes()
+                ->where('status', 'failed')
+                ->count(),
+        ];
+
         return view('platform.dashboard', [
             'tenantCount' => Tenant::query()->count(),
             'subscriptionCounts' => $subscriptionCounts,
@@ -209,6 +221,7 @@ class PlatformAdminController extends Controller
             'webhookCounts' => $webhookCounts,
             'latestFailedWebhook' => $latestFailedWebhook,
             'queueCounts' => $queueCounts,
+            'messageFailureCounts' => $messageFailureCounts,
         ]);
     }
 

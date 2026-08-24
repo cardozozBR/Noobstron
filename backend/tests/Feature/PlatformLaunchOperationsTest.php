@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\CommercialContact;
+use App\Models\EmailMessage;
 use App\Models\PaymentEventReceipt;
 use App\Models\Plan;
 use App\Models\PlanPrice;
 use App\Models\PlatformAdmin;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Models\WhatsAppMessage;
+use App\Services\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -148,6 +151,53 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Jobs falhos')
             ->assertSee('Fila aguardando processamento')
             ->assertSee('Falhas na fila precisam de atenção')
+            ->assertSee(
+                'class="metric-card metric-card--alert"',
+                false
+            );
+    }
+
+    public function test_platform_dashboard_shows_message_failure_counts(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Message Failure Tenant',
+            'slug' => 'message-failure-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        EmailMessage::query()->withoutGlobalScopes()->create([
+            'tenant_id' => $tenant->id,
+            'to_email' => 'failed@example.test',
+            'subject' => 'Falha de teste',
+            'body' => 'Mensagem de teste.',
+            'status' => 'failed',
+            'failed_at' => now(),
+            'failure_reason' => 'Test email failure.',
+        ]);
+
+        WhatsAppMessage::query()->withoutGlobalScopes()->create([
+            'tenant_id' => $tenant->id,
+            'phone' => '5511999999999',
+            'body' => 'Mensagem de teste.',
+            'status' => 'failed',
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' => 'Test WhatsApp failure.',
+        ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform')
+            ->assertOk()
+            ->assertSee('E-mails falhos')
+            ->assertSee('WhatsApps falhos')
+            ->assertSee('Falhas de envio de e-mail precisam de atenção')
+            ->assertSee('Falhas de envio do WhatsApp precisam de atenção')
             ->assertSee(
                 'class="metric-card metric-card--alert"',
                 false

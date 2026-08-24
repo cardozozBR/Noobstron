@@ -303,6 +303,46 @@
                     @endif
                 </div>
             </a>
+
+            <div
+                class="metric-card{{ (int) ($messageFailureCounts['email'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
+            >
+                <div class="metric-label">
+                    E-mails falhos
+                </div>
+
+                <div class="metric-value">
+                    {{ (int) ($messageFailureCounts['email'] ?? 0) }}
+                </div>
+
+                <div class="platform-muted metric-meta">
+                    @if ((int) ($messageFailureCounts['email'] ?? 0) > 0)
+                        Falhas de envio de e-mail precisam de atenção
+                    @else
+                        Nenhuma falha de e-mail
+                    @endif
+                </div>
+            </div>
+
+            <div
+                class="metric-card{{ (int) ($messageFailureCounts['whatsapp'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
+            >
+                <div class="metric-label">
+                    WhatsApps falhos
+                </div>
+
+                <div class="metric-value">
+                    {{ (int) ($messageFailureCounts['whatsapp'] ?? 0) }}
+                </div>
+
+                <div class="platform-muted metric-meta">
+                    @if ((int) ($messageFailureCounts['whatsapp'] ?? 0) > 0)
+                        Falhas de envio do WhatsApp precisam de atenção
+                    @else
+                        Nenhuma falha de WhatsApp
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div
