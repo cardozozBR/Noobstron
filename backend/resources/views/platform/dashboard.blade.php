@@ -265,6 +265,44 @@
                     {{ (int) ($webhookCounts['processing'] ?? 0) }}
                 </div>
             </a>
+
+            <a
+                class="metric-card"
+                href="{{ route('platform.health') }}"
+            >
+                <div class="metric-label">
+                    Jobs pendentes
+                </div>
+
+                <div class="metric-value">
+                    {{ (int) ($queueCounts['pending'] ?? 0) }}
+                </div>
+
+                <div class="platform-muted metric-meta">
+                    Fila aguardando processamento
+                </div>
+            </a>
+
+            <a
+                class="metric-card{{ (int) ($queueCounts['failed'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
+                href="{{ route('platform.health') }}"
+            >
+                <div class="metric-label">
+                    Jobs falhos
+                </div>
+
+                <div class="metric-value">
+                    {{ (int) ($queueCounts['failed'] ?? 0) }}
+                </div>
+
+                <div class="platform-muted metric-meta">
+                    @if ((int) ($queueCounts['failed'] ?? 0) > 0)
+                        Falhas na fila precisam de atenção
+                    @else
+                        Nenhuma falha na fila
+                    @endif
+                </div>
+            </a>
         </div>
 
         <div

@@ -10,7 +10,9 @@ use App\Models\PlatformAdmin;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class PlatformLaunchOperationsTest extends TestCase
@@ -114,6 +116,41 @@ class PlatformLaunchOperationsTest extends TestCase
                     'platform.webhooks',
                     ['status' => 'processing']
                 )
+            );
+    }
+
+    public function test_platform_dashboard_shows_queue_status_counts(): void
+    {
+        $admin = $this->platformAdmin();
+
+        DB::table('jobs')->insert([
+            'queue' => 'default',
+            'payload' => '{}',
+            'attempts' => 0,
+            'reserved_at' => null,
+            'available_at' => now()->timestamp,
+            'created_at' => now()->timestamp,
+        ]);
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => (string) Str::uuid(),
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => '{}',
+            'exception' => 'Test queue failure.',
+            'failed_at' => now(),
+        ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform')
+            ->assertOk()
+            ->assertSee('Jobs pendentes')
+            ->assertSee('Jobs falhos')
+            ->assertSee('Fila aguardando processamento')
+            ->assertSee('Falhas na fila precisam de atenção')
+            ->assertSee(
+                'class="metric-card metric-card--alert"',
+                false
             );
     }
 

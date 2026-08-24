@@ -194,6 +194,11 @@ class PlatformAdminController extends Controller
             ->orderByDesc('id')
             ->first();
 
+        $queueCounts = [
+            'pending' => (int) DB::table('jobs')->count(),
+            'failed' => (int) DB::table('failed_jobs')->count(),
+        ];
+
         return view('platform.dashboard', [
             'tenantCount' => Tenant::query()->count(),
             'subscriptionCounts' => $subscriptionCounts,
@@ -203,6 +208,7 @@ class PlatformAdminController extends Controller
             'usage' => $usage,
             'webhookCounts' => $webhookCounts,
             'latestFailedWebhook' => $latestFailedWebhook,
+            'queueCounts' => $queueCounts,
         ]);
     }
 
