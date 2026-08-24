@@ -97,6 +97,7 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertOk()
             ->assertSee('Webhooks falhos')
             ->assertSee('Webhooks em processamento')
+            ->assertSee('Última falha:')
             ->assertSee('1')
             ->assertSee(
                 route(
@@ -110,6 +111,18 @@ class PlatformLaunchOperationsTest extends TestCase
                     ['status' => 'processing']
                 )
             );
+    }
+
+    public function test_platform_dashboard_shows_no_pending_webhook_failure_message(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform')
+            ->assertOk()
+            ->assertSee('Webhooks falhos')
+            ->assertSee('Nenhuma falha pendente')
+            ->assertDontSee('Última falha:');
     }
 
     public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void

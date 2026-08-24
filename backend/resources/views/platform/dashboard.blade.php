@@ -51,6 +51,11 @@
     letter-spacing: -.035em;
 }
 
+.platform-dashboard-page .metric-meta {
+    margin-top: 10px;
+    font-size: 12px;
+}
+
 .platform-dashboard-page .detail-grid {
     gap: 14px;
 }
@@ -223,6 +228,15 @@
 
                 <div class="metric-value">
                     {{ (int) ($webhookCounts['failed'] ?? 0) }}
+                </div>
+
+                <div class="platform-muted metric-meta">
+                    @if ($latestFailedWebhook !== null)
+                        Última falha:
+                        {{ $latestFailedWebhook->updated_at?->format('d/m/Y H:i') }}
+                    @else
+                        Nenhuma falha pendente
+                    @endif
                 </div>
             </a>
 

@@ -174,19 +174,25 @@ class PlatformAdminController extends Controller
         ];
 
         $webhookCounts = PaymentEventReceipt::query()
-    ->whereIn(
-        'status',
-        [
-            'failed',
-            'processing',
-        ]
-    )
-    ->select(
-        'status',
-        DB::raw('COUNT(*) as aggregate')
-    )
-    ->groupBy('status')
-    ->pluck('aggregate', 'status');
+            ->whereIn(
+                'status',
+                [
+                    'failed',
+                    'processing',
+                ]
+            )
+            ->select(
+                'status',
+                DB::raw('COUNT(*) as aggregate')
+            )
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
+
+        $latestFailedWebhook = PaymentEventReceipt::query()
+            ->where('status', 'failed')
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->first();
 
         return view('platform.dashboard', [
             'tenantCount' => Tenant::query()->count(),
@@ -196,6 +202,7 @@ class PlatformAdminController extends Controller
             'mrr' => $mrr,
             'usage' => $usage,
             'webhookCounts' => $webhookCounts,
+            'latestFailedWebhook' => $latestFailedWebhook,
         ]);
     }
 
