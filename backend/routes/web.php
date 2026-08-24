@@ -478,6 +478,15 @@ Route::get(
     ->name('platform.health');
 
 Route::get(
+    '/platform/webhooks',
+    [PlatformAdminController::class, 'webhooks']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.webhooks');
+Route::get(
     '/platform/contacts',
     [PlatformCommercialContactController::class, 'index']
 )

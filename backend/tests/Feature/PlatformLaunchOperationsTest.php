@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PaymentEventReceipt;
 use App\Models\CommercialContact;
 use App\Models\Plan;
 use App\Models\PlanPrice;
@@ -107,6 +108,34 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('MRR contratual')
             ->assertDontSee('BRL 499,00');
     }
+
+public function test_platform_admin_can_view_payment_webhook_receipts(): void
+{
+    $admin = $this->platformAdmin();
+
+    PaymentEventReceipt::query()->create([
+        'provider' => 'stripe',
+        'event_id' => 'evt_platform_webhook_123',
+        'event_type' =>
+            'customer.subscription.updated',
+        'external_reference' =>
+            'sub_platform_webhook_123',
+        'processed_at' => now(),
+    ]);
+
+    $this->actingAs($admin, 'platform')
+        ->get('http://localhost/platform/webhooks')
+        ->assertOk()
+        ->assertSee('Webhooks')
+        ->assertSee('STRIPE')
+        ->assertSee('evt_platform_webhook_123')
+        ->assertSee(
+            'customer.subscription.updated'
+        )
+        ->assertSee(
+            'sub_platform_webhook_123'
+        );
+}
 
     public function test_platform_admin_can_view_operational_health_and_commercial_contacts(): void
     {
