@@ -56,6 +56,16 @@
     font-size: 12px;
 }
 
+.platform-dashboard-page .metric-card--alert {
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
+.platform-dashboard-page .metric-card--alert .metric-label,
+.platform-dashboard-page .metric-card--alert .metric-value {
+    color: #991b1b;
+}
+
 .platform-dashboard-page .detail-grid {
     gap: 14px;
 }
@@ -216,7 +226,7 @@
             </div>
 
             <a
-                class="metric-card"
+                class="metric-card{{ (int) ($webhookCounts['failed'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
                 href="{{ route(
                     'platform.webhooks',
                     ['status' => 'failed']

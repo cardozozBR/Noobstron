@@ -98,6 +98,10 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Webhooks falhos')
             ->assertSee('Webhooks em processamento')
             ->assertSee('Última falha:')
+            ->assertSee(
+                'class="metric-card metric-card--alert"',
+                false
+            )
             ->assertSee('1')
             ->assertSee(
                 route(
@@ -122,7 +126,11 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertOk()
             ->assertSee('Webhooks falhos')
             ->assertSee('Nenhuma falha pendente')
-            ->assertDontSee('Última falha:');
+            ->assertDontSee('Última falha:')
+            ->assertDontSee(
+                'class="metric-card metric-card--alert"',
+                false
+            );
     }
 
     public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void
