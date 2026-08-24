@@ -173,6 +173,21 @@ class PlatformAdminController extends Controller
                 ->sum('total_tokens'),
         ];
 
+        $webhookCounts = PaymentEventReceipt::query()
+    ->whereIn(
+        'status',
+        [
+            'failed',
+            'processing',
+        ]
+    )
+    ->select(
+        'status',
+        DB::raw('COUNT(*) as aggregate')
+    )
+    ->groupBy('status')
+    ->pluck('aggregate', 'status');
+
         return view('platform.dashboard', [
             'tenantCount' => Tenant::query()->count(),
             'subscriptionCounts' => $subscriptionCounts,
@@ -180,6 +195,7 @@ class PlatformAdminController extends Controller
             'trialExpiring' => $trialExpiring,
             'mrr' => $mrr,
             'usage' => $usage,
+            'webhookCounts' => $webhookCounts,
         ]);
     }
 

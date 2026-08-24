@@ -66,6 +66,40 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Webhooks');
     }
 
+    public function test_platform_dashboard_shows_webhook_status_counts(): void
+    {
+        $admin = $this->platformAdmin();
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_dashboard_failed_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_dashboard_failed_123',
+            'status' => 'failed',
+            'attempts' => 2,
+            'last_error' => 'Dashboard failure.',
+            'processed_at' => null,
+        ]);
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt_dashboard_processing_123',
+            'event_type' => 'customer.subscription.updated',
+            'external_reference' => 'sub_dashboard_processing_123',
+            'status' => 'processing',
+            'attempts' => 1,
+            'last_error' => null,
+            'processed_at' => null,
+        ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform')
+            ->assertOk()
+            ->assertSee('Webhooks falhos')
+            ->assertSee('Webhooks em processamento')
+            ->assertSee('1');
+    }
+
     public function test_cancelled_paid_subscription_is_excluded_from_contractual_mrr(): void
     {
         $admin = $this->platformAdmin();
