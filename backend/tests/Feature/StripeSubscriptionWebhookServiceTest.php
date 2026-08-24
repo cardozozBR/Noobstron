@@ -252,6 +252,132 @@ class StripeSubscriptionWebhookServiceTest extends TestCase
         );
     }
 
+    public function test_payment_failure_blocks_writes_and_paid_invoice_restores_access(): void
+    {
+        $this->configureWebhook();
+
+        $subscription = $this->subscription(
+            'sub_payment_recovery_123',
+            'active'
+        );
+
+        $subscription->forceFill([
+            'paid_at' => CarbonImmutable::parse(
+                '2026-08-20 00:01:00 UTC'
+            ),
+        ])->save();
+
+        $tenant = $subscription->tenant;
+
+        $this->assertTrue(
+            app(
+                \App\Services\TenantWriteAccessService::class
+            )->allowed($tenant)
+        );
+
+        $failedProcessed = $this->handle([
+            'type' => 'invoice.payment_failed',
+            'data' => [
+                'object' => [
+                    'id' => 'in_recovery_failed_123',
+                    'subscription' =>
+                        'sub_payment_recovery_123',
+                    'status' => 'open',
+                    'currency' => 'brl',
+                    'amount_due' => 9900,
+                    'amount_paid' => 0,
+                    'amount_remaining' => 9900,
+                    'billing_reason' =>
+                        'subscription_cycle',
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($failedProcessed);
+
+        $subscription->refresh();
+
+        $this->assertSame(
+            'suspended',
+            $subscription->status->value
+        );
+
+        $this->assertFalse(
+            app(
+                \App\Services\TenantWriteAccessService::class
+            )->allowed($tenant)
+        );
+
+        $periodStart = CarbonImmutable::parse(
+            '2026-09-20 00:00:00 UTC'
+        );
+
+        $periodEnd = CarbonImmutable::parse(
+            '2026-10-20 00:00:00 UTC'
+        );
+
+        $paidProcessed = $this->handle([
+            'type' => 'invoice.paid',
+            'data' => [
+                'object' => [
+                    'id' => 'in_recovery_paid_123',
+                    'subscription' =>
+                        'sub_payment_recovery_123',
+                    'status' => 'paid',
+                    'currency' => 'brl',
+                    'amount_due' => 9900,
+                    'amount_paid' => 9900,
+                    'amount_remaining' => 0,
+                    'billing_reason' =>
+                        'subscription_cycle',
+                    'lines' => [
+                        'data' => [
+                            [
+                                'period' => [
+                                    'start' =>
+                                        $periodStart->timestamp,
+                                    'end' =>
+                                        $periodEnd->timestamp,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($paidProcessed);
+
+        $subscription->refresh();
+
+        $this->assertSame(
+            'active',
+            $subscription->status->value
+        );
+
+        $this->assertTrue(
+            app(
+                \App\Services\TenantWriteAccessService::class
+            )->allowed($tenant)
+        );
+
+        $this->assertSame(
+            '2026-09-20 00:00:00',
+            $subscription
+                ->current_period_start
+                ->utc()
+                ->format('Y-m-d H:i:s')
+        );
+
+        $this->assertSame(
+            '2026-10-20 00:00:00',
+            $subscription
+                ->current_period_end
+                ->utc()
+                ->format('Y-m-d H:i:s')
+        );
+    }
+
     public function test_subscription_deleted_cancels_matching_subscription(): void
     {
         $this->configureWebhook();
