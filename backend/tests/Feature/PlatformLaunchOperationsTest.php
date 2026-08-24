@@ -120,6 +120,9 @@ public function test_platform_admin_can_view_payment_webhook_receipts(): void
             'customer.subscription.updated',
         'external_reference' =>
             'sub_platform_webhook_123',
+        'status' => 'processed',
+        'attempts' => 1,
+        'last_error' => null,
         'processed_at' => now(),
     ]);
 
@@ -134,7 +137,9 @@ public function test_platform_admin_can_view_payment_webhook_receipts(): void
         )
         ->assertSee(
             'sub_platform_webhook_123'
-        );
+        )
+        ->assertSee('PROCESSED')
+        ->assertSee('1');
 }
 
     public function test_platform_admin_can_view_operational_health_and_commercial_contacts(): void

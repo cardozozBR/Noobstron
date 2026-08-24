@@ -26,6 +26,29 @@
     background: #eef2ff;
 }
 
+.platform-webhooks-page .status-badge--processed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.platform-webhooks-page .status-badge--processing {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.platform-webhooks-page .status-badge--failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.platform-webhooks-page .webhook-error {
+    max-width: 320px;
+    white-space: normal;
+    word-break: break-word;
+    color: #991b1b;
+    font-size: 13px;
+}
+
 @media (max-width: 800px) {
     .platform-webhooks-page .platform-toolbar {
         align-items: flex-start;
@@ -77,6 +100,9 @@
                             <th>Evento</th>
                             <th>Tipo</th>
                             <th>Referência</th>
+                            <th>Status</th>
+                            <th>Tentativas</th>
+                            <th>Último erro</th>
                             <th>Processado em</th>
                         </tr>
                     </thead>
@@ -108,12 +134,29 @@
                                 </td>
 
                                 <td>
-                                    {{ $receipt->processed_at?->format('d/m/Y H:i:s') }}
+                                    <span
+                                        class="status-badge
+                                        status-badge--{{ $receipt->status }}"
+                                    >
+                                        {{ strtoupper($receipt->status) }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ $receipt->attempts }}
+                                </td>
+
+                                <td class="webhook-error">
+                                    {{ $receipt->last_error ?: '—' }}
+                                </td>
+
+                                <td>
+                                    {{ $receipt->processed_at?->format('d/m/Y H:i:s') ?? '—' }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5">
+                                <td colspan="8">
                                     Nenhum webhook processado ainda.
                                 </td>
                             </tr>
