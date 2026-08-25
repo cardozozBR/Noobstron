@@ -67,6 +67,59 @@
         </div>
 
         <div class="detail-grid">
+@if (
+    $tenant->trial_started_at
+    && $tenant->trial_ends_at
+)
+    <form
+        method="POST"
+        action="{{ route(
+            'platform.tenants.trial.extend',
+            $tenant
+        ) }}"
+        style="margin-top: 18px"
+    >
+        @csrf
+
+        <div style="display:grid; gap:10px">
+            <label>
+                <strong>Prorrogar trial</strong>
+
+                <input
+                    type="number"
+                    name="days"
+                    min="1"
+                    max="90"
+                    value="7"
+                    required
+                    style="display:block; margin-top:6px"
+                >
+            </label>
+
+            <label>
+                <span class="platform-muted">Motivo</span>
+
+                <input
+                    type="text"
+                    name="reason"
+                    maxlength="500"
+                    placeholder="Motivo administrativo"
+                    style="display:block; margin-top:6px; width:100%"
+                >
+            </label>
+
+            <button
+                class="button button-secondary"
+                type="submit"
+                onclick="return confirm(
+                    'Confirma a prorrogação do trial deste tenant?'
+                )"
+            >
+                Prorrogar
+            </button>
+        </div>
+    </form>
+@endif
             <section class="platform-card">
                 <h2>{{ __('platform.tenants.basic_data') }}</h2>
 

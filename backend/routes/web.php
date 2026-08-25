@@ -460,6 +460,15 @@ Route::get(
     ->middleware('platform.admin')
     ->name('platform.tenants.index');
 
+Route::post(
+    '/platform/tenants/{tenant}/trial/extend',
+    [PlatformTenantController::class, 'extendTrial']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.tenants.trial.extend');
 Route::get(
     '/platform/tenants/{tenant}',
     [PlatformTenantController::class, 'show']

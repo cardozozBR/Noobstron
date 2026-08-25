@@ -12,11 +12,12 @@ class TrialService
 {
     public function __construct(
         private readonly SubscriptionBillingService $billing,
-    ) {
-    }
+    ) {}
 
     public const STATUS_NOT_STARTED = 'not_started';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_EXPIRED = 'expired';
 
     public function start(
@@ -43,6 +44,43 @@ class TrialService
         $tenant->forceFill([
             'trial_started_at' => $period->startsAt(),
             'trial_ends_at' => $period->endsAt(),
+        ])->save();
+
+        return $tenant->refresh();
+    }
+
+    public function extend(
+        Tenant $tenant,
+        int $days,
+        ?CarbonImmutable $moment = null,
+    ): Tenant {
+        if ($days < 1 || $days > 90) {
+            throw new RuntimeException(
+                'Trial extension must be between 1 and 90 days.'
+            );
+        }
+
+        if (
+            $tenant->trial_started_at === null
+            || $tenant->trial_ends_at === null
+        ) {
+            throw new RuntimeException(
+                'Trial has not been initialized.'
+            );
+        }
+
+        $moment ??= CarbonImmutable::now('UTC');
+
+        $currentEnd = CarbonImmutable::instance(
+            $tenant->trial_ends_at
+        );
+
+        $base = $currentEnd->greaterThan($moment)
+            ? $currentEnd
+            : $moment;
+
+        $tenant->forceFill([
+            'trial_ends_at' => $base->addDays($days),
         ])->save();
 
         return $tenant->refresh();

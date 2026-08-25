@@ -11,6 +11,9 @@ use App\Models\SubscriptionInvoice;
 use App\Models\Tenant;
 use App\Models\TenantFeature;
 use App\Models\WhatsAppMessage;
+use App\Services\PlatformAdminAuditService;
+use App\Services\TrialService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -306,5 +309,111 @@ class PlatformTenantController extends Controller
             ->get()
             ->unique('tenant_id')
             ->keyBy('tenant_id');
+    }
+
+    public function extendTrial(
+        Request $request,
+        Tenant $tenant,
+        TrialService $trialService,
+        PlatformAdminAuditService $audit,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'days' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:90',
+            ],
+            'reason' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+        ]);
+
+        $before = [
+            'status' => $tenant->status,
+            'trial_started_at' => $tenant->trial_started_at?->toISOString(),
+            'trial_ends_at' => $tenant->trial_ends_at?->toISOString(),
+        ];
+
+        try {
+            DB::transaction(
+                function () use (
+                    $tenant,
+                    $trialService,
+                    $audit,
+                    $request,
+                    $validated,
+                    $before
+                ): void {
+                    $trialService->extend(
+                        $tenant,
+                        (int) $validated['days']
+                    );
+
+                    $tenant->refresh();
+
+                    $after = [
+                        'status' => $tenant->status,
+                        'trial_started_at' => $tenant
+                            ->trial_started_at
+                            ?->toISOString(),
+                        'trial_ends_at' => $tenant
+                            ->trial_ends_at
+                            ?->toISOString(),
+                    ];
+
+                    $audit->log(
+                        action: 'tenant.trial_extended',
+                        tenant: $tenant,
+                        entityType: Tenant::class,
+                        entityId: $tenant->id,
+                        beforeState: $before,
+                        afterState: $after,
+                        reason: $validated['reason']
+                            ?? null,
+                        request: $request,
+                    );
+                }
+            );
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->with(
+                    'success',
+                    'Trial prorrogado por '
+                    .$validated['days']
+                    .' dia(s).'
+                );
+        } catch (\Throwable $exception) {
+            try {
+                $audit->log(
+                    action: 'tenant.trial_extended',
+                    tenant: $tenant,
+                    entityType: Tenant::class,
+                    entityId: $tenant->id,
+                    beforeState: $before,
+                    result: PlatformAdminAuditService::RESULT_FAILURE,
+                    reason: $exception->getMessage(),
+                    request: $request,
+                );
+            } catch (\Throwable) {
+                // A falha principal não deve ser mascarada
+                // por eventual indisponibilidade da auditoria.
+            }
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->withErrors([
+                    'trial' => 'Não foi possível prorrogar o trial.',
+                ]);
+        }
     }
 }
