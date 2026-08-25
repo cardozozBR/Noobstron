@@ -76,7 +76,6 @@ Tenant B em operações sensíveis.
 -   [x] Monitoramento de Stripe
 -   [x] Monitoramento de configuração WhatsApp
 -   [x] Estados operacionais `OK / Atenção / Crítico`
--   [x] Remoção segura individual de failed jobs
 -   [x] Retry em lote avaliado e não adotado no lançamento por segurança operacional
 -   [x] Visão detalhada por tenant
 -   [x] Histórico de assinaturas por tenant
@@ -90,6 +89,10 @@ Tenant B em operações sensíveis.
 -   [x] Auditoria de suspensão/reativação de tenant
 -   [x] Bloqueio efetivo do workspace para tenant `blocked`
 -   [x] Preservação da assinatura durante suspensão/reativação
+-   [x] Cancelamento administrativo de assinatura Stripe
+-   [x] Auditoria do agendamento de cancelamento
+-   [x] Cancelamento Stripe configurado para o fim do período atual
+-   [x] Smoke externo do cancelamento validado em Stripe Test
 
 ### Ainda falta
 
@@ -99,7 +102,8 @@ Tenant B em operações sensíveis.
 -   [ ] Acabamento final da UX
 -   [ ] Homologação completa do `/platform`
 
-**Checkpoint da Fase 7B:** suspender/reativar tenant concluído e validado em produção.
+**Checkpoint da Fase 7B:** suspensão e reativação de tenant concluídas e
+validadas em produção.
 
 -   Suspensão `active` → `blocked` validada.
 -   Tenant `blocked` deixa de resolver o workspace.
@@ -110,7 +114,8 @@ Tenant B em operações sensíveis.
 -   Deploy concluído com `DEPLOY_OK`.
 -   Commit implantado: `a85a489`.
 
-**Checkpoint da Fase 7C:** cancelamento administrativo de assinatura Stripe implementado e implantado em produção.
+**Checkpoint da Fase 7C:** cancelamento administrativo de assinatura
+Stripe implementado, implantado e validado.
 
 -   Cancelamento solicitado ao fim do período atual.
 -   Assinatura permanece `active` até efetivação pela Stripe.
@@ -119,9 +124,13 @@ Tenant B em operações sensíveis.
 -   Falha da Stripe não altera `cancel_at` localmente.
 -   UI validada em produção para assinatura Stripe ativa.
 -   Deploy concluído com `DEPLOY_OK`.
--   Commit implantado: `b66c0d1`.
+-   Commit funcional implantado: `b66c0d1`.
 -   Smoke destrutivo não executado em Stripe Live por segurança.
--   Validação da chamada externa pendente em Stripe Test.
+-   Chamada externa validada em Stripe Test.
+-   `cancel_at_period_end=true` confirmado diretamente na Stripe.
+-   Assinatura permaneceu `active` durante o smoke.
+-   `cancel_at` foi preenchido.
+-   `canceled_at` permaneceu `null`.
 
 ## 4. Auditoria completa do produto do tenant
 
@@ -328,7 +337,7 @@ Antes do go-live:
 -   [ ] Admin Master homologado
 -   [ ] Produto do tenant homologado
 -   [ ] Produção saudável
--   [ ] Smoke test Stripe
+-   [x] Smoke test Stripe
 -   [ ] Smoke test e-mail
 -   [ ] Smoke test WhatsApp
 -   [ ] Monitoramento ativo
@@ -347,15 +356,15 @@ sem bloquear a entrada dos primeiros clientes.
 
 ## Sequência recomendada
 
-1.  Terminar Admin Master.
-2.  Auditoria completa do repositório/produto.
-3.  Criar lista real P0 / P1 / P2.
-4.  Resolver P0.
-5.  Infraestrutura + segurança + LGPD.
-6.  Homologação completa.
-7.  Gate GO/NO-GO.
-8.  Lançamento.
+1. Terminar Admin Master.
+2. Auditoria completa do repositório/produto.
+3. Criar lista real P0 / P1 / P2.
+4. Resolver P0.
+5. Infraestrutura + segurança + LGPD.
+6. Homologação completa.
+7. Gate GO/NO-GO.
+8. Lançamento.
 
 ## Checkpoint atual
 
-> **Admin Master: recuperação operacional, gestão de filas, saúde operacional avançada, visão detalhada de tenants e fundação da auditoria administrativa concluídas em produção. Commit atual: `4d23547`. Última suíte completa: 2008 testes / 4891 assertions. Próxima etapa: ações administrativas auditadas por tenant.**
+> **Admin Master: Fases 1 a 6 concluídas em produção. Fase 7 com suspensão/reativação validadas em produção e cancelamento administrativo Stripe implementado, implantado e validado com smoke externo em Stripe Test. Fase 8 com fundação da auditoria administrativa concluída. Próxima etapa: continuar as ações administrativas auditadas por tenant e avançar a revisão pré-lançamento.**

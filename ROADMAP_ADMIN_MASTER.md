@@ -232,7 +232,7 @@ Fase 7B validada em produção.
 -   [x] Testes automatizados concluídos
 -   [x] Deploy de produção concluído com `DEPLOY_OK`
 -   [x] Interface validada em produção
--   [ ] Smoke da chamada externa de cancelamento em Stripe Test
+-   [x] Smoke da chamada externa de cancelamento em Stripe Test
 
 **Checkpoint da Fase 7C:** cancelamento administrativo de assinatura Stripe implementado e implantado em produção.
 
@@ -245,10 +245,10 @@ Fase 7B validada em produção.
 -   Deploy concluído com `DEPLOY_OK`.
 -   Commit implantado: `b66c0d1`.
 -   Smoke destrutivo não executado em Stripe Live por segurança.
--   Validação da chamada externa pendente em Stripe Test.
+-   Chamada externa validada em Stripe Test com `cancel_at_period_end=true`.
 
 
-**Status: implementada e implantada em produção; chamada externa pendente de validação em Stripe Test.**
+**Status: concluída e validada, incluindo smoke externo em Stripe Test.**
 
 
 
