@@ -501,6 +501,16 @@ Route::post(
     ->name('platform.webhooks.retry');
 
 Route::get(
+    '/platform/email-failures',
+    [PlatformAdminController::class, 'emailFailures']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.email-failures');
+
+Route::get(
     '/platform/contacts',
     [PlatformCommercialContactController::class, 'index']
 )

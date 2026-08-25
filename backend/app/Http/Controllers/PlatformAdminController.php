@@ -225,6 +225,21 @@ class PlatformAdminController extends Controller
         ]);
     }
 
+    public function emailFailures(): View
+    {
+        $messages = EmailMessage::query()
+            ->withoutGlobalScopes()
+            ->with('tenant')
+            ->where('status', 'failed')
+            ->orderByDesc('failed_at')
+            ->orderByDesc('id')
+            ->paginate(50);
+
+        return view('platform.email-failures', [
+            'messages' => $messages,
+        ]);
+    }
+
     public function webhooks(Request $request): View
     {
         $status = trim(

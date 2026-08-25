@@ -204,6 +204,41 @@ class PlatformLaunchOperationsTest extends TestCase
             );
     }
 
+    public function test_platform_admin_can_view_global_email_failures(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Email Failure Tenant',
+            'slug' => 'email-failure-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        EmailMessage::query()
+            ->withoutGlobalScopes()
+            ->create([
+                'tenant_id' => $tenant->id,
+                'to_email' => 'failure@example.test',
+                'subject' => 'Falha operacional',
+                'body' => 'Mensagem que falhou.',
+                'status' => 'failed',
+                'failed_at' => now(),
+                'failure_reason' => 'SMTP indisponível.',
+            ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform/email-failures')
+            ->assertOk()
+            ->assertSee('Falhas de e-mail')
+            ->assertSee('Email Failure Tenant')
+            ->assertSee('failure@example.test')
+            ->assertSee('Falha operacional')
+            ->assertSee('SMTP indisponível.');
+    }
+
     public function test_platform_dashboard_shows_no_pending_webhook_failure_message(): void
     {
         $admin = $this->platformAdmin();
