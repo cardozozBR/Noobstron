@@ -109,6 +109,20 @@ Tenant B em operações sensíveis.
 -   Auditoria `tenant.suspended` e `tenant.reactivated` validada.
 -   Deploy concluído com `DEPLOY_OK`.
 -   Commit implantado: `a85a489`.
+
+**Checkpoint da Fase 7C:** cancelamento administrativo de assinatura Stripe implementado e implantado em produção.
+
+-   Cancelamento solicitado ao fim do período atual.
+-   Assinatura permanece `active` até efetivação pela Stripe.
+-   Auditoria `subscription.cancellation_scheduled` implementada.
+-   Motivo administrativo obrigatório.
+-   Falha da Stripe não altera `cancel_at` localmente.
+-   UI validada em produção para assinatura Stripe ativa.
+-   Deploy concluído com `DEPLOY_OK`.
+-   Commit implantado: `b66c0d1`.
+-   Smoke destrutivo não executado em Stripe Live por segurança.
+-   Validação da chamada externa pendente em Stripe Test.
+
 ## 4. Auditoria completa do produto do tenant
 
 Esta deve ser a primeira grande etapa depois do Admin Master.

@@ -152,7 +152,7 @@ Validação concluída em produção:
 -   Smoke test visual de `/platform/health` aprovado
 ## Fase 7 --- Gestão avançada de tenants
 
-**Status: parcialmente concluída e em produção**
+**Status: suspensão/reativação e cancelamento administrativo implementados em produção; validação externa do cancelamento pendente em Stripe Test.**
 
 ### Visão detalhada
 
@@ -217,7 +217,40 @@ Fase 7B validada em produção.
 - Deploy concluído com `DEPLOY_OK`.
 - Commit implantado: `a85a489`.
 
-**Status: concluída e validada em produção.**
+### Fase 7C — Cancelamento administrativo de assinatura Stripe
+
+-   [x] Ação administrativa de cancelamento implementada
+-   [x] Cancelamento configurado para o fim do período atual
+-   [x] Assinatura permanece `active` até efetivação pela Stripe
+-   [x] Integração com Stripe via `cancel_at_period_end=true`
+-   [x] Motivo administrativo obrigatório
+-   [x] Ação protegida por `platform.admin`
+-   [x] Auditoria `subscription.cancellation_scheduled`
+-   [x] `before_state` e `after_state` registrados
+-   [x] Falha da Stripe não grava `cancel_at` localmente
+-   [x] UI exibida apenas para assinatura Stripe ativa sem cancelamento agendado
+-   [x] Testes automatizados concluídos
+-   [x] Deploy de produção concluído com `DEPLOY_OK`
+-   [x] Interface validada em produção
+-   [ ] Smoke da chamada externa de cancelamento em Stripe Test
+
+**Checkpoint da Fase 7C:** cancelamento administrativo de assinatura Stripe implementado e implantado em produção.
+
+-   Cancelamento solicitado ao fim do período atual.
+-   Assinatura permanece `active` até efetivação pela Stripe.
+-   Auditoria `subscription.cancellation_scheduled` implementada.
+-   Motivo administrativo obrigatório.
+-   Falha da Stripe não altera `cancel_at` localmente.
+-   UI validada em produção para assinatura Stripe ativa.
+-   Deploy concluído com `DEPLOY_OK`.
+-   Commit implantado: `b66c0d1`.
+-   Smoke destrutivo não executado em Stripe Live por segurança.
+-   Validação da chamada externa pendente em Stripe Test.
+
+
+**Status: implementada e implantada em produção; chamada externa pendente de validação em Stripe Test.**
+
+
 
 ## Fase 8 --- Auditoria administrativa
 
@@ -339,7 +372,7 @@ Validação em produção:
 
 ## Checkpoint atual
 
-> **Admin Master: Fases 1 a 6 concluídas em produção. Fase 7 com visão detalhada do tenant concluída e primeira ação administrativa auditada implementada. Fundação da Fase 8 de auditoria administrativa concluída em produção. Próxima etapa: continuar a Fase 7B com ações administrativas auditadas por tenant.**
+> **Admin Master: Fases 1 a 6 concluídas em produção. Fase 7 com suspensão/reativação validadas em produção e cancelamento administrativo Stripe implementado e implantado. Fase 8 com fundação de auditoria administrativa concluída. Próxima etapa: validar o cancelamento administrativo em Stripe Test e seguir para a próxima ação avançada de tenant.**
 
 ### Última validação conhecida
 
