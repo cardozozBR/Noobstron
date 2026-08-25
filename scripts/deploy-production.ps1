@@ -189,13 +189,10 @@ Write-Host "ALL_SERVICES_OK"
 
 Write-Host "`n=== HTTP HEALTH ==="
 
-$response = Invoke-WebRequest `
-    -Uri "http://127.0.0.1:8080/up" `
-    -UseBasicParsing `
-    -TimeoutSec 15
+curl.exe -kfsS --max-time 15 https://127.0.0.1/up | Out-Null
 
-if ($response.StatusCode -ne 200) {
-    throw "/up não retornou 200."
+if ($LASTEXITCODE -ne 0) {
+    throw "/up nao retornou sucesso."
 }
 
 Write-Host "HTTP_UP_OK"
