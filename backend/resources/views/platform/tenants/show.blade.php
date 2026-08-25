@@ -274,6 +274,62 @@
                             </dd>
                         </div>
                     </dl>
+
+@if (
+    $subscription->status->value === 'active'
+    && $subscription->payment_provider === 'stripe'
+    && $subscription->cancel_at === null
+)
+    <form
+        method="POST"
+        action="{{ route(
+            'platform.tenants.subscription.cancel',
+            $tenant
+        ) }}"
+        style="margin-top:18px"
+    >
+        @csrf
+
+        <label>
+            <span class="platform-muted">
+                Motivo do cancelamento
+            </span>
+
+            <input
+                type="text"
+                name="reason"
+                maxlength="500"
+                required
+                placeholder="Informe o motivo administrativo"
+                style="display:block; margin-top:6px; width:100%"
+            >
+        </label>
+
+        <button
+            class="button button-secondary"
+            type="submit"
+            style="margin-top:10px"
+            onclick="return confirm(
+                'Confirma o cancelamento da assinatura ao fim do período atual? O acesso permanecerá ativo até essa data.'
+            )"
+        >
+            Cancelar assinatura ao fim do período
+        </button>
+    </form>
+@elseif (
+    $subscription->status->value === 'active'
+    && $subscription->payment_provider === 'stripe'
+    && $subscription->cancel_at !== null
+)
+    <p
+        class="platform-muted"
+        style="margin-top:14px"
+    >
+        Cancelamento agendado para
+        {{ $subscription->cancel_at->format('d/m/Y H:i') }}.
+    </p>
+@endif
+
                 @else
                     <p class="platform-muted">
                         {{ __('platform.tenants.no_subscription') }}.

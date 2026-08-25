@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\StripeSubscriptionCancellationService;
 use App\Models\AiUsageRecord;
 use App\Models\EmailMessage;
 use App\Models\PaymentEventReceipt;
@@ -417,99 +418,251 @@ class PlatformTenantController extends Controller
         }
     }
 
-    public function suspend(
-        Request $request,
-        Tenant $tenant,
-        PlatformAdminAuditService $audit,
-    ): RedirectResponse {
-        $validated = $request->validate([
-            'reason' => [
-                'required',
-                'string',
-                'max:500',
-            ],
-        ]);
+    public function cancelSubscription(
+    Request $request,
+    Tenant $tenant,
+    StripeSubscriptionCancellationService $cancellations,
+    PlatformAdminAuditService $audit,
+): RedirectResponse {
+    $validated = $request->validate([
+        'reason' => [
+            'required',
+            'string',
+            'max:500',
+        ],
+    ]);
 
-        $before = [
-            'status' => $tenant->status,
-        ];
+    $subscription = Subscription::query()
+        ->where('tenant_id', $tenant->id)
+        ->orderByDesc('id')
+        ->first();
 
-        if ($tenant->status !== 'active') {
-            return redirect()
-                ->route(
-                    'platform.tenants.show',
-                    $tenant
-                )
-                ->withErrors([
-                    'status' => 'Somente tenants ativos podem ser suspensos.',
-                ]);
+    if ($subscription === null) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Tenant não possui assinatura para cancelar.',
+            ]);
+    }
+
+    $before = [
+        'status' => $subscription->status->value,
+        'cancel_at' =>
+            $subscription->cancel_at?->toIso8601String(),
+        'canceled_at' =>
+            $subscription->canceled_at?->toIso8601String(),
+    ];
+
+    if (
+        $subscription->status
+        !== \App\Enums\SubscriptionStatus::ACTIVE
+    ) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Somente assinaturas ativas podem ter cancelamento agendado.',
+            ]);
+    }
+
+    if (
+        $subscription->payment_provider
+        !== 'stripe'
+    ) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Somente assinaturas Stripe podem ser canceladas por esta ação.',
+            ]);
+    }
+
+    if ($subscription->cancel_at !== null) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Esta assinatura já possui cancelamento agendado.',
+            ]);
+    }
+
+    try {
+        $subscription = $cancellations
+            ->cancelAtPeriodEnd($subscription);
+    } catch (\Throwable $exception) {
+        try {
+            $audit->log(
+                action: 'subscription.cancellation_scheduled',
+                tenant: $tenant,
+                entityType: Subscription::class,
+                entityId: $subscription->id,
+                beforeState: $before,
+                result: PlatformAdminAuditService::RESULT_FAILURE,
+                reason: $exception->getMessage(),
+                request: $request,
+            );
+        } catch (\Throwable) {
+            // A falha principal não deve ser mascarada.
         }
 
-        try {
-            DB::transaction(
-                function () use (
-                    $tenant,
-                    $audit,
-                    $request,
-                    $validated,
-                    $before
-                ): void {
-                    $tenant->forceFill([
-                        'status' => 'blocked',
-                    ])->save();
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Não foi possível agendar o cancelamento da assinatura.',
+            ]);
+    }
 
-                    $tenant->refresh();
+    try {
+        $audit->log(
+            action: 'subscription.cancellation_scheduled',
+            tenant: $tenant,
+            entityType: Subscription::class,
+            entityId: $subscription->id,
+            beforeState: $before,
+            afterState: [
+                'status' => $subscription->status->value,
+                'cancel_at' =>
+                    $subscription->cancel_at?->toIso8601String(),
+                'canceled_at' =>
+                    $subscription->canceled_at?->toIso8601String(),
+            ],
+            reason: $validated['reason'],
+            request: $request,
+        );
+    } catch (\Throwable $exception) {
+        logger()->error(
+            'Platform subscription cancellation audit failed.',
+            [
+                'tenant_id' => $tenant->id,
+                'subscription_id' => $subscription->id,
+                'exception' => $exception->getMessage(),
+            ]
+        );
+    }
 
-                    $audit->log(
-                        action: 'tenant.suspended',
-                        tenant: $tenant,
-                        entityType: Tenant::class,
-                        entityId: $tenant->id,
-                        beforeState: $before,
-                        afterState: [
-                            'status' => $tenant->status,
-                        ],
-                        reason: $validated['reason'],
-                        request: $request,
-                    );
-                }
-            );
+    return redirect()
+        ->route(
+            'platform.tenants.show',
+            $tenant
+        )
+        ->with(
+            'success',
+            'Cancelamento da assinatura agendado para o fim do período atual.'
+        );
+}
 
-            return redirect()
-                ->route(
-                    'platform.tenants.show',
-                    $tenant
-                )
-                ->with(
-                    'success',
-                    'Tenant suspenso com sucesso.'
-                );
-        } catch (\Throwable $exception) {
-            try {
+public function suspend(
+    Request $request,
+    Tenant $tenant,
+    PlatformAdminAuditService $audit,
+): RedirectResponse {
+    $validated = $request->validate([
+        'reason' => [
+            'required',
+            'string',
+            'max:500',
+        ],
+    ]);
+
+    $before = [
+        'status' => $tenant->status,
+    ];
+
+    if ($tenant->status !== 'active') {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'status' =>
+                    'Somente tenants ativos podem ser suspensos.',
+            ]);
+    }
+
+    try {
+        DB::transaction(
+            function () use (
+                $tenant,
+                $audit,
+                $request,
+                $validated,
+                $before
+            ): void {
+                $tenant->forceFill([
+                    'status' => 'blocked',
+                ])->save();
+
+                $tenant->refresh();
+
                 $audit->log(
                     action: 'tenant.suspended',
                     tenant: $tenant,
                     entityType: Tenant::class,
                     entityId: $tenant->id,
                     beforeState: $before,
-                    result: PlatformAdminAuditService::RESULT_FAILURE,
-                    reason: $exception->getMessage(),
+                    afterState: [
+                        'status' => $tenant->status,
+                    ],
+                    reason: $validated['reason'],
                     request: $request,
                 );
-            } catch (\Throwable) {
-                // A falha principal nao deve ser mascarada.
             }
+        );
 
-            return redirect()
-                ->route(
-                    'platform.tenants.show',
-                    $tenant
-                )
-                ->withErrors([
-                    'status' => 'Nao foi possivel suspender o tenant.',
-                ]);
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->with(
+                'success',
+                'Tenant suspenso com sucesso.'
+            );
+    } catch (\Throwable $exception) {
+        try {
+            $audit->log(
+                action: 'tenant.suspended',
+                tenant: $tenant,
+                entityType: Tenant::class,
+                entityId: $tenant->id,
+                beforeState: $before,
+                result: PlatformAdminAuditService::RESULT_FAILURE,
+                reason: $exception->getMessage(),
+                request: $request,
+            );
+        } catch (\Throwable) {
+            // A falha principal nao deve ser mascarada.
         }
+
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'status' =>
+                    'Nao foi possivel suspender o tenant.',
+            ]);
     }
+}
 
     public function reactivate(
         Request $request,

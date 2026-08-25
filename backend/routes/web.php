@@ -461,6 +461,21 @@ Route::get(
     ->name('platform.tenants.index');
 
 Route::post(
+    '/platform/tenants/{tenant}/subscription/cancel',
+    [
+        PlatformTenantController::class,
+        'cancelSubscription',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name(
+        'platform.tenants.subscription.cancel'
+    );
+
+Route::post(
     '/platform/tenants/{tenant}/reactivate',
     [PlatformTenantController::class, 'reactivate']
 )
