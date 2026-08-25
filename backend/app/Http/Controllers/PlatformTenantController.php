@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AiUsageRecord;
+use App\Models\EmailMessage;
+use App\Models\PaymentEventReceipt;
 use App\Models\PlanUsageLimit;
 use App\Models\Subscription;
+use App\Models\SubscriptionInvoice;
 use App\Models\Tenant;
 use App\Models\TenantFeature;
+use App\Models\WhatsAppMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -34,12 +39,12 @@ class PlatformTenantController extends Controller
                         ->where(
                             'name',
                             'like',
-                            '%' . $search . '%'
+                            '%'.$search.'%'
                         )
                         ->orWhere(
                             'slug',
                             'like',
-                            '%' . $search . '%'
+                            '%'.$search.'%'
                         );
                 }
             );
@@ -81,8 +86,7 @@ class PlatformTenantController extends Controller
             [
                 'tenants' => $tenants,
                 'userCounts' => $userCounts,
-                'subscriptions' =>
-                    $subscriptions,
+                'subscriptions' => $subscriptions,
                 'search' => $search,
                 'status' => $status,
             ]
@@ -133,16 +137,129 @@ class PlatformTenantController extends Controller
             )
             ->count();
 
+        $subscriptionHistory =
+            Subscription::query()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->with('plan')
+                ->orderByDesc('id')
+                ->limit(20)
+                ->get();
+
+        $subscriptionIds =
+            $subscriptionHistory
+                ->pluck('id');
+
+        $invoices = $subscriptionIds->isEmpty()
+            ? collect()
+            : SubscriptionInvoice::query()
+                ->whereIn(
+                    'subscription_id',
+                    $subscriptionIds
+                )
+                ->orderByDesc('id')
+                ->limit(20)
+                ->get();
+
+        $emailFailures =
+            EmailMessage::query()
+                ->withoutGlobalScopes()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->where(
+                    'status',
+                    'failed'
+                )
+                ->orderByDesc('id')
+                ->limit(10)
+                ->get();
+
+        $whatsAppFailures =
+            WhatsAppMessage::query()
+                ->withoutGlobalScopes()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->where(
+                    'status',
+                    'failed'
+                )
+                ->orderByDesc('id')
+                ->limit(10)
+                ->get();
+
+        $usage = [
+            'users' => $userCount,
+
+            'email_messages' => (int) EmailMessage::query()
+                ->withoutGlobalScopes()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->count(),
+
+            'whatsapp_messages' => (int) WhatsAppMessage::query()
+                ->withoutGlobalScopes()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->where(
+                    'direction',
+                    'outbound'
+                )
+                ->count(),
+
+            'ai_tokens' => (int) AiUsageRecord::query()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->sum(
+                    'total_tokens'
+                ),
+        ];
+
+        $externalReferences =
+            $subscriptionHistory
+                ->pluck(
+                    'external_reference'
+                )
+                ->filter()
+                ->unique()
+                ->values();
+
+        $webhooks = $externalReferences->isEmpty()
+            ? collect()
+            : PaymentEventReceipt::query()
+                ->whereIn(
+                    'external_reference',
+                    $externalReferences
+                )
+                ->orderByDesc('id')
+                ->limit(20)
+                ->get();
+
         return view(
             'platform.tenants.show',
             [
                 'tenant' => $tenant,
-                'subscription' =>
-                    $subscription,
+                'subscription' => $subscription,
                 'features' => $features,
-                'usageLimits' =>
-                    $usageLimits,
+                'usageLimits' => $usageLimits,
                 'userCount' => $userCount,
+                'subscriptionHistory' => $subscriptionHistory,
+                'invoices' => $invoices,
+                'usage' => $usage,
+                'emailFailures' => $emailFailures,
+                'whatsAppFailures' => $whatsAppFailures,
+                'webhooks' => $webhooks,
             ]
         );
     }

@@ -224,6 +224,224 @@
                     </div>
                 @endif
             </section>
+
+            <section class="platform-card">
+                <h2>Uso</h2>
+
+                <dl class="detail-list">
+                    <div>
+                        <dt>Usuários</dt>
+                        <dd>{{ number_format($usage['users']) }}</dd>
+                    </div>
+
+                    <div>
+                        <dt>E-mails</dt>
+                        <dd>{{ number_format($usage['email_messages']) }}</dd>
+                    </div>
+
+                    <div>
+                        <dt>WhatsApps enviados</dt>
+                        <dd>{{ number_format($usage['whatsapp_messages']) }}</dd>
+                    </div>
+
+                    <div>
+                        <dt>Tokens de IA</dt>
+                        <dd>{{ number_format($usage['ai_tokens']) }}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="platform-card">
+                <h2>Histórico de assinaturas</h2>
+
+                @if ($subscriptionHistory->isEmpty())
+                    <p class="platform-muted">
+                        Nenhuma assinatura encontrada.
+                    </p>
+                @else
+                    <div class="table-wrap">
+                        <table class="platform-table">
+                            <thead>
+                                <tr>
+                                    <th>Plano</th>
+                                    <th>Status</th>
+                                    <th>Provider</th>
+                                    <th>Referência</th>
+                                    <th>Período</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($subscriptionHistory as $item)
+                                    <tr>
+                                        <td>{{ $item->plan?->name ?? '—' }}</td>
+                                        <td>{{ $item->status->value }}</td>
+                                        <td>{{ strtoupper($item->payment_provider ?? '—') }}</td>
+                                        <td>{{ $item->external_reference ?? '—' }}</td>
+                                        <td>
+                                            {{ $item->current_period_start?->format('d/m/Y') ?? '—' }}
+                                            —
+                                            {{ $item->current_period_end?->format('d/m/Y') ?? '—' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
+
+            <section class="platform-card">
+                <h2>Cobrança</h2>
+
+                @if ($invoices->isEmpty())
+                    <p class="platform-muted">
+                        Nenhuma fatura encontrada.
+                    </p>
+                @else
+                    <div class="table-wrap">
+                        <table class="platform-table">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Fatura</th>
+                                    <th>Status</th>
+                                    <th>Valor</th>
+                                    <th>Pago em</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($invoices as $invoice)
+                                    <tr>
+                                        <td>{{ strtoupper($invoice->provider) }}</td>
+                                        <td>{{ $invoice->external_invoice_id }}</td>
+                                        <td>{{ strtoupper($invoice->status) }}</td>
+                                        <td>
+                                            {{ $invoice->currency }}
+                                            {{ number_format(
+                                                $invoice->amount_due / 100,
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                        </td>
+                                        <td>
+                                            {{ $invoice->paid_at?->format('d/m/Y H:i') ?? '—' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
+
+            <section class="platform-card">
+                <h2>Falhas de e-mail</h2>
+
+                @if ($emailFailures->isEmpty())
+                    <p class="platform-muted">
+                        Nenhuma falha de e-mail.
+                    </p>
+                @else
+                    <div class="table-wrap">
+                        <table class="platform-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Destinatário</th>
+                                    <th>Assunto</th>
+                                    <th>Status</th>
+                                    <th>Erro</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($emailFailures as $message)
+                                    <tr>
+                                        <td>#{{ $message->id }}</td>
+                                        <td>{{ $message->to_email }}</td>
+                                        <td>{{ $message->subject }}</td>
+                                        <td>{{ strtoupper($message->status instanceof \BackedEnum ? $message->status->value : (string) $message->status) }}</td>
+                                        <td>{{ $message->failure_reason ?? '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
+
+            <section class="platform-card">
+                <h2>Falhas de WhatsApp</h2>
+
+                @if ($whatsAppFailures->isEmpty())
+                    <p class="platform-muted">
+                        Nenhuma falha de WhatsApp.
+                    </p>
+                @else
+                    <div class="table-wrap">
+                        <table class="platform-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Destinatário</th>
+                                    <th>Mensagem</th>
+                                    <th>Status</th>
+                                    <th>Erro</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($whatsAppFailures as $message)
+                                    <tr>
+                                        <td>#{{ $message->id }}</td>
+                                        <td>{{ $message->phone }}</td>
+                                        <td>{{ $message->body }}</td>
+                                        <td>{{ strtoupper($message->status instanceof \BackedEnum ? $message->status->value : (string) $message->status) }}</td>
+                                        <td>{{ $message->failure_reason ?? '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
+
+            <section class="platform-card">
+                <h2>Webhooks relacionados</h2>
+
+                @if ($webhooks->isEmpty())
+                    <p class="platform-muted">
+                        Nenhum webhook relacionado.
+                    </p>
+                @else
+                    <div class="table-wrap">
+                        <table class="platform-table">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Evento</th>
+                                    <th>Status</th>
+                                    <th>Tentativas</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($webhooks as $webhook)
+                                    <tr>
+                                        <td>{{ strtoupper($webhook->provider) }}</td>
+                                        <td>{{ $webhook->event_type }}</td>
+                                        <td>{{ strtoupper($webhook->status) }}</td>
+                                        <td>{{ $webhook->attempts }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </section>
         </div>
     </main>
 </div>

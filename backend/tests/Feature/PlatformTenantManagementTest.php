@@ -2,17 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EmailMessageStatus;
 use App\Enums\Feature;
 use App\Enums\Role;
 use App\Enums\SubscriptionStatus;
 use App\Enums\UsageMetric;
+use App\Enums\WhatsAppMessageStatus;
+use App\Models\EmailMessage;
+use App\Models\PaymentEventReceipt;
 use App\Models\Plan;
 use App\Models\PlanUsageLimit;
 use App\Models\PlatformAdmin;
 use App\Models\Subscription;
+use App\Models\SubscriptionInvoice;
 use App\Models\Tenant;
 use App\Models\TenantFeature;
 use App\Models\User;
+use App\Models\WhatsAppMessage;
 use App\Services\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +34,7 @@ class PlatformTenantManagementTest extends TestCase
         return PlatformAdmin::query()->create([
             'name' => 'Platform Admin',
             'email' => uniqid('platform-', true)
-                . '@example.test',
+                .'@example.test',
             'password' => Hash::make(
                 'SenhaSegura123'
             ),
@@ -45,10 +51,8 @@ class PlatformTenantManagementTest extends TestCase
             'name' => $name,
             'slug' => $slug,
             'status' => $status,
-            'trial_started_at' =>
-                '2026-08-10 12:00:00',
-            'trial_ends_at' =>
-                '2026-08-24 12:00:00',
+            'trial_started_at' => '2026-08-10 12:00:00',
+            'trial_ends_at' => '2026-08-24 12:00:00',
         ]);
     }
 
@@ -73,10 +77,8 @@ class PlatformTenantManagementTest extends TestCase
             'tenant_id' => $tenant->id,
             'plan_id' => $plan->id,
             'status' => $status,
-            'current_period_start' =>
-                '2026-08-18 00:00:00',
-            'current_period_end' =>
-                '2026-09-18 00:00:00',
+            'current_period_start' => '2026-08-18 00:00:00',
+            'current_period_end' => '2026-09-18 00:00:00',
         ]);
     }
 
@@ -220,7 +222,7 @@ class PlatformTenantManagementTest extends TestCase
             )
             ->get(
                 'http://localhost/platform/tenants/'
-                . $tenant->id
+                .$tenant->id
             );
 
         $response
@@ -269,7 +271,7 @@ class PlatformTenantManagementTest extends TestCase
             ->actingAs($user)
             ->get(
                 'http://localhost/platform/tenants/'
-                . $tenant->id
+                .$tenant->id
             )
             ->assertRedirect(
                 route('platform.login')
@@ -298,10 +300,244 @@ class PlatformTenantManagementTest extends TestCase
             ->actingAs($admin, 'platform')
             ->get(
                 'http://localhost/platform/tenants/'
-                . $tenant->id
+                .$tenant->id
             )
             ->assertOk();
 
+    }
 
+    public function test_platform_tenant_detail_isolates_operational_data_between_tenants(): void
+    {
+        $tenantA = $this->tenant(
+            'Tenant Operacional A',
+            'tenant-operacional-a'
+        );
+
+        $tenantB = $this->tenant(
+            'Tenant Operacional B',
+            'tenant-operacional-b'
+        );
+
+        app(TenantContext::class)->set($tenantA);
+
+        EmailMessage::query()->create([
+            'tenant_id' => $tenantA->id,
+            'to_email' => 'tenant-a@example.test',
+            'to_name' => 'Tenant A',
+            'subject' => 'EMAIL-FAILURE-TENANT-A',
+            'body' => 'Mensagem exclusiva do tenant A.',
+            'status' => EmailMessageStatus::FAILED,
+            'failed_at' => now(),
+            'failure_reason' => 'FALHA-EMAIL-EXCLUSIVA-A',
+        ]);
+
+        WhatsAppMessage::query()->create([
+            'tenant_id' => $tenantA->id,
+            'phone' => '5511999990001',
+            'recipient_name' => 'Tenant A',
+            'body' => 'WHATSAPP-FAILURE-TENANT-A',
+            'status' => WhatsAppMessageStatus::FAILED,
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' => 'FALHA-WHATSAPP-EXCLUSIVA-A',
+        ]);
+
+        app(TenantContext::class)->set($tenantB);
+
+        EmailMessage::query()->create([
+            'tenant_id' => $tenantB->id,
+            'to_email' => 'tenant-b@example.test',
+            'to_name' => 'Tenant B',
+            'subject' => 'EMAIL-FAILURE-TENANT-B',
+            'body' => 'Mensagem exclusiva do tenant B.',
+            'status' => EmailMessageStatus::FAILED,
+            'failed_at' => now(),
+            'failure_reason' => 'FALHA-EMAIL-EXCLUSIVA-B',
+        ]);
+
+        WhatsAppMessage::query()->create([
+            'tenant_id' => $tenantB->id,
+            'phone' => '5511999990002',
+            'recipient_name' => 'Tenant B',
+            'body' => 'WHATSAPP-FAILURE-TENANT-B',
+            'status' => WhatsAppMessageStatus::FAILED,
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' => 'FALHA-WHATSAPP-EXCLUSIVA-B',
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs(
+                $this->platformAdmin(),
+                'platform'
+            )
+            ->get(
+                'http://localhost/platform/tenants/'
+                .$tenantA->id
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Tenant Operacional A')
+            ->assertSee('EMAIL-FAILURE-TENANT-A')
+            ->assertSee('FALHA-EMAIL-EXCLUSIVA-A')
+            ->assertSee('WHATSAPP-FAILURE-TENANT-A')
+            ->assertSee('FALHA-WHATSAPP-EXCLUSIVA-A')
+            ->assertDontSee('EMAIL-FAILURE-TENANT-B')
+            ->assertDontSee('FALHA-EMAIL-EXCLUSIVA-B')
+            ->assertDontSee('WHATSAPP-FAILURE-TENANT-B')
+            ->assertDontSee('FALHA-WHATSAPP-EXCLUSIVA-B');
+    }
+
+    public function test_platform_tenant_detail_shows_subscription_billing_and_related_webhooks(): void
+    {
+        $tenantA = $this->tenant(
+            'Tenant Billing A',
+            'tenant-billing-a'
+        );
+
+        $tenantB = $this->tenant(
+            'Tenant Billing B',
+            'tenant-billing-b'
+        );
+
+        $plan = $this->plan(
+            'phase7-billing-plan',
+            'Plano Phase 7'
+        );
+
+        $this->subscribe(
+            $tenantA,
+            $plan,
+            SubscriptionStatus::ACTIVE
+        );
+
+        $this->subscribe(
+            $tenantB,
+            $plan,
+            SubscriptionStatus::ACTIVE
+        );
+
+        $subscriptionA = Subscription::query()
+            ->where(
+                'tenant_id',
+                $tenantA->id
+            )
+            ->latest('id')
+            ->firstOrFail();
+
+        $subscriptionB = Subscription::query()
+            ->where(
+                'tenant_id',
+                $tenantB->id
+            )
+            ->latest('id')
+            ->firstOrFail();
+
+        $subscriptionA->update([
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub-phase7-tenant-a',
+            'currency' => 'BRL',
+            'amount_minor' => 19900,
+            'current_period_start' => now()->subDay(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+        $subscriptionB->update([
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub-phase7-tenant-b-secret',
+            'currency' => 'BRL',
+            'amount_minor' => 49900,
+            'current_period_start' => now()->subDay(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+        SubscriptionInvoice::query()->create([
+            'subscription_id' => $subscriptionA->id,
+            'provider' => 'stripe',
+            'external_invoice_id' => 'in-phase7-tenant-a',
+            'status' => 'paid',
+            'currency' => 'BRL',
+            'amount_due' => 19900,
+            'amount_paid' => 19900,
+            'amount_remaining' => 0,
+            'billing_reason' => 'subscription_cycle',
+            'paid_at' => now(),
+        ]);
+
+        SubscriptionInvoice::query()->create([
+            'subscription_id' => $subscriptionB->id,
+            'provider' => 'stripe',
+            'external_invoice_id' => 'in-phase7-tenant-b-secret',
+            'status' => 'paid',
+            'currency' => 'BRL',
+            'amount_due' => 49900,
+            'amount_paid' => 49900,
+            'amount_remaining' => 0,
+            'billing_reason' => 'subscription_cycle',
+            'paid_at' => now(),
+        ]);
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt-phase7-tenant-a',
+            'event_type' => 'invoice.payment_succeeded',
+            'external_reference' => 'sub-phase7-tenant-a',
+            'status' => 'processed',
+            'attempts' => 1,
+            'last_error' => null,
+            'processed_at' => now(),
+        ]);
+
+        PaymentEventReceipt::query()->create([
+            'provider' => 'stripe',
+            'event_id' => 'evt-phase7-tenant-b-secret',
+            'event_type' => 'invoice.payment_failed',
+            'external_reference' => 'sub-phase7-tenant-b-secret',
+            'status' => 'failed',
+            'attempts' => 2,
+            'last_error' => 'SECRET-WEBHOOK-ERROR-B',
+            'processed_at' => null,
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs(
+                $this->platformAdmin(),
+                'platform'
+            )
+            ->get(
+                'http://localhost/platform/tenants/'
+                .$tenantA->id
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Histórico de assinaturas')
+            ->assertSee('Plano Phase 7')
+            ->assertSee('sub-phase7-tenant-a')
+            ->assertSee('Cobrança')
+            ->assertSee('in-phase7-tenant-a')
+            ->assertSee('BRL')
+            ->assertSee('199,00')
+            ->assertSee('Webhooks relacionados')
+            ->assertSee('invoice.payment_succeeded')
+            ->assertDontSee(
+                'sub-phase7-tenant-b-secret'
+            )
+            ->assertDontSee(
+                'in-phase7-tenant-b-secret'
+            )
+            ->assertDontSee(
+                'invoice.payment_failed'
+            )
+            ->assertDontSee(
+                'SECRET-WEBHOOK-ERROR-B'
+            );
     }
 }
