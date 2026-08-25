@@ -152,7 +152,7 @@ Validação concluída em produção:
 -   Smoke test visual de `/platform/health` aprovado
 ## Fase 7 --- Gestão avançada de tenants
 
-**Status: suspensão/reativação e cancelamento administrativo implementados em produção; validação externa do cancelamento pendente em Stripe Test.**
+**Status: suspensão/reativação, cancelamento administrativo e correção administrativa de plano implementados e validados.**
 
 ### Visão detalhada
 
@@ -176,8 +176,8 @@ Validação concluída em produção:
 -   [x] Suspender tenant
 -   [x] Reativar tenant
 -   [x] Alterar/prorrogar trial
--   [ ] Cancelar assinatura
--   [ ] Corrigir plano
+-   [x] Cancelar assinatura
+-   [x] Corrigir plano
 
 Essas ações devem exigir confirmação e auditoria.
 
@@ -247,6 +247,31 @@ Fase 7B validada em produção.
 -   Smoke destrutivo não executado em Stripe Live por segurança.
 -   Chamada externa validada em Stripe Test com `cancel_at_period_end=true`.
 
+### Fase 7D — Correção administrativa de plano
+
+-   [x] Correção administrativa de plano implementada
+-   [x] Ação protegida por `platform.admin`
+-   [x] Motivo administrativo obrigatório
+-   [x] Reutilização de `StripeSubscriptionPlanChangeService`
+-   [x] Auditoria `subscription.plan_corrected`
+-   [x] `before_state` e `after_state` registrados
+-   [x] Falha da Stripe preserva o plano local
+-   [x] Assinatura com cancelamento agendado não pode ter plano corrigido
+-   [x] Interface validada em produção
+-   [x] Smoke externo validado em Stripe Test
+-   [x] Prorrata configurada com `create_prorations`
+
+**Checkpoint da Fase 7D:** correção administrativa de plano implementada, implantada e validada.
+
+-   Deploy funcional concluído no commit `8fbc066`.
+-   Rota administrativa validada em produção.
+-   Interface “Corrigir plano da assinatura” validada em produção.
+-   Smoke destrutivo não executado em Stripe Live por segurança.
+-   Smoke externo executado em Stripe Test.
+-   Assinatura permaneceu `active`.
+-   Preço Stripe alterado de `9900` para `24900`.
+-   `price_1U6rw5Cyb3ZNP2kpSXvSqVuK` confirmado diretamente na Stripe Test.
+-   Estado local só é atualizado após sucesso da Stripe.
 
 **Status: concluída e validada, incluindo smoke externo em Stripe Test.**
 
