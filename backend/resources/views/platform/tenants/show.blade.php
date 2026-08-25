@@ -279,6 +279,74 @@
     $subscription->status->value === 'active'
     && $subscription->payment_provider === 'stripe'
     && $subscription->cancel_at === null
+    && $availablePlans->count() > 1
+)
+    <form
+        method="POST"
+        action="{{ route(
+            'platform.tenants.subscription.correct-plan',
+            $tenant
+        ) }}"
+        style="margin-top:18px"
+    >
+        @csrf
+
+        <label>
+            <span class="platform-muted">
+                Corrigir plano da assinatura
+            </span>
+
+            <select
+                name="plan_id"
+                required
+                style="display:block; margin-top:6px; width:100%"
+            >
+                <option value="">
+                    Selecione o plano de destino
+                </option>
+
+                @foreach ($availablePlans as $plan)
+                    @if ($plan->id !== $subscription->plan_id)
+                        <option value="{{ $plan->id }}">
+                            {{ $plan->name }}
+                        </option>
+                    @endif
+                @endforeach
+            </select>
+        </label>
+
+        <label style="display:block; margin-top:10px">
+            <span class="platform-muted">
+                Motivo da correção
+            </span>
+
+            <input
+                type="text"
+                name="reason"
+                maxlength="500"
+                required
+                placeholder="Informe o motivo administrativo"
+                style="display:block; margin-top:6px; width:100%"
+            >
+        </label>
+
+        <button
+            class="button button-secondary"
+            type="submit"
+            style="margin-top:10px"
+            onclick="return confirm(
+                'Confirma a correção do plano desta assinatura? A Stripe poderá gerar prorrata.'
+            )"
+        >
+            Corrigir plano
+        </button>
+    </form>
+@endif
+
+@if (
+    $subscription->status->value === 'active'
+    && $subscription->payment_provider === 'stripe'
+    && $subscription->cancel_at === null
 )
     <form
         method="POST"

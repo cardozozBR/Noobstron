@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Services\StripeSubscriptionCancellationService;
+use App\Services\StripeSubscriptionPlanChangeService;
 use App\Models\AiUsageRecord;
 use App\Models\EmailMessage;
 use App\Models\PaymentEventReceipt;
+use App\Models\Plan;
 use App\Models\PlanUsageLimit;
 use App\Models\Subscription;
 use App\Models\SubscriptionInvoice;
@@ -109,6 +111,13 @@ class PlatformTenantController extends Controller
                 ->with('plan')
                 ->orderByDesc('id')
                 ->first();
+
+        $availablePlans = Plan::query()
+            ->where('active', true)
+            ->with('prices')
+            ->orderBy('name')
+            ->orderBy('id')
+            ->get();
 
         $features =
             TenantFeature::query()
@@ -255,6 +264,7 @@ class PlatformTenantController extends Controller
             [
                 'tenant' => $tenant,
                 'subscription' => $subscription,
+                'availablePlans' => $availablePlans,
                 'features' => $features,
                 'usageLimits' => $usageLimits,
                 'userCount' => $userCount,
@@ -565,6 +575,194 @@ class PlatformTenantController extends Controller
         ->with(
             'success',
             'Cancelamento da assinatura agendado para o fim do período atual.'
+        );
+}
+
+public function correctSubscriptionPlan(
+    Request $request,
+    Tenant $tenant,
+    StripeSubscriptionPlanChangeService $planChange,
+    PlatformAdminAuditService $audit,
+): RedirectResponse {
+    $validated = $request->validate([
+        'plan_id' => [
+            'required',
+            'integer',
+        ],
+        'reason' => [
+            'required',
+            'string',
+            'max:500',
+        ],
+    ]);
+
+    $subscription = Subscription::query()
+        ->where('tenant_id', $tenant->id)
+        ->orderByDesc('id')
+        ->first();
+
+    if ($subscription === null) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Tenant não possui assinatura para corrigir.',
+            ]);
+    }
+
+    $targetPlan = Plan::query()
+        ->whereKey((int) $validated['plan_id'])
+        ->where('active', true)
+        ->with('prices')
+        ->first();
+
+    if ($targetPlan === null) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'plan' =>
+                    'Plano de destino inválido ou inativo.',
+            ]);
+    }
+
+    if (
+        $subscription->status
+        !== \App\Enums\SubscriptionStatus::ACTIVE
+    ) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Somente assinaturas ativas podem ter o plano corrigido.',
+            ]);
+    }
+
+    if (
+        $subscription->payment_provider
+        !== 'stripe'
+    ) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Somente assinaturas Stripe podem ter o plano corrigido por esta ação.',
+            ]);
+    }
+
+        if ($subscription->cancel_at !== null) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Assinaturas com cancelamento agendado não podem ter o plano corrigido.',
+            ]);
+    }
+
+    if ($subscription->plan_id === $targetPlan->id) {
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'plan' =>
+                    'A assinatura já está vinculada a este plano.',
+            ]);
+    }
+
+    $before = [
+        'status' => $subscription->status->value,
+        'plan_id' => $subscription->plan_id,
+        'plan_code' => $subscription->plan?->code,
+        'amount_minor' => $subscription->amount_minor,
+        'currency' => $subscription->currency,
+    ];
+
+    try {
+        $subscription = $planChange->change(
+            $subscription,
+            $targetPlan
+        );
+    } catch (\Throwable $exception) {
+        try {
+            $audit->log(
+                action: 'subscription.plan_corrected',
+                tenant: $tenant,
+                entityType: Subscription::class,
+                entityId: $subscription->id,
+                beforeState: $before,
+                result: PlatformAdminAuditService::RESULT_FAILURE,
+                reason: $exception->getMessage(),
+                request: $request,
+            );
+        } catch (\Throwable) {
+            // A falha principal não deve ser mascarada.
+        }
+
+        return redirect()
+            ->route(
+                'platform.tenants.show',
+                $tenant
+            )
+            ->withErrors([
+                'subscription' =>
+                    'Não foi possível corrigir o plano da assinatura.',
+            ]);
+    }
+
+    try {
+        $subscription->loadMissing('plan');
+
+        $audit->log(
+            action: 'subscription.plan_corrected',
+            tenant: $tenant,
+            entityType: Subscription::class,
+            entityId: $subscription->id,
+            beforeState: $before,
+            afterState: [
+                'status' => $subscription->status->value,
+                'plan_id' => $subscription->plan_id,
+                'plan_code' => $subscription->plan?->code,
+                'amount_minor' => $subscription->amount_minor,
+                'currency' => $subscription->currency,
+            ],
+            reason: $validated['reason'],
+            request: $request,
+        );
+    } catch (\Throwable $exception) {
+        logger()->error(
+            'Platform subscription plan correction audit failed.',
+            [
+                'tenant_id' => $tenant->id,
+                'subscription_id' => $subscription->id,
+                'exception' => $exception->getMessage(),
+            ]
+        );
+    }
+
+    return redirect()
+        ->route(
+            'platform.tenants.show',
+            $tenant
+        )
+        ->with(
+            'success',
+            'Plano da assinatura corrigido com sucesso.'
         );
 }
 

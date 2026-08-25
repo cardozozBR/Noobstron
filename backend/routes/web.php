@@ -476,6 +476,21 @@ Route::post(
     );
 
 Route::post(
+    '/platform/tenants/{tenant}/subscription/correct-plan',
+    [
+        PlatformTenantController::class,
+        'correctSubscriptionPlan',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name(
+        'platform.tenants.subscription.correct-plan'
+    );
+
+Route::post(
     '/platform/tenants/{tenant}/reactivate',
     [PlatformTenantController::class, 'reactivate']
 )
