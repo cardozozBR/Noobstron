@@ -1,0 +1,294 @@
+@extends('platform.layout')
+
+@section('title', 'Falhas de WhatsApp')
+
+@section('body')
+
+<style>
+.platform-whatsapp-failures-page .platform-toolbar {
+    align-items: flex-end;
+    gap: 18px;
+}
+
+.platform-whatsapp-failures-page .platform-toolbar h1 {
+    margin: 4px 0 0;
+    font-size: 32px;
+    letter-spacing: -.03em;
+}
+
+.platform-whatsapp-failures-page .platform-card {
+    border-radius: 16px;
+}
+
+.platform-whatsapp-failures-page .whatsapp-failures-summary {
+    margin-bottom: 18px;
+}
+
+.platform-whatsapp-failures-page .whatsapp-failures-count {
+    margin-top: 8px;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.035em;
+}
+
+.platform-whatsapp-failures-page .table-wrap {
+    overflow-x: auto;
+}
+
+.platform-whatsapp-failures-page table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.platform-whatsapp-failures-page th,
+.platform-whatsapp-failures-page td {
+    padding: 14px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.platform-whatsapp-failures-page th {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.platform-whatsapp-failures-page td {
+    font-size: 14px;
+}
+
+.platform-whatsapp-failures-page .failure-reason {
+    max-width: 420px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.platform-whatsapp-failures-page .phone {
+    white-space: nowrap;
+}
+
+.platform-whatsapp-failures-page .message-body {
+    min-width: 220px;
+    max-width: 380px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.platform-whatsapp-failures-page .provider {
+    white-space: nowrap;
+}
+
+.platform-whatsapp-failures-page .failure-date {
+    white-space: nowrap;
+}
+
+.platform-whatsapp-failures-page .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.platform-whatsapp-failures-page .empty-state {
+    padding: 28px 10px;
+    text-align: center;
+}
+
+.platform-whatsapp-failures-page .pagination-wrap {
+    margin-top: 20px;
+}
+
+@media (max-width: 800px) {
+    .platform-whatsapp-failures-page .platform-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+
+<div class="platform-whatsapp-failures-page">
+    <header class="platform-header">
+        <div class="platform-header__inner">
+            <a
+                class="platform-brand"
+                href="{{ route('platform.dashboard') }}"
+            >
+                {{ __('platform.brand') }}
+            </a>
+
+            <form
+                method="POST"
+                action="{{ route('platform.logout') }}"
+            >
+                @csrf
+
+                <button
+                    class="logout-button"
+                    type="submit"
+                >
+                    {{ __('platform.logout') }}
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="platform-main">
+        <div class="platform-toolbar">
+            <div>
+                <div class="platform-muted">
+                    Operações
+                </div>
+
+                <h1>
+                    Falhas de WhatsApp
+                </h1>
+
+                <p class="platform-muted">
+                    Mensagens de WhatsApp com falha de envio em todos os tenants.
+                </p>
+            </div>
+
+            <div>
+                <a
+                    class="button"
+                    href="{{ route('platform.dashboard') }}"
+                >
+                    Voltar ao painel
+                </a>
+            </div>
+        </div>
+
+        <section class="platform-card whatsapp-failures-summary">
+            <div class="platform-muted">
+                Falhas encontradas
+            </div>
+
+            <div class="whatsapp-failures-count">
+                {{ number_format($messages->total(), 0, ',', '.') }}
+            </div>
+        </section>
+
+        <section class="platform-card">
+            @if ($messages->isEmpty())
+                <div class="empty-state">
+                    <strong>
+                        Nenhuma falha de WhatsApp encontrada.
+                    </strong>
+
+                    <p class="platform-muted">
+                        Não existem mensagens de WhatsApp com status de falha.
+                    </p>
+                </div>
+            @else
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tenant</th>
+                                <th>Destinatário</th>
+                                <th>Telefone</th>
+                                <th>Mensagem</th>
+                                <th>Provedor</th>
+                                <th>Status</th>
+                                <th>Motivo</th>
+                                <th>Falhou em</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($messages as $message)
+                                <tr>
+                                    <td>
+                                        @if ($message->tenant !== null)
+                                            <strong>
+                                                {{ $message->tenant->name }}
+                                            </strong>
+
+                                            <div class="platform-muted">
+                                                {{ $message->tenant->slug }}
+                                            </div>
+                                        @else
+                                            <span class="platform-muted">
+                                                Tenant indisponível
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if (filled($message->recipient_name))
+                                            {{ $message->recipient_name }}
+                                        @else
+                                            <span class="platform-muted">
+                                                Nome não informado
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td class="phone">
+                                        {{ $message->phone }}
+                                    </td>
+
+                                    <td class="message-body">
+                                        {{ $message->body }}
+                                    </td>
+
+                                    <td class="provider">
+                                        @if (filled($message->provider))
+                                            {{ strtoupper($message->provider) }}
+                                        @else
+                                            <span class="platform-muted">
+                                                Não informado
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge">
+                                            Falhou
+                                        </span>
+                                    </td>
+
+                                    <td class="failure-reason">
+                                        @if (filled($message->failure_reason))
+                                            {{ $message->failure_reason }}
+                                        @else
+                                            <span class="platform-muted">
+                                                Motivo não informado
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td class="failure-date">
+                                        @if ($message->failed_at !== null)
+                                            {{ $message->failed_at->format('d/m/Y H:i') }}
+                                        @else
+                                            <span class="platform-muted">
+                                                Data não informada
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                @if ($messages->hasPages())
+                    <div class="pagination-wrap">
+                        {{ $messages->links() }}
+                    </div>
+                @endif
+            @endif
+        </section>
+    </main>
+</div>
+
+@endsection

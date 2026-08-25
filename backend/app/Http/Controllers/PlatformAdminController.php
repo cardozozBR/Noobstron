@@ -240,6 +240,21 @@ class PlatformAdminController extends Controller
         ]);
     }
 
+    public function whatsappFailures(): View
+    {
+        $messages = WhatsAppMessage::query()
+            ->withoutGlobalScopes()
+            ->with('tenant')
+            ->where('status', 'failed')
+            ->orderByDesc('failed_at')
+            ->orderByDesc('id')
+            ->paginate(50);
+
+        return view('platform.whatsapp-failures', [
+            'messages' => $messages,
+        ]);
+    }
+
     public function webhooks(Request $request): View
     {
         $status = trim(

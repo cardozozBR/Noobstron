@@ -511,6 +511,16 @@ Route::get(
     ->name('platform.email-failures');
 
 Route::get(
+    '/platform/whatsapp-failures',
+    [PlatformAdminController::class, 'whatsappFailures']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.whatsapp-failures');
+
+Route::get(
     '/platform/contacts',
     [PlatformCommercialContactController::class, 'index']
 )

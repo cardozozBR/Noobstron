@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\WhatsAppMessageStatus;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RuntimeException;
 
 class WhatsAppMessage extends Model
@@ -187,6 +188,11 @@ class WhatsAppMessage extends Model
             }
         }
     }
+
+    public function tenant(): BelongsTo
+{
+    return $this->belongsTo(Tenant::class);
+}
 
     public function conversation(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

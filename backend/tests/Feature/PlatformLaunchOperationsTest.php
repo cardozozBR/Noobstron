@@ -170,26 +170,30 @@ class PlatformLaunchOperationsTest extends TestCase
 
         app(TenantContext::class)->set($tenant);
 
-        EmailMessage::query()->withoutGlobalScopes()->create([
-            'tenant_id' => $tenant->id,
-            'to_email' => 'failed@example.test',
-            'subject' => 'Falha de teste',
-            'body' => 'Mensagem de teste.',
-            'status' => 'failed',
-            'failed_at' => now(),
-            'failure_reason' => 'Test email failure.',
-        ]);
+        EmailMessage::query()
+            ->withoutGlobalScopes()
+            ->create([
+                'tenant_id' => $tenant->id,
+                'to_email' => 'failed@example.test',
+                'subject' => 'Falha de teste',
+                'body' => 'Mensagem de teste.',
+                'status' => 'failed',
+                'failed_at' => now(),
+                'failure_reason' => 'Test email failure.',
+            ]);
 
-        WhatsAppMessage::query()->withoutGlobalScopes()->create([
-            'tenant_id' => $tenant->id,
-            'phone' => '5511999999999',
-            'body' => 'Mensagem de teste.',
-            'status' => 'failed',
-            'direction' => 'outbound',
-            'provider' => 'test',
-            'failed_at' => now(),
-            'failure_reason' => 'Test WhatsApp failure.',
-        ]);
+        WhatsAppMessage::query()
+            ->withoutGlobalScopes()
+            ->create([
+                'tenant_id' => $tenant->id,
+                'phone' => '5511999999999',
+                'body' => 'Mensagem de teste.',
+                'status' => 'failed',
+                'direction' => 'outbound',
+                'provider' => 'test',
+                'failed_at' => now(),
+                'failure_reason' => 'Test WhatsApp failure.',
+            ]);
 
         $this->actingAs($admin, 'platform')
             ->get('http://localhost/platform')
@@ -201,7 +205,50 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee(
                 'class="metric-card metric-card--alert"',
                 false
+            )
+            ->assertSee(
+                route('platform.email-failures')
+            )
+            ->assertSee(
+                route('platform.whatsapp-failures')
             );
+    }
+
+    public function test_platform_admin_can_view_global_whatsapp_failures(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'WhatsApp Failure Tenant',
+            'slug' => 'whatsapp-failure-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        WhatsAppMessage::query()
+            ->withoutGlobalScopes()
+            ->create([
+                'tenant_id' => $tenant->id,
+                'phone' => '5511999999999',
+                'recipient_name' => 'Cliente Teste',
+                'body' => 'Mensagem que falhou.',
+                'status' => 'failed',
+                'direction' => 'outbound',
+                'provider' => 'test',
+                'failed_at' => now(),
+                'failure_reason' => 'Provider indisponível.',
+            ]);
+
+        $this->actingAs($admin, 'platform')
+            ->get('http://localhost/platform/whatsapp-failures')
+            ->assertOk()
+            ->assertSee('Falhas de WhatsApp')
+            ->assertSee('WhatsApp Failure Tenant')
+            ->assertSee('Cliente Teste')
+            ->assertSee('5511999999999')
+            ->assertSee('Provider indisponível.');
     }
 
     public function test_platform_admin_can_view_global_email_failures(): void

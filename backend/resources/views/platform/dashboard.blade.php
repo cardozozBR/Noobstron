@@ -325,25 +325,26 @@
     </div>
 </a>
 
-            <div
-                class="metric-card{{ (int) ($messageFailureCounts['whatsapp'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
-            >
-                <div class="metric-label">
-                    WhatsApps falhos
-                </div>
+            <a
+    class="metric-card{{ (int) ($messageFailureCounts['whatsapp'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
+    href="{{ route('platform.whatsapp-failures') }}"
+>
+    <div class="metric-label">
+        WhatsApps falhos
+    </div>
 
-                <div class="metric-value">
-                    {{ (int) ($messageFailureCounts['whatsapp'] ?? 0) }}
-                </div>
+    <div class="metric-value">
+        {{ (int) ($messageFailureCounts['whatsapp'] ?? 0) }}
+    </div>
 
-                <div class="platform-muted metric-meta">
-                    @if ((int) ($messageFailureCounts['whatsapp'] ?? 0) > 0)
-                        Falhas de envio do WhatsApp precisam de atenção
-                    @else
-                        Nenhuma falha de WhatsApp
-                    @endif
-                </div>
-            </div>
+    <div class="platform-muted metric-meta">
+        @if ((int) ($messageFailureCounts['whatsapp'] ?? 0) > 0)
+            Falhas de envio do WhatsApp precisam de atenção
+        @else
+            Nenhuma falha de WhatsApp
+        @endif
+    </div>
+</a>
         </div>
 
         <div
