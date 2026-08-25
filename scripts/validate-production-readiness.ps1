@@ -190,18 +190,36 @@ Assert-Value $env "SESSION_HTTP_ONLY" {
 } "deve ser true"
 
 Assert-Value $env "MAIL_MAILER" {
-    param($v) $v -eq "smtp"
-} "configure SMTP real"
+    param($v) $v -in @(
+        "smtp",
+        "resend"
+    )
+} "deve ser smtp ou resend"
 
 foreach ($key in @(
-    "MAIL_HOST",
-    "MAIL_PORT",
     "MAIL_FROM_ADDRESS",
     "MARKETING_CONTACT_EMAIL"
 )) {
     Assert-Value $env $key {
         param($v) -not [string]::IsNullOrWhiteSpace($v)
     } "obrigatório antes do go-live"
+}
+
+if ($env["MAIL_MAILER"] -eq "smtp") {
+    foreach ($key in @(
+        "MAIL_HOST",
+        "MAIL_PORT"
+    )) {
+        Assert-Value $env $key {
+            param($v) -not [string]::IsNullOrWhiteSpace($v)
+        } "obrigatório para SMTP"
+    }
+}
+
+if ($env["MAIL_MAILER"] -eq "resend") {
+    Assert-Value $env "RESEND_API_KEY" {
+        param($v) -not [string]::IsNullOrWhiteSpace($v)
+    } "obrigatório para Resend"
 }
 
 Write-Host "`n=== STATIC DEPLOY CONTRACT ==="
