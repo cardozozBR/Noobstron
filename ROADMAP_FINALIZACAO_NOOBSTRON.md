@@ -99,9 +99,16 @@ Tenant B em operações sensíveis.
 -   [ ] Acabamento final da UX
 -   [ ] Homologação completa do `/platform`
 
-**Checkpoint da Fase 7B:** suspender/reativar tenant implementado e validado localmente
-com auditoria, confirmação, motivo obrigatório e testes. Pendente commit, deploy e
-smoke test em produção antes de marcar a etapa como validada em produção.
+**Checkpoint da Fase 7B:** suspender/reativar tenant concluído e validado em produção.
+
+-   Suspensão `active` → `blocked` validada.
+-   Tenant `blocked` deixa de resolver o workspace.
+-   Assinatura permanece inalterada durante suspensão.
+-   Reativação `blocked` → `active` validada.
+-   Workspace volta a responder após reativação.
+-   Auditoria `tenant.suspended` e `tenant.reactivated` validada.
+-   Deploy concluído com `DEPLOY_OK`.
+-   Commit implantado: `a85a489`.
 ## 4. Auditoria completa do produto do tenant
 
 Esta deve ser a primeira grande etapa depois do Admin Master.

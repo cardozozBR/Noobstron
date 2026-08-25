@@ -204,7 +204,20 @@ Validação concluída em produção:
 -   [x] Regressão ampliada: 65 testes / 341 assertions
 -   [x] `git diff --check` sem erros
 
-**Status: implementação concluída e validada localmente; pendente commit, deploy e smoke test em produção.**
+Fase 7B validada em produção.
+
+- Suspensão `active` → `blocked` validada.
+- Tenant bloqueado deixa de resolver o workspace.
+- Assinatura permanece inalterada durante suspensão.
+- Reativação `blocked` → `active` validada.
+- Workspace volta a responder após reativação.
+- Auditoria `tenant.suspended` validada.
+- Auditoria `tenant.reactivated` validada.
+- Smoke realizado com tenant de teste em produção.
+- Deploy concluído com `DEPLOY_OK`.
+- Commit implantado: `a85a489`.
+
+**Status: concluída e validada em produção.**
 
 ## Fase 8 --- Auditoria administrativa
 
