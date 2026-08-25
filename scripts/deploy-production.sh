@@ -170,7 +170,7 @@ echo "ALL_SERVICES_OK"
 echo
 echo "=== HTTP HEALTH ==="
 
-curl -fsS --max-time 15 http://127.0.0.1:8080/up >/dev/null
+curl -kfsS --max-time 15 https://127.0.0.1/up >/dev/null
 echo "HTTP_UP_OK"
 
 echo
