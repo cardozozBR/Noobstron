@@ -85,6 +85,11 @@ Tenant B em operações sensíveis.
 -   [x] Webhooks relacionados por tenant
 -   [x] Auditoria administrativa global
 -   [x] Prorrogação de trial auditada
+-   [x] Suspensão administrativa de tenant (`active` → `blocked`)
+-   [x] Reativação administrativa de tenant (`blocked` → `active`)
+-   [x] Auditoria de suspensão/reativação de tenant
+-   [x] Bloqueio efetivo do workspace para tenant `blocked`
+-   [x] Preservação da assinatura durante suspensão/reativação
 
 ### Ainda falta
 
@@ -94,7 +99,9 @@ Tenant B em operações sensíveis.
 -   [ ] Acabamento final da UX
 -   [ ] Homologação completa do `/platform`
 
-**Próximo passo atual:** continuar a Fase 7B — ações administrativas auditadas por tenant, começando por suspender/reativar tenant.
+**Checkpoint da Fase 7B:** suspender/reativar tenant implementado e validado localmente
+com auditoria, confirmação, motivo obrigatório e testes. Pendente commit, deploy e
+smoke test em produção antes de marcar a etapa como validada em produção.
 ## 4. Auditoria completa do produto do tenant
 
 Esta deve ser a primeira grande etapa depois do Admin Master.

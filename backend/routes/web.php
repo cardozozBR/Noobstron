@@ -461,6 +461,24 @@ Route::get(
     ->name('platform.tenants.index');
 
 Route::post(
+    '/platform/tenants/{tenant}/reactivate',
+    [PlatformTenantController::class, 'reactivate']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.tenants.reactivate');
+Route::post(
+    '/platform/tenants/{tenant}/suspend',
+    [PlatformTenantController::class, 'suspend']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.tenants.suspend');
+Route::post(
     '/platform/tenants/{tenant}/trial/extend',
     [PlatformTenantController::class, 'extendTrial']
 )

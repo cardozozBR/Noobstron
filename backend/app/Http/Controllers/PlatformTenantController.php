@@ -416,4 +416,192 @@ class PlatformTenantController extends Controller
                 ]);
         }
     }
+
+    public function suspend(
+        Request $request,
+        Tenant $tenant,
+        PlatformAdminAuditService $audit,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'reason' => [
+                'required',
+                'string',
+                'max:500',
+            ],
+        ]);
+
+        $before = [
+            'status' => $tenant->status,
+        ];
+
+        if ($tenant->status !== 'active') {
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->withErrors([
+                    'status' => 'Somente tenants ativos podem ser suspensos.',
+                ]);
+        }
+
+        try {
+            DB::transaction(
+                function () use (
+                    $tenant,
+                    $audit,
+                    $request,
+                    $validated,
+                    $before
+                ): void {
+                    $tenant->forceFill([
+                        'status' => 'blocked',
+                    ])->save();
+
+                    $tenant->refresh();
+
+                    $audit->log(
+                        action: 'tenant.suspended',
+                        tenant: $tenant,
+                        entityType: Tenant::class,
+                        entityId: $tenant->id,
+                        beforeState: $before,
+                        afterState: [
+                            'status' => $tenant->status,
+                        ],
+                        reason: $validated['reason'],
+                        request: $request,
+                    );
+                }
+            );
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->with(
+                    'success',
+                    'Tenant suspenso com sucesso.'
+                );
+        } catch (\Throwable $exception) {
+            try {
+                $audit->log(
+                    action: 'tenant.suspended',
+                    tenant: $tenant,
+                    entityType: Tenant::class,
+                    entityId: $tenant->id,
+                    beforeState: $before,
+                    result: PlatformAdminAuditService::RESULT_FAILURE,
+                    reason: $exception->getMessage(),
+                    request: $request,
+                );
+            } catch (\Throwable) {
+                // A falha principal nao deve ser mascarada.
+            }
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->withErrors([
+                    'status' => 'Nao foi possivel suspender o tenant.',
+                ]);
+        }
+    }
+
+    public function reactivate(
+        Request $request,
+        Tenant $tenant,
+        PlatformAdminAuditService $audit,
+    ): RedirectResponse {
+        $validated = $request->validate([
+            'reason' => [
+                'required',
+                'string',
+                'max:500',
+            ],
+        ]);
+
+        $before = [
+            'status' => $tenant->status,
+        ];
+
+        if ($tenant->status !== 'blocked') {
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->withErrors([
+                    'status' => 'Somente tenants bloqueados podem ser reativados.',
+                ]);
+        }
+
+        try {
+            DB::transaction(
+                function () use (
+                    $tenant,
+                    $audit,
+                    $request,
+                    $validated,
+                    $before
+                ): void {
+                    $tenant->forceFill([
+                        'status' => 'active',
+                    ])->save();
+
+                    $tenant->refresh();
+
+                    $audit->log(
+                        action: 'tenant.reactivated',
+                        tenant: $tenant,
+                        entityType: Tenant::class,
+                        entityId: $tenant->id,
+                        beforeState: $before,
+                        afterState: [
+                            'status' => $tenant->status,
+                        ],
+                        reason: $validated['reason'],
+                        request: $request,
+                    );
+                }
+            );
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->with(
+                    'success',
+                    'Tenant reativado com sucesso.'
+                );
+        } catch (\Throwable $exception) {
+            try {
+                $audit->log(
+                    action: 'tenant.reactivated',
+                    tenant: $tenant,
+                    entityType: Tenant::class,
+                    entityId: $tenant->id,
+                    beforeState: $before,
+                    result: PlatformAdminAuditService::RESULT_FAILURE,
+                    reason: $exception->getMessage(),
+                    request: $request,
+                );
+            } catch (\Throwable) {
+                // A falha principal nao deve ser mascarada.
+            }
+
+            return redirect()
+                ->route(
+                    'platform.tenants.show',
+                    $tenant
+                )
+                ->withErrors([
+                    'status' => 'Nao foi possivel reativar o tenant.',
+                ]);
+        }
+    }
 }

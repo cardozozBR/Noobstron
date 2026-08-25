@@ -149,6 +149,81 @@
                         <dd>{{ $userCount }}</dd>
                     </div>
                 </dl>
+@if ($tenant->status === 'active')
+    <form
+        method="POST"
+        action="{{ route(
+            'platform.tenants.suspend',
+            $tenant
+        ) }}"
+        style="margin-top:18px"
+    >
+        @csrf
+
+        <label>
+            <span class="platform-muted">
+                Motivo da suspensão
+            </span>
+
+            <input
+                type="text"
+                name="reason"
+                maxlength="500"
+                required
+                placeholder="Informe o motivo administrativo"
+                style="display:block; margin-top:6px; width:100%"
+            >
+        </label>
+
+        <button
+            class="button button-secondary"
+            type="submit"
+            style="margin-top:10px"
+            onclick="return confirm(
+                'Confirma a suspensão deste tenant? O workspace ficará indisponível.'
+            )"
+        >
+            Suspender tenant
+        </button>
+    </form>
+@elseif ($tenant->status === 'blocked')
+    <form
+        method="POST"
+        action="{{ route(
+            'platform.tenants.reactivate',
+            $tenant
+        ) }}"
+        style="margin-top:18px"
+    >
+        @csrf
+
+        <label>
+            <span class="platform-muted">
+                Motivo da reativação
+            </span>
+
+            <input
+                type="text"
+                name="reason"
+                maxlength="500"
+                required
+                placeholder="Informe o motivo administrativo"
+                style="display:block; margin-top:6px; width:100%"
+            >
+        </label>
+
+        <button
+            class="button button-secondary"
+            type="submit"
+            style="margin-top:10px"
+            onclick="return confirm(
+                'Confirma a reativação deste tenant?'
+            )"
+        >
+            Reativar tenant
+        </button>
+    </form>
+@endif
             </section>
 
             <section class="platform-card">

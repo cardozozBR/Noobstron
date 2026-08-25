@@ -173,8 +173,8 @@ Validação concluída em produção:
 
 ### Ações administrativas a avaliar
 
--   [ ] Suspender tenant
--   [ ] Reativar tenant
+-   [x] Suspender tenant
+-   [x] Reativar tenant
 -   [x] Alterar/prorrogar trial
 -   [ ] Cancelar assinatura
 -   [ ] Corrigir plano
@@ -189,6 +189,22 @@ Validação concluída em produção:
 -   Histórico de assinaturas, cobrança, falhas e webhooks relacionados validados em produção
 -   Prorrogação de trial validada em produção
 -   Auditoria da prorrogação validada em `platform_admin_audit_logs`
+
+### Fase 7B — Suspensão e reativação de tenant
+
+-   [x] Suspensão administrativa implementada como `active` → `blocked`
+-   [x] Reativação administrativa implementada como `blocked` → `active`
+-   [x] Ações protegidas por `platform.admin`
+-   [x] Confirmação e motivo obrigatório
+-   [x] Auditoria `tenant.suspended` e `tenant.reactivated`
+-   [x] `before_state` e `after_state` registrados
+-   [x] Tenant `blocked` deixa de resolver o workspace
+-   [x] Assinatura existente permanece inalterada
+-   [x] Cobertura específica: 10 testes / 46 assertions
+-   [x] Regressão ampliada: 65 testes / 341 assertions
+-   [x] `git diff --check` sem erros
+
+**Status: implementação concluída e validada localmente; pendente commit, deploy e smoke test em produção.**
 
 ## Fase 8 --- Auditoria administrativa
 
@@ -216,8 +232,8 @@ Registrar, quando aplicável:
 -   [ ] Admin reprocessou webhook
 -   [ ] Admin reprocessou e-mail
 -   [ ] Admin reprocessou WhatsApp
--   [ ] Admin suspendeu tenant
--   [ ] Admin reativou tenant
+-   [x] Admin suspendeu tenant
+-   [x] Admin reativou tenant
 
 Validação em produção:
 
