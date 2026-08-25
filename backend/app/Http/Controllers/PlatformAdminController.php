@@ -8,7 +8,10 @@ use App\Models\PaymentEventReceipt;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\WhatsAppMessage;
+use App\Services\EmailMessageService;
+use App\Services\EmailQueueService;
 use App\Services\StripeSubscriptionWebhookService;
+use App\Services\TenantContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -238,6 +241,62 @@ class PlatformAdminController extends Controller
         return view('platform.email-failures', [
             'messages' => $messages,
         ]);
+    }
+
+    public function retryEmailFailure(
+        int $message,
+        EmailMessageService $messages,
+        EmailQueueService $queue,
+        TenantContext $tenantContext
+    ): RedirectResponse {
+        try {
+            DB::transaction(function () use (
+                $message,
+                $messages,
+                $queue,
+                $tenantContext
+            ): void {
+                $emailMessage = EmailMessage::query()
+                    ->withoutGlobalScopes()
+                    ->lockForUpdate()
+                    ->findOrFail($message);
+
+                if ($emailMessage->tenant === null) {
+                    throw new \RuntimeException(
+                        'O tenant desta mensagem não está disponível.'
+                    );
+                }
+
+                $tenantContext->set(
+                    $emailMessage->tenant
+                );
+
+                $emailMessage = $messages->retry(
+                    $emailMessage
+                );
+
+                $queue->dispatch(
+                    $emailMessage
+                );
+            });
+        } catch (\Throwable $exception) {
+            return redirect()
+                ->route('platform.email-failures')
+                ->with(
+                    'error',
+                    'O e-mail não pôde ser reprocessado: '
+                        .$exception->getMessage()
+                );
+        } finally {
+            $tenantContext->clear();
+        }
+
+        return redirect()
+            ->route('platform.email-failures')
+            ->with(
+                'success',
+                'E-mail enviado para reprocessamento.'
+            );
     }
 
     public function whatsappFailures(): View

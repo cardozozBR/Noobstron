@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EmailMessageStatus;
+use App\Jobs\SendEmailMessageJob;
 use App\Models\CommercialContact;
 use App\Models\EmailMessage;
 use App\Models\PaymentEventReceipt;
@@ -15,12 +17,144 @@ use App\Services\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class PlatformLaunchOperationsTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_platform_admin_can_retry_failed_email_message(): void
+    {
+        Queue::fake();
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Retry Email Tenant',
+            'slug' => 'retry-email-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        $message = EmailMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'to_email' => 'retry-email@example.test',
+            'to_name' => 'Retry Email',
+            'subject' => 'Retry de e-mail',
+            'body' => 'Mensagem de teste para retry.',
+            'status' => EmailMessageStatus::FAILED,
+            'failed_at' => now(),
+            'failure_reason' => 'Temporary delivery failure.',
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.email-failures.retry',
+                    $message->id
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.email-failures')
+            )
+            ->assertSessionHas(
+                'success',
+                'E-mail enviado para reprocessamento.'
+            );
+
+        $message->refresh();
+
+        $this->assertSame(
+            EmailMessageStatus::PENDING,
+            $message->status
+        );
+
+        $this->assertNull(
+            $message->failed_at
+        );
+
+        $this->assertNull(
+            $message->failure_reason
+        );
+
+        Queue::assertPushed(
+            SendEmailMessageJob::class,
+            function (
+                SendEmailMessageJob $job
+            ) use ($tenant, $message): bool {
+                return $job->tenantId === $tenant->id
+                    && $job->emailMessageId === $message->id;
+            }
+        );
+        $this->assertDatabaseHas(
+            'audit_logs',
+            [
+                'tenant_id' => $tenant->id,
+                'user_id' => null,
+                'action' => 'email.retried',
+            ]
+        );
+    }
+
+    public function test_platform_admin_cannot_retry_non_failed_email_message(): void
+    {
+        Queue::fake();
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Retry Guard Tenant',
+            'slug' => 'retry-guard-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        $message = EmailMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'to_email' => 'already-pending@example.test',
+            'to_name' => 'Pending Email',
+            'subject' => 'Pending email',
+            'body' => 'Mensagem já pendente.',
+            'status' => EmailMessageStatus::PENDING,
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.email-failures.retry',
+                    $message->id
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.email-failures')
+            )
+            ->assertSessionHas(
+                'error'
+            );
+
+        $this->assertSame(
+            EmailMessageStatus::PENDING,
+            $message->refresh()->status
+        );
+
+        Queue::assertNothingPushed();
+    }
 
     public function test_platform_dashboard_exposes_subscription_trial_revenue_and_usage_overview(): void
     {

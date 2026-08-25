@@ -32,6 +32,22 @@
     letter-spacing: -.035em;
 }
 
+.platform-email-failures-page .flash-message {
+    margin-bottom: 18px;
+}
+
+.platform-email-failures-page .flash-message--success {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.platform-email-failures-page .flash-message--error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
 .platform-email-failures-page .table-wrap {
     overflow-x: auto;
 }
@@ -90,6 +106,14 @@
     font-weight: 700;
 }
 
+.platform-email-failures-page .retry-form {
+    margin: 0;
+}
+
+.platform-email-failures-page .retry-button {
+    white-space: nowrap;
+}
+
 .platform-email-failures-page .empty-state {
     padding: 28px 10px;
     text-align: center;
@@ -134,6 +158,26 @@
     </header>
 
     <main class="platform-main">
+        @if (session('success'))
+            <section
+                class="platform-card flash-message flash-message--success"
+            >
+                <strong>
+                    {{ session('success') }}
+                </strong>
+            </section>
+        @endif
+
+        @if (session('error'))
+            <section
+                class="platform-card flash-message flash-message--error"
+            >
+                <strong>
+                    {{ session('error') }}
+                </strong>
+            </section>
+        @endif
+
         <div class="platform-toolbar">
             <div>
                 <div class="platform-muted">
@@ -191,6 +235,7 @@
                                 <th>Status</th>
                                 <th>Motivo</th>
                                 <th>Falhou em</th>
+                                <th>Ação</th>
                             </tr>
                         </thead>
 
@@ -245,6 +290,29 @@
                                                 Data não informada
                                             </span>
                                         @endif
+                                    </td>
+
+                                    <td>
+                                        <form
+                                            class="retry-form"
+                                            method="POST"
+                                            action="{{ route(
+                                                'platform.email-failures.retry',
+                                                $message->id
+                                            ) }}"
+                                        >
+                                            @csrf
+
+                                            <button
+                                                class="button retry-button"
+                                                type="submit"
+                                                onclick="return confirm(
+                                                    'Deseja reprocessar este e-mail?'
+                                                )"
+                                            >
+                                                Reprocessar
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
