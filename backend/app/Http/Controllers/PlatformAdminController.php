@@ -16,6 +16,7 @@ use App\Services\WhatsAppMessageService;
 use App\Services\WhatsAppQueueService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
@@ -378,6 +379,87 @@ class PlatformAdminController extends Controller
                 'success',
                 'Mensagem WhatsApp enviada para reprocessamento.'
             );
+    }
+
+    public function jobs(): View
+    {
+        $pendingJobs = DB::table('jobs')
+            ->orderByDesc('id')
+            ->paginate(
+                50,
+                ['*'],
+                'pending_page'
+            );
+
+        $failedJobs = DB::table('failed_jobs')
+            ->orderByDesc('failed_at')
+            ->orderByDesc('id')
+            ->paginate(
+                50,
+                ['*'],
+                'failed_page'
+            );
+
+        return view('platform.jobs', [
+            'pendingJobs' => $pendingJobs,
+            'failedJobs' => $failedJobs,
+        ]);
+    }
+
+    public function retryFailedJob(
+        string $uuid
+    ): RedirectResponse {
+        $failedJob = DB::table('failed_jobs')
+            ->where('uuid', $uuid)
+            ->first();
+
+        if ($failedJob === null) {
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'error',
+                    'O job falho não foi encontrado.'
+                );
+        }
+
+        try {
+            $exitCode = Artisan::call(
+                'queue:retry',
+                [
+                    'id' => [
+                        $uuid,
+                    ],
+                ]
+            );
+
+            if ($exitCode !== 0) {
+                $output = trim(
+                    Artisan::output()
+                );
+
+                throw new \RuntimeException(
+                    $output !== ''
+                        ? $output
+                        : 'O Laravel não conseguiu reprocessar o job.'
+                );
+            }
+
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'success',
+                    'Job enviado para reprocessamento.'
+                );
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'error',
+                    'O job não pôde ser reprocessado.'
+                );
+        }
     }
 
     public function webhooks(Request $request): View

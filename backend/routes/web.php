@@ -1,52 +1,57 @@
 <?php
 
-use App\Http\Controllers\SubscriptionBillingController;
-use App\Http\Controllers\MercadoPagoSubscriptionWebhookController;
-use App\Http\Controllers\StripeSubscriptionWebhookController;
-use App\Http\Controllers\WhatsAppWebhookController;
-use App\Http\Controllers\PaymentWebhookController;
-use App\Http\Middleware\ResolveTenant;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\CatalogController;
-use App\Http\Controllers\ProposalController;
-use App\Http\Controllers\OpportunityController;
-use App\Http\Controllers\PipelineController;
-use App\Http\Controllers\PipelineStageController;
-use App\Http\Controllers\ImportController;
+use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmailVerificationController;
-use App\Http\Controllers\SelfServiceRegistrationController;
-use App\Http\Controllers\WorkspaceLoginController;
-use App\Http\Controllers\PublicLocaleController;
-use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\CommercialContactController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PlatformAdminController;
-use App\Http\Controllers\PlatformTenantController;
-use App\Http\Controllers\PlatformCommercialContactController;
-use App\Http\Controllers\LeadController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserPermissionController;
-use App\Http\Controllers\TenantSettingsController;
 use App\Http\Controllers\CompanyOnboardingController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerRelationshipController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\ReceivableController;
-use App\Http\Controllers\ChargeController;
-use App\Http\Controllers\FinancialIndicatorController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EmailTemplateController;
+use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\FinancialIndicatorController;
+use App\Http\Controllers\ImportController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\MercadoPagoSubscriptionWebhookController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PaymentWebhookController;
+use App\Http\Controllers\PipelineController;
+use App\Http\Controllers\PipelineStageController;
+use App\Http\Controllers\PlatformAdminController;
+use App\Http\Controllers\PlatformCommercialContactController;
+use App\Http\Controllers\PlatformTenantController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\PublicLocaleController;
+use App\Http\Controllers\ReceivableController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SelfServiceRegistrationController;
+use App\Http\Controllers\StripeSubscriptionWebhookController;
+use App\Http\Controllers\SubscriptionBillingController;
+use App\Http\Controllers\TenantSettingsController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPermissionController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\WhatsAppTemplateController;
-use App\Http\Controllers\AiAssistantController;
-use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\WhatsAppWebhookController;
+use App\Http\Controllers\WorkspaceLoginController;
+use App\Http\Middleware\PublicLocale;
+use App\Http\Middleware\ResolveTenant;
+use App\Support\PlanCatalog;
+use App\Support\TrialPeriod;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (\Illuminate\Http\Request $request) {
+Route::get('/', function (Request $request) {
     $centralHost = parse_url(
         (string) config('app.url'),
         PHP_URL_HOST
@@ -69,7 +74,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
     ->withoutMiddleware(
         ResolveTenant::class
     )
-    ->middleware(\App\Http\Middleware\PublicLocale::class)
+    ->middleware(PublicLocale::class)
     ->name('marketing.home');
 
 Route::get('/aprender', function () {
@@ -79,7 +84,7 @@ Route::get('/aprender', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.index');
 
@@ -90,7 +95,7 @@ Route::get('/aprender/primeiros-passos', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.getting-started');
 
@@ -101,7 +106,7 @@ Route::get('/aprender/organizar-clientes', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.customers');
 
@@ -112,7 +117,7 @@ Route::get('/aprender/processo-de-vendas', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.sales');
 
@@ -123,7 +128,7 @@ Route::get('/aprender/follow-up-e-atividades', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.follow-up');
 
@@ -134,7 +139,7 @@ Route::get('/aprender/centralizar-comunicacao', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.communication');
 
@@ -145,7 +150,7 @@ Route::get('/aprender/resultados-e-evolucao', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.results');
 
@@ -156,7 +161,7 @@ Route::get('/aprender/automatize-e-escale', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.automation');
 
@@ -167,7 +172,7 @@ Route::get('/aprender/rotina-comercial', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.routine');
 
@@ -178,7 +183,7 @@ Route::get('/aprender/ia-no-processo-comercial', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.ai');
 
@@ -189,7 +194,7 @@ Route::get('/aprender/revisar-e-melhorar-processo', function () {
         ResolveTenant::class
     )
     ->middleware(
-        \App\Http\Middleware\PublicLocale::class
+        PublicLocale::class
     )
     ->name('marketing.learn.review');
 
@@ -201,7 +206,7 @@ Route::get('/terms', function () {
     ->withoutMiddleware(
         ResolveTenant::class
     )
-    ->middleware(\App\Http\Middleware\PublicLocale::class)
+    ->middleware(PublicLocale::class)
     ->name('marketing.terms');
 
 Route::get('/privacy', function () {
@@ -212,7 +217,7 @@ Route::get('/privacy', function () {
     ->withoutMiddleware(
         ResolveTenant::class
     )
-    ->middleware(\App\Http\Middleware\PublicLocale::class)
+    ->middleware(PublicLocale::class)
     ->name('marketing.privacy');
 
 Route::get('/robots.txt', function () {
@@ -220,12 +225,11 @@ Route::get('/robots.txt', function () {
 
     return response(
         "User-agent: *\n"
-            . "Disallow:\n"
-            . "Sitemap: {$sitemapUrl}\n",
+            ."Disallow:\n"
+            ."Sitemap: {$sitemapUrl}\n",
         200,
         [
-            'Content-Type' =>
-                'text/plain; charset=UTF-8',
+            'Content-Type' => 'text/plain; charset=UTF-8',
         ]
     );
 })
@@ -242,7 +246,7 @@ Route::post(
         ResolveTenant::class
     )
     ->middleware([
-        \App\Http\Middleware\PublicLocale::class,
+        PublicLocale::class,
         'throttle:5,1',
     ])
     ->name('marketing.contact.store');
@@ -316,22 +320,22 @@ Route::get('/sitemap.xml', function () {
 
             return implode("\n", [
                 '    <url>',
-                '        <loc>' . htmlspecialchars($url, ENT_XML1, 'UTF-8') . '</loc>',
-                '        <changefreq>' . $changefreq . '</changefreq>',
-                '        <priority>' . $priority . '</priority>',
+                '        <loc>'.htmlspecialchars($url, ENT_XML1, 'UTF-8').'</loc>',
+                '        <changefreq>'.$changefreq.'</changefreq>',
+                '        <priority>'.$priority.'</priority>',
                 '    </url>',
             ]);
         })
         ->implode("\n");
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?>'
-        . "\n"
-        . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        . "\n"
-        . $urls
-        . "\n"
-        . '</urlset>'
-        . "\n";
+        ."\n"
+        .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        ."\n"
+        .$urls
+        ."\n"
+        .'</urlset>'
+        ."\n";
 
     return response($xml, 200, [
         'Content-Type' => 'application/xml; charset=UTF-8',
@@ -355,28 +359,26 @@ Route::get('/register', function () {
         ),
         'plans' => array_values(
             array_filter(
-                \App\Support\PlanCatalog::definitions(),
-                static fn (array $plan): bool =>
-                    in_array(
-                        $plan['code'],
-                        [
-                            'start',
-                            'pro',
-                            'business',
-                        ],
-                        true
-                    )
+                PlanCatalog::definitions(),
+                static fn (array $plan): bool => in_array(
+                    $plan['code'],
+                    [
+                        'start',
+                        'pro',
+                        'business',
+                    ],
+                    true
+                )
             )
         ),
         'defaultPlan' => 'start',
-        'trialDays' =>
-            \App\Support\TrialPeriod::DEFAULT_DAYS,
+        'trialDays' => TrialPeriod::DEFAULT_DAYS,
     ]);
 })
     ->withoutMiddleware(
         ResolveTenant::class
     )
-    ->middleware(\App\Http\Middleware\PublicLocale::class)
+    ->middleware(PublicLocale::class)
     ->name('register');
 Route::post(
     '/register',
@@ -559,6 +561,27 @@ Route::post(
     )
     ->middleware('platform.admin')
     ->name('platform.logout');
+
+Route::get(
+    '/platform/jobs',
+    [PlatformAdminController::class, 'jobs']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.jobs');
+
+Route::post(
+    '/platform/jobs/failed/{uuid}/retry',
+    [PlatformAdminController::class, 'retryFailedJob']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.jobs.failed.retry');
+
 Route::get(
     '/idioma',
     [PublicLocaleController::class, 'update']
@@ -574,7 +597,7 @@ Route::get(
     ->withoutMiddleware(
         ResolveTenant::class
     )
-    ->middleware(\App\Http\Middleware\PublicLocale::class)
+    ->middleware(PublicLocale::class)
     ->name('workspace.login');
 
 Route::post(
@@ -630,24 +653,24 @@ Route::middleware('auth')->group(function () {
         ->name('profile.update');
 
     Route::get(
-    '/billing',
-    [SubscriptionBillingController::class, 'index']
-)->name('billing.index');
+        '/billing',
+        [SubscriptionBillingController::class, 'index']
+    )->name('billing.index');
 
-Route::post(
-    '/billing/checkout',
-    [SubscriptionBillingController::class, 'checkout']
-)->name('billing.checkout');
+    Route::post(
+        '/billing/checkout',
+        [SubscriptionBillingController::class, 'checkout']
+    )->name('billing.checkout');
 
-Route::post(
-    '/billing/change-plan',
-    [SubscriptionBillingController::class, 'changePlan']
-)->name('billing.change-plan');
+    Route::post(
+        '/billing/change-plan',
+        [SubscriptionBillingController::class, 'changePlan']
+    )->name('billing.change-plan');
 
-Route::post(
-    '/billing/portal',
-    [SubscriptionBillingController::class, 'portal']
-)->name('billing.portal');
+    Route::post(
+        '/billing/portal',
+        [SubscriptionBillingController::class, 'portal']
+    )->name('billing.portal');
 
     Route::get('/users', [UserController::class, 'index'])
         ->middleware('permission:users.view')
@@ -1651,7 +1674,7 @@ Route::post(
     ])
     ->name('ai.rewrite');
 
-    Route::post(
+Route::post(
     '/webhooks/subscription/stripe',
     [
         StripeSubscriptionWebhookController::class,
@@ -1659,9 +1682,9 @@ Route::post(
     ]
 )
     ->withoutMiddleware([
-        ResolveTenant::class,
-        \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
-    ])
+            ResolveTenant::class,
+            PreventRequestForgery::class,
+        ])
     ->name(
         'webhooks.subscription.stripe'
     );
@@ -1680,7 +1703,6 @@ Route::post(
         'webhooks.whatsapp.handle'
     );
 
-
 Route::post(
     '/webhooks/subscription/mercado-pago',
     [
@@ -1690,7 +1712,7 @@ Route::post(
 )
     ->withoutMiddleware([
         ResolveTenant::class,
-        \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
+        PreventRequestForgery::class,
     ])
     ->name(
         'webhooks.subscription.mercado-pago'

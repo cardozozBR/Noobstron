@@ -280,8 +280,11 @@ class PlatformLaunchOperationsTest extends TestCase
             'failed_at' => now(),
         ]);
 
-        $this->actingAs($admin, 'platform')
-            ->get('http://localhost/platform')
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get('http://localhost/platform');
+
+        $response
             ->assertOk()
             ->assertSee('Jobs pendentes')
             ->assertSee('Jobs falhos')
@@ -291,6 +294,162 @@ class PlatformLaunchOperationsTest extends TestCase
                 'class="metric-card metric-card--alert"',
                 false
             );
+
+        $this->assertSame(
+            2,
+            substr_count(
+                $response->getContent(),
+                route('platform.jobs')
+            )
+        );
+    }
+
+    public function test_platform_admin_can_retry_failed_queue_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Failed Job Retry Tenant',
+            'slug' => 'failed-job-retry-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set(
+            $tenant
+        );
+
+        $message = EmailMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'to_email' => 'queue-retry@example.test',
+            'subject' => 'Queue retry',
+            'body' => 'Mensagem usada para gerar payload real.',
+            'status' => EmailMessageStatus::PENDING,
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        config([
+            'queue.default' => 'database',
+        ]);
+
+        Queue::connection('database')->push(
+            new SendEmailMessageJob(
+                $tenant->id,
+                $message->id
+            )
+        );
+
+        $queuedJob = DB::table('jobs')
+            ->orderByDesc('id')
+            ->first();
+
+        $this->assertNotNull(
+            $queuedJob
+        );
+
+        $uuid = (string) Str::uuid();
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => $uuid,
+            'connection' => 'database',
+            'queue' => $queuedJob->queue,
+            'payload' => $queuedJob->payload,
+            'exception' => 'Test failed queue job.',
+            'failed_at' => now(),
+        ]);
+
+        DB::table('jobs')
+            ->where('id', $queuedJob->id)
+            ->delete();
+
+        $this->assertSame(
+            0,
+            DB::table('jobs')->count()
+        );
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.jobs.failed.retry',
+                    $uuid
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.jobs')
+            )
+            ->assertSessionHas(
+                'success',
+                'Job enviado para reprocessamento.'
+            );
+
+        $this->assertDatabaseMissing(
+            'failed_jobs',
+            [
+                'uuid' => $uuid,
+            ]
+        );
+
+        $this->assertSame(
+            1,
+            DB::table('jobs')->count()
+        );
+
+        $retriedJob = DB::table('jobs')
+            ->first();
+
+        $payload = json_decode(
+            $retriedJob->payload,
+            true
+        );
+
+        $this->assertSame(
+            SendEmailMessageJob::class,
+            data_get(
+                $payload,
+                'displayName'
+            )
+        );
+    }
+
+    public function test_platform_admin_cannot_retry_missing_failed_queue_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $missingUuid = (string) Str::uuid();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.jobs.failed.retry',
+                    $missingUuid
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.jobs')
+            )
+            ->assertSessionHas(
+                'error',
+                'O job falho não foi encontrado.'
+            );
+
+        $this->assertDatabaseMissing(
+            'failed_jobs',
+            [
+                'uuid' => $missingUuid,
+            ]
+        );
+
+        $this->assertSame(
+            0,
+            DB::table('jobs')->count()
+        );
     }
 
     public function test_platform_dashboard_shows_message_failure_counts(): void
@@ -630,6 +789,98 @@ class PlatformLaunchOperationsTest extends TestCase
                 'action' => 'whatsapp.retried',
             ]
         );
+    }
+
+    public function test_platform_admin_can_view_queue_jobs(): void
+    {
+        $admin = $this->platformAdmin();
+
+        DB::table('jobs')->insert([
+            'queue' => 'default',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SendEmailMessageJob',
+            ]),
+            'attempts' => 1,
+            'reserved_at' => null,
+            'available_at' => now()->timestamp,
+            'created_at' => now()->timestamp,
+        ]);
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => (string) Str::uuid(),
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SendWhatsAppMessageJob',
+            ]),
+            'exception' => 'Sensitive exception details.',
+            'failed_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.jobs')
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Filas e jobs')
+            ->assertSee('Jobs pendentes')
+            ->assertSee('Jobs falhos')
+            ->assertSee('App\\Jobs\\SendEmailMessageJob')
+            ->assertSee('App\\Jobs\\SendWhatsAppMessageJob')
+            ->assertDontSee(
+                'Sensitive exception details.'
+            );
+    }
+
+    public function test_platform_jobs_show_retry_for_failed_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $uuid = (string) Str::uuid();
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => $uuid,
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SendEmailMessageJob',
+            ]),
+            'exception' => 'Test failed job.',
+            'failed_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.jobs')
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Reprocessar')
+            ->assertSee(
+                route(
+                    'platform.jobs.failed.retry',
+                    $uuid
+                )
+            );
+    }
+
+    public function test_platform_jobs_page_shows_empty_states(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.jobs')
+            )
+            ->assertOk()
+            ->assertSee('Nenhum job pendente.')
+            ->assertSee('Nenhum job falho.');
     }
 
     public function test_platform_admin_can_view_global_email_failures(): void
