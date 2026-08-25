@@ -1,4 +1,4 @@
-@extends('platform.layout')
+﻿@extends('platform.layout')
 
 @section('title', 'Filas e jobs')
 
@@ -105,6 +105,17 @@
     min-width: 240px;
     max-width: 460px;
     overflow-wrap: anywhere;
+}
+
+.platform-jobs-page .job-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.platform-jobs-page .job-actions form {
+    margin: 0;
 }
 
 .platform-jobs-page .status-badge {
@@ -438,26 +449,49 @@
                                     </td>
 
                                     <td class="job-action">
-                                        <form
-                                            method="POST"
-                                            action="{{ route(
-                                                'platform.jobs.failed.retry',
-                                                $job->uuid
-                                            ) }}"
-                                        >
-                                            @csrf
+    <div class="job-actions">
+        <form
+            method="POST"
+            action="{{ route(
+                'platform.jobs.failed.retry',
+                $job->uuid
+            ) }}"
+        >
+            @csrf
 
-                                            <button
-                                                class="button"
-                                                type="submit"
-                                                onclick="return confirm(
-                                                    'Deseja reprocessar este job falho?'
-                                                )"
-                                            >
-                                                Reprocessar
-                                            </button>
-                                        </form>
-                                    </td>
+            <button
+                class="button"
+                type="submit"
+                onclick="return confirm(
+                    'Deseja reprocessar este job falho?'
+                )"
+            >
+                Reprocessar
+            </button>
+        </form>
+
+        <form
+            method="POST"
+            action="{{ route(
+                'platform.jobs.failed.forget',
+                $job->uuid
+            ) }}"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                class="button"
+                type="submit"
+                onclick="return confirm(
+                    'ATENÇÃO: este job falho será removido definitivamente da lista e não será reprocessado. Deseja continuar?'
+                )"
+            >
+                Remover
+            </button>
+        </form>
+    </div>
+</td>
                                 </tr>
                             @endforeach
                         </tbody>

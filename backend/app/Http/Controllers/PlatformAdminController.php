@@ -462,6 +462,60 @@ class PlatformAdminController extends Controller
         }
     }
 
+    public function forgetFailedJob(
+        string $uuid
+    ): RedirectResponse {
+        $failedJob = DB::table('failed_jobs')
+            ->where('uuid', $uuid)
+            ->first();
+
+        if ($failedJob === null) {
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'error',
+                    'O job falho não foi encontrado.'
+                );
+        }
+
+        try {
+            $exitCode = Artisan::call(
+                'queue:forget',
+                [
+                    'id' => $uuid,
+                ]
+            );
+
+            if ($exitCode !== 0) {
+                $output = trim(
+                    Artisan::output()
+                );
+
+                throw new \RuntimeException(
+                    $output !== ''
+                        ? $output
+                        : 'O Laravel não conseguiu remover o job falho.'
+                );
+            }
+
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'success',
+                    'Job falho removido.'
+                );
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return redirect()
+                ->route('platform.jobs')
+                ->with(
+                    'error',
+                    'O job falho não pôde ser removido.'
+                );
+        }
+    }
+
     public function webhooks(Request $request): View
     {
         $status = trim(

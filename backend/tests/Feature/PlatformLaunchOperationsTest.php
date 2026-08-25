@@ -415,6 +415,81 @@ class PlatformLaunchOperationsTest extends TestCase
         );
     }
 
+    public function test_platform_admin_can_forget_failed_queue_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $uuid = (string) Str::uuid();
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => $uuid,
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SendEmailMessageJob',
+            ]),
+            'exception' => 'Test failed job to forget.',
+            'failed_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->delete(
+                route(
+                    'platform.jobs.failed.forget',
+                    $uuid
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.jobs')
+            )
+            ->assertSessionHas(
+                'success',
+                'Job falho removido.'
+            );
+
+        $this->assertDatabaseMissing(
+            'failed_jobs',
+            [
+                'uuid' => $uuid,
+            ]
+        );
+    }
+
+    public function test_platform_admin_cannot_forget_missing_failed_queue_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $missingUuid = (string) Str::uuid();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->delete(
+                route(
+                    'platform.jobs.failed.forget',
+                    $missingUuid
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.jobs')
+            )
+            ->assertSessionHas(
+                'error',
+                'O job falho não foi encontrado.'
+            );
+
+        $this->assertDatabaseMissing(
+            'failed_jobs',
+            [
+                'uuid' => $missingUuid,
+            ]
+        );
+    }
+
     public function test_platform_admin_cannot_retry_missing_failed_queue_job(): void
     {
         $admin = $this->platformAdmin();
@@ -866,6 +941,50 @@ class PlatformLaunchOperationsTest extends TestCase
                     'platform.jobs.failed.retry',
                     $uuid
                 )
+            );
+    }
+
+    public function test_platform_jobs_show_forget_for_failed_job(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $uuid = (string) Str::uuid();
+
+        DB::table('failed_jobs')->insert([
+            'uuid' => $uuid,
+            'connection' => 'database',
+            'queue' => 'default',
+            'payload' => json_encode([
+                'displayName' => 'App\\Jobs\\SendEmailMessageJob',
+            ]),
+            'exception' => 'Test failed job.',
+            'failed_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.jobs')
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Reprocessar')
+            ->assertSee('Remover')
+            ->assertSee(
+                route(
+                    'platform.jobs.failed.retry',
+                    $uuid
+                )
+            )
+            ->assertSee(
+                route(
+                    'platform.jobs.failed.forget',
+                    $uuid
+                )
+            )
+            ->assertSee(
+                'ATENÇÃO: este job falho será removido definitivamente da lista e não será reprocessado. Deseja continuar?'
             );
     }
 

@@ -582,6 +582,16 @@ Route::post(
     ->middleware('platform.admin')
     ->name('platform.jobs.failed.retry');
 
+Route::delete(
+    '/platform/jobs/failed/{uuid}',
+    [PlatformAdminController::class, 'forgetFailedJob']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.jobs.failed.forget');
+
 Route::get(
     '/idioma',
     [PublicLocaleController::class, 'update']
@@ -1682,9 +1692,9 @@ Route::post(
     ]
 )
     ->withoutMiddleware([
-            ResolveTenant::class,
-            PreventRequestForgery::class,
-        ])
+        ResolveTenant::class,
+        PreventRequestForgery::class,
+    ])
     ->name(
         'webhooks.subscription.stripe'
     );
