@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Enums\UsageMetric;
-
 use App\Enums\ConversationChannel;
+use App\Enums\UsageMetric;
 use App\Enums\WhatsAppMessageStatus;
+use App\Exceptions\UsageBlockedException;
 use App\Models\WhatsAppMessage;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -27,7 +27,7 @@ class WhatsAppMessageService
                 UsageMetric::MESSAGES,
                 1
             );
-        } catch (\App\Exceptions\UsageBlockedException $exception) {
+        } catch (UsageBlockedException $exception) {
             if ($exception->reason !== 'unavailable') {
                 throw $exception;
             }
@@ -55,10 +55,10 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.created',
             'Mensagem WhatsApp criada para '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;
@@ -89,23 +89,17 @@ class WhatsAppMessageService
                 $providerMessageId
             ): WhatsAppMessage {
                 $message->forceFill([
-                    'status' =>
-                        WhatsAppMessageStatus::SENT,
+                    'status' => WhatsAppMessageStatus::SENT,
 
-                    'provider' =>
-                        $provider,
+                    'provider' => $provider,
 
-                    'provider_message_id' =>
-                        $providerMessageId,
+                    'provider_message_id' => $providerMessageId,
 
-                    'sent_at' =>
-                        now(),
+                    'sent_at' => now(),
 
-                    'failed_at' =>
-                        null,
+                    'failed_at' => null,
 
-                    'failure_reason' =>
-                        null,
+                    'failure_reason' => null,
                 ])->save();
 
                 return $message->refresh();
@@ -115,10 +109,10 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.sent',
             'Mensagem WhatsApp enviada para '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;
@@ -145,11 +139,9 @@ class WhatsAppMessageService
                 $message
             ): WhatsAppMessage {
                 $message->forceFill([
-                    'status' =>
-                        WhatsAppMessageStatus::DELIVERED,
+                    'status' => WhatsAppMessageStatus::DELIVERED,
 
-                    'delivered_at' =>
-                        now(),
+                    'delivered_at' => now(),
                 ])->save();
 
                 return $message->refresh();
@@ -159,10 +151,10 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.delivered',
             'Mensagem WhatsApp entregue para '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;
@@ -189,11 +181,9 @@ class WhatsAppMessageService
                 $message
             ): WhatsAppMessage {
                 $message->forceFill([
-                    'status' =>
-                        WhatsAppMessageStatus::READ,
+                    'status' => WhatsAppMessageStatus::READ,
 
-                    'read_at' =>
-                        now(),
+                    'read_at' => now(),
                 ])->save();
 
                 return $message->refresh();
@@ -203,10 +193,10 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.read',
             'Mensagem WhatsApp lida por '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;
@@ -251,14 +241,11 @@ class WhatsAppMessageService
                 $reason
             ): WhatsAppMessage {
                 $message->forceFill([
-                    'status' =>
-                        WhatsAppMessageStatus::FAILED,
+                    'status' => WhatsAppMessageStatus::FAILED,
 
-                    'failed_at' =>
-                        now(),
+                    'failed_at' => now(),
 
-                    'failure_reason' =>
-                        $reason,
+                    'failure_reason' => $reason,
                 ])->save();
 
                 return $message->refresh();
@@ -268,12 +255,70 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.failed',
             'Falha na mensagem WhatsApp para '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '. Motivo: '
-                . $reason
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'. Motivo: '
+                .$reason
+                .'.'
+        );
+
+        return $message;
+    }
+
+    public function retry(
+        WhatsAppMessage $message
+    ): WhatsAppMessage {
+        $this->assertCurrentTenant(
+            $message
+        );
+
+        if (
+            $message->status !==
+            WhatsAppMessageStatus::FAILED
+        ) {
+            throw new RuntimeException(
+                'Only failed WhatsApp messages can be retried.'
+            );
+        }
+
+        if (blank($message->provider)) {
+            throw new RuntimeException(
+                'WhatsApp provider is required to retry message.'
+            );
+        }
+
+        $message = DB::transaction(
+            function () use (
+                $message
+            ): WhatsAppMessage {
+                $message->forceFill([
+                    'status' => WhatsAppMessageStatus::PENDING,
+
+                    'provider_message_id' => null,
+
+                    'sent_at' => null,
+
+                    'delivered_at' => null,
+
+                    'read_at' => null,
+
+                    'failed_at' => null,
+
+                    'failure_reason' => null,
+                ])->save();
+
+                return $message->refresh();
+            }
+        );
+
+        app(AuditService::class)->log(
+            'whatsapp.retried',
+            'Novo envio WhatsApp solicitado para '
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;
@@ -313,10 +358,10 @@ class WhatsAppMessageService
         app(AuditService::class)->log(
             'whatsapp.received',
             'Mensagem WhatsApp recebida de '
-                . $message->phone
-                . '. ID: '
-                . $message->id
-                . '.'
+                .$message->phone
+                .'. ID: '
+                .$message->id
+                .'.'
         );
 
         return $message;

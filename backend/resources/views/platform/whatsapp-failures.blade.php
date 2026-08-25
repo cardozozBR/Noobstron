@@ -32,6 +32,22 @@
     letter-spacing: -.035em;
 }
 
+.platform-whatsapp-failures-page .flash-message {
+    margin-bottom: 18px;
+}
+
+.platform-whatsapp-failures-page .flash-message--success {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.platform-whatsapp-failures-page .flash-message--error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
 .platform-whatsapp-failures-page .table-wrap {
     overflow-x: auto;
 }
@@ -61,10 +77,8 @@
     font-size: 14px;
 }
 
-.platform-whatsapp-failures-page .failure-reason {
-    max-width: 420px;
-    white-space: normal;
-    overflow-wrap: anywhere;
+.platform-whatsapp-failures-page .recipient {
+    min-width: 150px;
 }
 
 .platform-whatsapp-failures-page .phone {
@@ -73,13 +87,19 @@
 
 .platform-whatsapp-failures-page .message-body {
     min-width: 220px;
-    max-width: 380px;
+    max-width: 420px;
     white-space: normal;
     overflow-wrap: anywhere;
 }
 
 .platform-whatsapp-failures-page .provider {
     white-space: nowrap;
+}
+
+.platform-whatsapp-failures-page .failure-reason {
+    max-width: 420px;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .platform-whatsapp-failures-page .failure-date {
@@ -94,6 +114,19 @@
     background: #fee2e2;
     color: #991b1b;
     font-size: 12px;
+    font-weight: 700;
+}
+
+.platform-whatsapp-failures-page .retry-form {
+    margin: 0;
+}
+
+.platform-whatsapp-failures-page .retry-button {
+    white-space: nowrap;
+}
+
+.platform-whatsapp-failures-page .provider-unavailable {
+    color: #991b1b;
     font-weight: 700;
 }
 
@@ -141,6 +174,26 @@
     </header>
 
     <main class="platform-main">
+        @if (session('success'))
+            <section
+                class="platform-card flash-message flash-message--success"
+            >
+                <strong>
+                    {{ session('success') }}
+                </strong>
+            </section>
+        @endif
+
+        @if (session('error'))
+            <section
+                class="platform-card flash-message flash-message--error"
+            >
+                <strong>
+                    {{ session('error') }}
+                </strong>
+            </section>
+        @endif
+
         <div class="platform-toolbar">
             <div>
                 <div class="platform-muted">
@@ -196,10 +249,11 @@
                                 <th>Destinatário</th>
                                 <th>Telefone</th>
                                 <th>Mensagem</th>
-                                <th>Provedor</th>
+                                <th>Provider</th>
                                 <th>Status</th>
                                 <th>Motivo</th>
                                 <th>Falhou em</th>
+                                <th>Ação</th>
                             </tr>
                         </thead>
 
@@ -222,12 +276,12 @@
                                         @endif
                                     </td>
 
-                                    <td>
+                                    <td class="recipient">
                                         @if (filled($message->recipient_name))
                                             {{ $message->recipient_name }}
                                         @else
                                             <span class="platform-muted">
-                                                Nome não informado
+                                                Não informado
                                             </span>
                                         @endif
                                     </td>
@@ -242,10 +296,10 @@
 
                                     <td class="provider">
                                         @if (filled($message->provider))
-                                            {{ strtoupper($message->provider) }}
+                                            {{ $message->provider }}
                                         @else
-                                            <span class="platform-muted">
-                                                Não informado
+                                            <span class="provider-unavailable">
+                                                Não disponível
                                             </span>
                                         @endif
                                     </td>
@@ -272,6 +326,38 @@
                                         @else
                                             <span class="platform-muted">
                                                 Data não informada
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if (
+                                            $message->tenant !== null
+                                            && filled($message->provider)
+                                        )
+                                            <form
+                                                class="retry-form"
+                                                method="POST"
+                                                action="{{ route(
+                                                    'platform.whatsapp-failures.retry',
+                                                    $message->id
+                                                ) }}"
+                                            >
+                                                @csrf
+
+                                                <button
+                                                    class="button retry-button"
+                                                    type="submit"
+                                                    onclick="return confirm(
+                                                        'Deseja reprocessar esta mensagem de WhatsApp?'
+                                                    )"
+                                                >
+                                                    Reprocessar
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="platform-muted">
+                                                Reprocessamento indisponível
                                             </span>
                                         @endif
                                     </td>

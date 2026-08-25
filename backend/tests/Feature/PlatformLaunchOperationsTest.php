@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Enums\EmailMessageStatus;
+use App\Enums\WhatsAppMessageStatus;
 use App\Jobs\SendEmailMessageJob;
+use App\Jobs\SendWhatsAppMessageJob;
 use App\Models\CommercialContact;
 use App\Models\EmailMessage;
 use App\Models\PaymentEventReceipt;
@@ -383,6 +385,251 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Cliente Teste')
             ->assertSee('5511999999999')
             ->assertSee('Provider indisponível.');
+    }
+
+    public function test_platform_admin_can_retry_failed_whatsapp_message(): void
+    {
+        Queue::fake();
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Retry WhatsApp Tenant',
+            'slug' => 'retry-whatsapp-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set(
+            $tenant
+        );
+
+        $message = WhatsAppMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'phone' => '5511999999999',
+            'recipient_name' => 'Retry WhatsApp',
+            'body' => 'Mensagem de teste para retry.',
+            'status' => WhatsAppMessageStatus::FAILED,
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'provider_message_id' => 'old-provider-id',
+            'failed_at' => now(),
+            'failure_reason' => 'Temporary provider failure.',
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.whatsapp-failures.retry',
+                    $message->id
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.whatsapp-failures')
+            )
+            ->assertSessionHas(
+                'success',
+                'Mensagem WhatsApp enviada para reprocessamento.'
+            );
+
+        $message->refresh();
+
+        $this->assertSame(
+            WhatsAppMessageStatus::PENDING,
+            $message->status
+        );
+
+        $this->assertSame(
+            'test',
+            $message->provider
+        );
+
+        $this->assertNull(
+            $message->provider_message_id
+        );
+
+        $this->assertNull(
+            $message->failed_at
+        );
+
+        $this->assertNull(
+            $message->failure_reason
+        );
+
+        Queue::assertPushed(
+            SendWhatsAppMessageJob::class,
+            function (
+                SendWhatsAppMessageJob $job
+            ) use (
+                $tenant,
+                $message
+            ): bool {
+                return $job->tenantId === $tenant->id
+                    && $job->messageId === $message->id
+                    && $job->provider === 'test';
+            }
+        );
+
+        $this->assertDatabaseHas(
+            'audit_logs',
+            [
+                'tenant_id' => $tenant->id,
+                'user_id' => null,
+                'action' => 'whatsapp.retried',
+            ]
+        );
+    }
+
+    public function test_platform_admin_cannot_retry_non_failed_whatsapp_message(): void
+    {
+        Queue::fake();
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'WhatsApp Retry Guard Tenant',
+            'slug' => 'whatsapp-retry-guard-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set(
+            $tenant
+        );
+
+        $message = WhatsAppMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'phone' => '5511888888888',
+            'recipient_name' => 'Pending WhatsApp',
+            'body' => 'Mensagem ainda pendente.',
+            'status' => WhatsAppMessageStatus::PENDING,
+            'direction' => 'outbound',
+            'provider' => 'test',
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.whatsapp-failures.retry',
+                    $message->id
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.whatsapp-failures')
+            )
+            ->assertSessionHas(
+                'error'
+            );
+
+        $message->refresh();
+
+        $this->assertSame(
+            WhatsAppMessageStatus::PENDING,
+            $message->status
+        );
+
+        Queue::assertNotPushed(
+            SendWhatsAppMessageJob::class
+        );
+
+        $this->assertDatabaseMissing(
+            'audit_logs',
+            [
+                'tenant_id' => $tenant->id,
+                'action' => 'whatsapp.retried',
+            ]
+        );
+    }
+
+    public function test_platform_admin_cannot_retry_failed_whatsapp_message_without_provider(): void
+    {
+        Queue::fake();
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'WhatsApp Missing Provider Tenant',
+            'slug' => 'whatsapp-missing-provider-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set(
+            $tenant
+        );
+
+        $message = WhatsAppMessage::query()->create([
+            'tenant_id' => $tenant->id,
+            'phone' => '5511777777777',
+            'recipient_name' => 'Legacy WhatsApp',
+            'body' => 'Mensagem antiga sem provider.',
+            'status' => WhatsAppMessageStatus::FAILED,
+            'direction' => 'outbound',
+            'provider' => null,
+            'failed_at' => now(),
+            'failure_reason' => 'Legacy provider failure.',
+        ]);
+
+        app(TenantContext::class)->clear();
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->post(
+                route(
+                    'platform.whatsapp-failures.retry',
+                    $message->id
+                )
+            );
+
+        $response
+            ->assertRedirect(
+                route('platform.whatsapp-failures')
+            )
+            ->assertSessionHas(
+                'error'
+            );
+
+        $message->refresh();
+
+        $this->assertSame(
+            WhatsAppMessageStatus::FAILED,
+            $message->status
+        );
+
+        $this->assertNull(
+            $message->provider
+        );
+
+        $this->assertNotNull(
+            $message->failed_at
+        );
+
+        $this->assertSame(
+            'Legacy provider failure.',
+            $message->failure_reason
+        );
+
+        Queue::assertNotPushed(
+            SendWhatsAppMessageJob::class
+        );
+
+        $this->assertDatabaseMissing(
+            'audit_logs',
+            [
+                'tenant_id' => $tenant->id,
+                'action' => 'whatsapp.retried',
+            ]
+        );
     }
 
     public function test_platform_admin_can_view_global_email_failures(): void

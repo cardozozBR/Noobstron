@@ -23,14 +23,11 @@ class WhatsAppMessageServiceTest extends TestCase
 
         $message = $this->service()
             ->create([
-                'phone' =>
-                    '+55 85 99999-9999',
+                'phone' => '+55 85 99999-9999',
 
-                'recipient_name' =>
-                    'Cliente',
+                'recipient_name' => 'Cliente',
 
-                'body' =>
-                    'Olá pelo WhatsApp',
+                'body' => 'Olá pelo WhatsApp',
             ]);
 
         $this->assertSame(
@@ -41,6 +38,109 @@ class WhatsAppMessageServiceTest extends TestCase
         $this->assertSame(
             WhatsAppMessageStatus::PENDING,
             $message->status
+        );
+    }
+
+    public function test_failed_whatsapp_message_can_be_retried(): void
+    {
+        $tenant = $this->tenant(
+            'whatsapp-retry'
+        );
+
+        $service = app(
+            WhatsAppMessageService::class
+        );
+
+        $message = WhatsAppMessage::query()
+            ->create([
+                'phone' => '5511999999999',
+                'body' => 'Mensagem para retry.',
+                'provider' => 'meta',
+                'status' => WhatsAppMessageStatus::FAILED,
+                'provider_message_id' => 'provider-message-old',
+                'sent_at' => now()->subMinute(),
+                'delivered_at' => now()->subMinute(),
+                'read_at' => now()->subMinute(),
+                'failed_at' => now(),
+                'failure_reason' => 'Temporary provider failure.',
+            ]);
+
+        $message = $service->retry(
+            $message
+        );
+
+        $this->assertSame(
+            WhatsAppMessageStatus::PENDING,
+            $message->status
+        );
+
+        $this->assertSame(
+            'meta',
+            $message->provider
+        );
+
+        $this->assertNull(
+            $message->provider_message_id
+        );
+
+        $this->assertNull(
+            $message->sent_at
+        );
+
+        $this->assertNull(
+            $message->delivered_at
+        );
+
+        $this->assertNull(
+            $message->read_at
+        );
+
+        $this->assertNull(
+            $message->failed_at
+        );
+
+        $this->assertNull(
+            $message->failure_reason
+        );
+
+        $this->assertDatabaseHas(
+            'audit_logs',
+            [
+                'tenant_id' => $tenant->id,
+                'action' => 'whatsapp.retried',
+            ]
+        );
+    }
+
+    public function test_failed_whatsapp_message_without_provider_cannot_be_retried(): void
+    {
+        $this->tenant(
+            'whatsapp-retry-no-provider'
+        );
+
+        $service = app(
+            WhatsAppMessageService::class
+        );
+
+        $message = WhatsAppMessage::query()
+            ->create([
+                'phone' => '5511888888888',
+                'body' => 'Mensagem sem provider.',
+                'status' => WhatsAppMessageStatus::FAILED,
+                'failed_at' => now(),
+                'failure_reason' => 'Temporary failure.',
+            ]);
+
+        $this->expectException(
+            RuntimeException::class
+        );
+
+        $this->expectExceptionMessage(
+            'WhatsApp provider is required to retry message.'
+        );
+
+        $service->retry(
+            $message
         );
     }
 
@@ -190,20 +290,15 @@ class WhatsAppMessageServiceTest extends TestCase
 
         $message = $this->service()
             ->receive([
-                'phone' =>
-                    '+55 85 98888-7777',
+                'phone' => '+55 85 98888-7777',
 
-                'recipient_name' =>
-                    'Cliente',
+                'recipient_name' => 'Cliente',
 
-                'body' =>
-                    'Mensagem recebida',
+                'body' => 'Mensagem recebida',
 
-                'provider' =>
-                    'meta',
+                'provider' => 'meta',
 
-                'provider_message_id' =>
-                    'wamid.inbound.1',
+                'provider_message_id' => 'wamid.inbound.1',
             ]);
 
         $this->assertSame(
@@ -317,8 +412,7 @@ class WhatsAppMessageServiceTest extends TestCase
                 ->markRead(
                     $message
                 );
-        }
-        catch (RuntimeException) {
+        } catch (RuntimeException) {
         }
 
         $fresh = $message->fresh();
@@ -432,14 +526,11 @@ class WhatsAppMessageServiceTest extends TestCase
     {
         return WhatsAppMessage::query()
             ->create([
-                'phone' =>
-                    '5585999999999',
+                'phone' => '5585999999999',
 
-                'recipient_name' =>
-                    'Cliente',
+                'recipient_name' => 'Cliente',
 
-                'body' =>
-                    'Mensagem WhatsApp',
+                'body' => 'Mensagem WhatsApp',
             ]);
     }
 
@@ -448,26 +539,19 @@ class WhatsAppMessageServiceTest extends TestCase
     ): Tenant {
         $tenant = Tenant::query()
             ->create([
-                'name' =>
-                    'Tenant ' . $slug,
+                'name' => 'Tenant '.$slug,
 
-                'slug' =>
-                    $slug,
+                'slug' => $slug,
 
-                'status' =>
-                    'active',
+                'status' => 'active',
 
-                'country_code' =>
-                    'BR',
+                'country_code' => 'BR',
 
-                'locale' =>
-                    'pt-BR',
+                'locale' => 'pt-BR',
 
-                'timezone' =>
-                    'America/Fortaleza',
+                'timezone' => 'America/Fortaleza',
 
-                'currency' =>
-                    'BRL',
+                'currency' => 'BRL',
             ]);
 
         app(

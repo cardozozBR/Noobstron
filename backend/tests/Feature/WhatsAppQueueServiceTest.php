@@ -34,6 +34,13 @@ class WhatsAppQueueServiceTest extends TestCase
             ' META '
         );
 
+        $message->refresh();
+
+        $this->assertSame(
+            'meta',
+            $message->provider
+        );
+
         Queue::assertPushed(
             SendWhatsAppMessageJob::class,
             function (
@@ -59,20 +66,15 @@ class WhatsAppQueueServiceTest extends TestCase
 
         $message = WhatsAppMessage::query()
             ->create([
-                'phone' =>
-                    '5585999999999',
+                'phone' => '5585999999999',
 
-                'body' =>
-                    'Mensagem',
+                'body' => 'Mensagem',
 
-                'status' =>
-                    WhatsAppMessageStatus::RECEIVED,
+                'status' => WhatsAppMessageStatus::RECEIVED,
 
-                'direction' =>
-                    'inbound',
+                'direction' => 'inbound',
 
-                'received_at' =>
-                    now(),
+                'received_at' => now(),
             ]);
 
         $this->expectException(
@@ -137,11 +139,9 @@ class WhatsAppQueueServiceTest extends TestCase
     {
         return WhatsAppMessage::query()
             ->create([
-                'phone' =>
-                    '5585999999999',
+                'phone' => '5585999999999',
 
-                'body' =>
-                    'Mensagem WhatsApp',
+                'body' => 'Mensagem WhatsApp',
             ]);
     }
 
@@ -150,26 +150,19 @@ class WhatsAppQueueServiceTest extends TestCase
     ): Tenant {
         $tenant = Tenant::query()
             ->create([
-                'name' =>
-                    'Tenant ' . $slug,
+                'name' => 'Tenant '.$slug,
 
-                'slug' =>
-                    $slug,
+                'slug' => $slug,
 
-                'status' =>
-                    'active',
+                'status' => 'active',
 
-                'country_code' =>
-                    'BR',
+                'country_code' => 'BR',
 
-                'locale' =>
-                    'pt-BR',
+                'locale' => 'pt-BR',
 
-                'timezone' =>
-                    'America/Fortaleza',
+                'timezone' => 'America/Fortaleza',
 
-                'currency' =>
-                    'BRL',
+                'currency' => 'BRL',
             ]);
 
         app(

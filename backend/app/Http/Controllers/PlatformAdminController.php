@@ -12,6 +12,8 @@ use App\Services\EmailMessageService;
 use App\Services\EmailQueueService;
 use App\Services\StripeSubscriptionWebhookService;
 use App\Services\TenantContext;
+use App\Services\WhatsAppMessageService;
+use App\Services\WhatsAppQueueService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -312,6 +314,70 @@ class PlatformAdminController extends Controller
         return view('platform.whatsapp-failures', [
             'messages' => $messages,
         ]);
+    }
+
+    public function retryWhatsAppFailure(
+        int $message,
+        WhatsAppMessageService $messages,
+        WhatsAppQueueService $queue,
+        TenantContext $tenantContext
+    ): RedirectResponse {
+        try {
+            DB::transaction(function () use (
+                $message,
+                $messages,
+                $queue,
+                $tenantContext
+            ): void {
+                $whatsAppMessage = WhatsAppMessage::query()
+                    ->withoutGlobalScopes()
+                    ->with('tenant')
+                    ->lockForUpdate()
+                    ->findOrFail($message);
+
+                if ($whatsAppMessage->tenant === null) {
+                    throw new \RuntimeException(
+                        'O tenant desta mensagem não está disponível.'
+                    );
+                }
+
+                if (blank($whatsAppMessage->provider)) {
+                    throw new \RuntimeException(
+                        'O provider desta mensagem não está disponível.'
+                    );
+                }
+
+                $tenantContext->set(
+                    $whatsAppMessage->tenant
+                );
+
+                $whatsAppMessage = $messages->retry(
+                    $whatsAppMessage
+                );
+
+                $queue->dispatch(
+                    $whatsAppMessage,
+                    $whatsAppMessage->provider
+                );
+            });
+        } catch (\Throwable $exception) {
+            return redirect()
+                ->route('platform.whatsapp-failures')
+                ->with(
+                    'error',
+                    'A mensagem WhatsApp não pôde ser reprocessada: '
+                        .$exception->getMessage()
+                );
+        } finally {
+            $tenantContext->clear();
+        }
+
+        return redirect()
+            ->route('platform.whatsapp-failures')
+            ->with(
+                'success',
+                'Mensagem WhatsApp enviada para reprocessamento.'
+            );
     }
 
     public function webhooks(Request $request): View

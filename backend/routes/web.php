@@ -530,6 +530,16 @@ Route::get(
     ->middleware('platform.admin')
     ->name('platform.whatsapp-failures');
 
+Route::post(
+    '/platform/whatsapp-failures/{message}/retry',
+    [PlatformAdminController::class, 'retryWhatsAppFailure']
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.whatsapp-failures.retry');
+
 Route::get(
     '/platform/contacts',
     [PlatformCommercialContactController::class, 'index']

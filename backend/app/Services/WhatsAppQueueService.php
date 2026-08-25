@@ -47,6 +47,10 @@ class WhatsAppQueueService
             );
         }
 
+        $message->forceFill([
+            'provider' => $provider,
+        ])->save();
+
         SendWhatsAppMessageJob::dispatch(
             $tenant->id,
             $message->id,
