@@ -1,7 +1,12 @@
 <?php
 
+use App\Jobs\WorkerHeartbeatJob;
+use App\Services\ActivityReminderService;
+use App\Services\ReceivableOverdueTenantRunner;
+use App\Services\TrialExpirationTenantRunner;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -10,7 +15,7 @@ Artisan::command('inspire', function () {
 Artisan::command(
     'activities:send-reminders',
     function (
-        \App\Services\ActivityReminderService $service
+        ActivityReminderService $service
     ): int {
         $count =
             $service->dispatchDueReminders();
@@ -25,7 +30,7 @@ Artisan::command(
     'Send reminders for activities due within 24 hours'
 );
 
-\Illuminate\Support\Facades\Schedule::command(
+Schedule::command(
     'activities:send-reminders'
 )
     ->hourly()
@@ -33,7 +38,7 @@ Artisan::command(
 Artisan::command(
     'triggers:dispatch-overdue-receivables',
     function (
-        \App\Services\ReceivableOverdueTenantRunner $runner
+        ReceivableOverdueTenantRunner $runner
     ): int {
         $count =
             $runner->dispatch();
@@ -48,7 +53,7 @@ Artisan::command(
     'Dispatch overdue receivable triggers for active tenants'
 );
 
-\Illuminate\Support\Facades\Schedule::command(
+Schedule::command(
     'triggers:dispatch-overdue-receivables'
 )
     ->hourly()
@@ -57,7 +62,7 @@ Artisan::command(
 Artisan::command(
     'trials:block-expired',
     function (
-        \App\Services\TrialExpirationTenantRunner $runner
+        TrialExpirationTenantRunner $runner
     ): int {
         $count = $runner->dispatch();
 
@@ -71,13 +76,33 @@ Artisan::command(
     'Block active tenants with expired trials'
 );
 
-\Illuminate\Support\Facades\Schedule::command(
+Schedule::command(
     'trials:block-expired'
 )
     ->hourly()
     ->withoutOverlapping();
-    \Illuminate\Support\Facades\Schedule::command(
+Schedule::command(
     'subscriptions:sync-stripe-invoices'
 )
     ->hourly()
+    ->withoutOverlapping();
+
+Schedule::call(
+    function (): void {
+        cache()->put(
+            'platform.scheduler.last_run_at',
+            now()->toIso8601String(),
+            now()->addHours(2)
+        );
+    }
+)
+    ->everyMinute()
+    ->name('platform-scheduler-heartbeat')
+    ->withoutOverlapping();
+
+Schedule::job(
+    new WorkerHeartbeatJob
+)
+    ->everyMinute()
+    ->name('platform-worker-heartbeat')
     ->withoutOverlapping();

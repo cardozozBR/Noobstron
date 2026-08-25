@@ -16,6 +16,7 @@ use App\Services\WhatsAppMessageService;
 use App\Services\WhatsAppQueueService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -608,6 +609,51 @@ class PlatformAdminController extends Controller
         $databaseOk = true;
         $queuePending = null;
         $queueFailed = null;
+        $whatsAppConfiguredTenants = null;
+        $schedulerLastRunAt = null;
+        $schedulerHealthy = false;
+
+        $schedulerHeartbeat = cache()->get(
+            'platform.scheduler.last_run_at'
+        );
+        $workerLastSeenAt = null;
+        $workerHealthy = false;
+
+        $workerHeartbeat = cache()->get(
+            'platform.worker.last_seen_at'
+        );
+
+        if (is_string($workerHeartbeat)) {
+            try {
+                $workerLastSeenAt = Carbon::parse(
+                    $workerHeartbeat
+                );
+
+                $workerHealthy =
+                    $workerLastSeenAt->gte(
+                        now()->subMinutes(5)
+                    );
+            } catch (\Throwable) {
+                $workerLastSeenAt = null;
+                $workerHealthy = false;
+            }
+        }
+
+        if (is_string($schedulerHeartbeat)) {
+            try {
+                $schedulerLastRunAt = Carbon::parse(
+                    $schedulerHeartbeat
+                );
+
+                $schedulerHealthy =
+                    $schedulerLastRunAt->gte(
+                        now()->subMinutes(5)
+                    );
+            } catch (\Throwable) {
+                $schedulerLastRunAt = null;
+                $schedulerHealthy = false;
+            }
+        }
 
         try {
             DB::select('select 1');
@@ -617,6 +663,25 @@ class PlatformAdminController extends Controller
 
             $queueFailed =
                 (int) DB::table('failed_jobs')->count();
+
+            $whatsAppConfiguredTenants =
+                (int) DB::table(
+                    'whatsapp_provider_configs'
+                )
+                    ->where(
+                        'active',
+                        true
+                    )
+                    ->whereNotNull(
+                        'provider'
+                    )
+                    ->whereNotNull(
+                        'sender_id'
+                    )
+                    ->distinct()
+                    ->count(
+                        'tenant_id'
+                    );
         } catch (\Throwable) {
             $databaseOk = false;
         }
@@ -624,7 +689,13 @@ class PlatformAdminController extends Controller
         return view('platform.health', [
             'checks' => [
                 'database' => $databaseOk,
-                'storage' => is_writable(storage_path()),
+                'storage' => is_writable(
+                    storage_path()
+                ),
+                'worker_healthy' => $workerHealthy,
+                'worker_last_seen_at' => $workerLastSeenAt,
+                'scheduler_healthy' => $schedulerHealthy,
+                'scheduler_last_run_at' => $schedulerLastRunAt,
                 'queue_pending' => $queuePending,
                 'queue_failed' => $queueFailed,
                 'mail_configured' => config('mail.default') !== 'log',
@@ -633,6 +704,13 @@ class PlatformAdminController extends Controller
                         'marketing.contact_recipient'
                     )
                 ) !== '',
+                'stripe_configured' => filled(
+                    config(
+                        'services.stripe.secret_key'
+                    )
+                ),
+                'whatsapp_configured_tenants' => $whatsAppConfiguredTenants,
+                'checked_at' => now(),
             ],
         ]);
     }

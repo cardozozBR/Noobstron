@@ -1351,6 +1351,223 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('lead@example.test');
     }
 
+    public function test_platform_health_exposes_stripe_whatsapp_and_check_timestamp(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenantA = Tenant::query()->create([
+            'name' => 'Health WhatsApp Tenant A',
+            'slug' => 'health-whatsapp-tenant-a',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        $tenantB = Tenant::query()->create([
+            'name' => 'Health WhatsApp Tenant B',
+            'slug' => 'health-whatsapp-tenant-b',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        DB::table('whatsapp_provider_configs')->insert([
+            [
+                'tenant_id' => $tenantA->id,
+                'provider' => 'meta',
+                'sender_id' => 'sender-a',
+                'settings' => null,
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'tenant_id' => $tenantA->id,
+                'provider' => 'secondary',
+                'sender_id' => 'sender-a-secondary',
+                'settings' => null,
+                'active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'tenant_id' => $tenantB->id,
+                'provider' => 'meta',
+                'sender_id' => 'sender-b',
+                'settings' => null,
+                'active' => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        config([
+            'services.stripe.secret_key' => 'sk_test_platform_health',
+        ]);
+
+        $response = $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            );
+
+        $response
+            ->assertOk()
+            ->assertViewHas(
+                'checks',
+                function (
+                    array $checks
+                ): bool {
+                    return
+                        $checks['stripe_configured'] === true
+                        && $checks['whatsapp_configured_tenants'] === 1
+                        && $checks['checked_at'] !== null;
+                }
+            );
+    }
+
+    public function test_platform_health_shows_advanced_operational_statuses(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Health UI Tenant',
+            'slug' => 'health-ui-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        DB::table('whatsapp_provider_configs')->insert([
+            'tenant_id' => $tenant->id,
+            'provider' => 'meta',
+            'sender_id' => 'health-ui-sender',
+            'settings' => null,
+            'active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        config([
+            'services.stripe.secret_key' => 'sk_test_health_ui',
+        ]);
+
+        $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            )
+            ->assertOk()
+            ->assertSee('Stripe')
+            ->assertSee('WhatsApp')
+            ->assertSee('Verificado em')
+            ->assertSee('Credencial principal configurada.')
+            ->assertSee('1')
+            ->assertSee('tenant(s) com provider ativo.')
+            ->assertSee('OK');
+    }
+
+    public function test_platform_health_shows_scheduler_health(): void
+    {
+        $admin = $this->platformAdmin();
+
+        cache()->put(
+            'platform.scheduler.last_run_at',
+            now()->toIso8601String(),
+            now()->addHours(2)
+        );
+
+        $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            )
+            ->assertOk()
+            ->assertSee('Scheduler')
+            ->assertSee('Última execução:')
+            ->assertSee('OK');
+    }
+
+    public function test_platform_health_marks_stale_scheduler_as_critical(): void
+    {
+        $admin = $this->platformAdmin();
+
+        cache()->put(
+            'platform.scheduler.last_run_at',
+            now()
+                ->subMinutes(10)
+                ->toIso8601String(),
+            now()->addHours(2)
+        );
+
+        $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            )
+            ->assertOk()
+            ->assertSee('Scheduler')
+            ->assertSee('Crítico');
+    }
+
+    public function test_platform_health_shows_worker_health(): void
+    {
+        $admin = $this->platformAdmin();
+
+        cache()->put(
+            'platform.worker.last_seen_at',
+            now()->toIso8601String(),
+            now()->addHours(2)
+        );
+
+        $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            )
+            ->assertOk()
+            ->assertSee('Worker')
+            ->assertSee('Última atividade:')
+            ->assertSee('OK');
+    }
+
+    public function test_platform_health_marks_stale_worker_as_critical(): void
+    {
+        $admin = $this->platformAdmin();
+
+        cache()->put(
+            'platform.worker.last_seen_at',
+            now()
+                ->subMinutes(10)
+                ->toIso8601String(),
+            now()->addHours(2)
+        );
+
+        $this
+            ->actingAs(
+                $admin,
+                'platform'
+            )
+            ->get(
+                route('platform.health')
+            )
+            ->assertOk()
+            ->assertSee('Worker')
+            ->assertSee('Crítico');
+    }
+
     private function platformAdmin(): PlatformAdmin
     {
         return PlatformAdmin::query()->create([
