@@ -398,19 +398,19 @@ Validação em produção:
 -   [x] Suíte completa
 -   [x] `git diff --check`
 -   [x] Revisão de segurança
--   [ ] Deploy
--   [ ] Health dos containers
--   [ ] Smoke test em produção
--   [ ] Testar login/logout
--   [ ] Dashboard
--   [ ] Tenants
--   [ ] Saúde
--   [ ] Webhooks
--   [ ] E-mails
--   [ ] WhatsApp
--   [ ] Jobs
--   [ ] Ações de retry
--   [ ] Auditoria
+-   [x] Deploy
+-   [x] Health dos containers
+-   [x] Smoke test em produção
+-   [x] Testar login/logout
+-   [x] Dashboard
+-   [x] Tenants
+-   [x] Saúde
+-   [x] Webhooks
+-   [x] E-mails
+-   [x] WhatsApp
+-   [x] Jobs
+-   [x] Ações de retry
+-   [x] Auditoria
 
 ## Ordem recomendada daqui para frente
 
