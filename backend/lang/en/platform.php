@@ -26,6 +26,7 @@ return [
         'tenant' => 'Tenant',
         'converted_tenant' => 'Converted tenant',
         'contracted_plan' => 'Contracted plan',
+        'revenue' => 'Revenue by plan',
         'convert' => 'Link tenant',
         'converted' => 'Contact successfully linked to tenant.',
         'select_tenant' => 'Select tenant',

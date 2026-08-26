@@ -24,6 +24,7 @@ return [
         'tenant' => 'Tenant',
         'converted_tenant' => 'Tenant convertido',
         'contracted_plan' => 'Plano contratado',
+        'revenue' => 'Receita por plano',
         'convert' => 'Vincular tenant',
         'converted' => 'Contato vinculado ao tenant com sucesso.',
         'select_tenant' => 'Selecione o tenant',

@@ -169,6 +169,7 @@
                             <th>{{ __('platform.contacts.status') }}</th>
                             <th>{{ __('platform.contacts.tenant') }}</th>
                             <th>{{ __('platform.contacts.contracted_plan') }}</th>
+                            <th>{{ __('platform.contacts.revenue') }}</th>
                             <th>{{ __('platform.contacts.message') }}</th>
                         </tr>
                     </thead>
@@ -288,13 +289,34 @@
                                 }}
                             </td>
 
+                            <td class="contracted-revenue">
+                                @if (
+                                    $contact->contracted_revenue_minor !== null
+                                    && filled(
+                                        $contact->contracted_revenue_currency
+                                    )
+                                )
+                                    {{
+                                        \App\Support\MoneyFormatter::format(
+                                            \App\Support\Money::fromMinor(
+                                                (int) $contact->contracted_revenue_minor,
+                                                (string) $contact->contracted_revenue_currency
+                                            ),
+                                            app()->getLocale()
+                                        )
+                                    }}
+                                @else
+                                    —
+                                @endif
+                            </td>
+
                             <td class="contact-message">
                                 {{ $contact->message }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8">
+                            <td colspan="9">
                                 {{ __('platform.contacts.empty') }}
                             </td>
                         </tr>

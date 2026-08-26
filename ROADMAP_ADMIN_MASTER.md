@@ -363,7 +363,7 @@ Validação em produção:
 -   [ ] Histórico
 -   [x] Tenant convertido
 -   [x] Plano contratado
--   [ ] Receita por plano
+-   [x] Receita por plano
 -   [ ] Novas assinaturas
 -   [ ] Cancelamentos
 -   [ ] Trials convertidos

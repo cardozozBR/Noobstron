@@ -6,6 +6,7 @@ use App\Enums\CommercialContactStatus;
 use App\Models\CommercialContact;
 use App\Models\PlatformAdmin;
 use App\Models\Plan;
+use App\Models\PlanPrice;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -548,6 +549,118 @@ class PlatformCommercialContactManagementTest extends TestCase
                 ->convertedTenant
                 ->latestSubscription
         );
+    }
+
+    public function test_platform_contacts_page_shows_subscription_snapshot_revenue(): void
+    {
+        app()->setLocale('pt-BR');
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant Receita Snapshot',
+            'slug' => 'tenant-receita-snapshot',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'commercial-revenue-snapshot',
+            'name' => 'Plano Receita Snapshot',
+            'active' => true,
+        ]);
+
+        PlanPrice::query()->create([
+            'plan_id' => $plan->id,
+            'currency' => 'BRL',
+            'amount_minor' => 99900,
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'currency' => 'BRL',
+            'amount_minor' => 19900,
+        ]);
+
+        CommercialContact::query()->create([
+            'name' => 'Contato receita snapshot',
+            'email' => 'revenue-snapshot@example.test',
+            'message' => 'Receita pelo snapshot.',
+            'status' => CommercialContactStatus::CONVERTED,
+            'converted_tenant_id' => $tenant->id,
+            'converted_at' => now(),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.contacts.index')
+            )
+            ->assertOk()
+            ->assertSee(
+                __('platform.contacts.revenue')
+            )
+            ->assertSee('Plano Receita Snapshot')
+            ->assertSee('199,00')
+            ->assertDontSee('999,00');
+    }
+
+    public function test_platform_contacts_page_uses_plan_price_when_subscription_snapshot_is_missing(): void
+    {
+        app()->setLocale('pt-BR');
+
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant Receita Fallback',
+            'slug' => 'tenant-receita-fallback',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'commercial-revenue-fallback',
+            'name' => 'Plano Receita Fallback',
+            'active' => true,
+        ]);
+
+        PlanPrice::query()->create([
+            'plan_id' => $plan->id,
+            'currency' => 'BRL',
+            'amount_minor' => 29900,
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'currency' => null,
+            'amount_minor' => null,
+        ]);
+
+        CommercialContact::query()->create([
+            'name' => 'Contato receita fallback',
+            'email' => 'revenue-fallback@example.test',
+            'message' => 'Receita usando preço do plano.',
+            'status' => CommercialContactStatus::CONVERTED,
+            'converted_tenant_id' => $tenant->id,
+            'converted_at' => now(),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.contacts.index')
+            )
+            ->assertOk()
+            ->assertSee('Plano Receita Fallback')
+            ->assertSee('299,00');
     }
     private function platformAdmin(): PlatformAdmin
     {

@@ -28,7 +28,7 @@ class PlatformCommercialContactController extends Controller
 
         $query = CommercialContact::query()
             ->with(
-                'convertedTenant.latestSubscription.plan'
+                'convertedTenant.latestSubscription.plan.prices'
             )
             ->latest();
 
@@ -51,7 +51,49 @@ class PlatformCommercialContactController extends Controller
         return view('platform.contacts.index', [
             'contacts' => $query
                 ->paginate(30)
-                ->withQueryString(),
+                ->withQueryString()
+                ->through(
+                    function (CommercialContact $contact): CommercialContact {
+                        $subscription = $contact
+                            ->convertedTenant
+                            ?->latestSubscription;
+
+                        $currency = $subscription?->currency
+                            ?: $contact
+                                ->convertedTenant
+                                ?->currency;
+
+                        $amountMinor = $subscription
+                            ?->amount_minor;
+
+                        if (
+                            $amountMinor === null
+                            && $subscription?->plan !== null
+                            && $currency !== null
+                        ) {
+                            $amountMinor = $subscription
+                                ->plan
+                                ->prices
+                                ->firstWhere(
+                                    'currency',
+                                    $currency
+                                )
+                                ?->amount_minor;
+                        }
+
+                        $contact->setAttribute(
+                            'contracted_revenue_minor',
+                            $amountMinor
+                        );
+
+                        $contact->setAttribute(
+                            'contracted_revenue_currency',
+                            $currency
+                        );
+
+                        return $contact;
+                    }
+                ),
 
             'status' => $status,
 
