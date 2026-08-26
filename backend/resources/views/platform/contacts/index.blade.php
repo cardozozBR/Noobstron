@@ -1,4 +1,4 @@
-@extends('platform.layout')
+﻿@extends('platform.layout')
 
 @section('title', __('platform.contacts.title'))
 
@@ -24,10 +24,59 @@
     vertical-align: top;
 }
 
+.platform-contacts-page .contact-summary {
+    min-width: 220px;
+}
+
+.platform-contacts-page .contact-summary strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.platform-contacts-page .contact-summary__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 6px;
+    font-size: 13px;
+}
+
+.platform-contacts-page .contact-commercial {
+    min-width: 170px;
+}
+
+.platform-contacts-page .contact-commercial__item + .contact-commercial__item {
+    margin-top: 8px;
+}
+
+.platform-contacts-page .contact-actions {
+    min-width: 230px;
+}
+
+.platform-contacts-page .contact-actions select {
+    width: 100%;
+    max-width: 240px;
+}
+
 .platform-contacts-page .contact-message {
-    max-width: 420px;
-    white-space: pre-wrap;
+    min-width: 220px;
+    max-width: 360px;
+    white-space: normal;
     line-height: 1.5;
+}
+
+.platform-contacts-page .contact-message__text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.platform-contacts-page .contact-history {
+    margin-top: 10px;
+}
+
+.platform-contacts-page .contact-history summary {
+    cursor: pointer;
+    font-weight: 600;
 }
 
 .platform-contacts-page .contacts-filter {
@@ -163,14 +212,10 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th scope="col">{{ __('platform.contacts.date') }}</th>
                             <th scope="col">{{ __('platform.contacts.name') }}</th>
-                            <th scope="col">{{ __('platform.contacts.company') }}</th>
-                            <th scope="col">{{ __('platform.email') }}</th>
                             <th scope="col">{{ __('platform.contacts.status') }}</th>
-                            <th scope="col">{{ __('platform.contacts.tenant') }}</th>
                             <th scope="col">{{ __('platform.contacts.contracted_plan') }}</th>
-                            <th scope="col">{{ __('platform.contacts.revenue') }}</th>
+                            <th scope="col">{{ __('platform.contacts.tenant') }}</th>
                             <th scope="col">{{ __('platform.contacts.message') }}</th>
                         </tr>
                     </thead>
@@ -178,20 +223,22 @@
                     <tbody>
                     @forelse ($contacts as $contact)
                         <tr>
-                            <td>
-                                {{ $contact->created_at?->format('d/m/Y H:i') }}
-                            </td>
+                            <td class="contact-summary">
+                                <strong>{{ $contact->name }}</strong>
 
-                            <td>{{ $contact->name }}</td>
+                                <div class="contact-summary__meta platform-muted">
+                                    @if ($contact->company)
+                                        <span>{{ $contact->company }}</span>
+                                    @endif
 
-                            <td>
-                                {{ $contact->company ?: '—' }}
-                            </td>
+                                    <a href="mailto:{{ $contact->email }}">
+                                        {{ $contact->email }}
+                                    </a>
 
-                            <td>
-                                <a href="mailto:{{ $contact->email }}">
-                                    {{ $contact->email }}
-                                </a>
+                                    <span>
+                                        {{ $contact->created_at?->format('d/m/Y H:i') }}
+                                    </span>
+                                </div>
                             </td>
 
                             <td>
@@ -225,7 +272,7 @@
                                 </form>
                             </td>
 
-                            <td>
+                            <td class="contact-actions">
                                 @if ($contact->convertedTenant)
                                     <div class="converted-tenant">
                                         <strong>
@@ -283,39 +330,53 @@
                                 @endif
                             </td>
 
-                            <td class="contracted-plan">
-                                {{
-                                    $contact->convertedTenant
-                                        ?->latestSubscription
-                                        ?->plan
-                                        ?->name
-                                    ?? '—'
-                                }}
-                            </td>
+                            <td class="contact-commercial">
+                                <div class="contact-commercial__item">
+                                    <div class="platform-muted">
+                                        {{ __('platform.contacts.contracted_plan') }}
+                                    </div>
 
-                            <td class="contracted-revenue">
-                                @if (
-                                    $contact->contracted_revenue_minor !== null
-                                    && filled(
-                                        $contact->contracted_revenue_currency
-                                    )
-                                )
-                                    {{
-                                        \App\Support\MoneyFormatter::format(
-                                            \App\Support\Money::fromMinor(
-                                                (int) $contact->contracted_revenue_minor,
-                                                (string) $contact->contracted_revenue_currency
-                                            ),
-                                            app()->getLocale()
+                                    <strong>
+                                        {{
+                                            $contact->convertedTenant
+                                                ?->latestSubscription
+                                                ?->plan
+                                                ?->name
+                                            ?? '—'
+                                        }}
+                                    </strong>
+                                </div>
+
+                                <div class="contact-commercial__item">
+                                    <div class="platform-muted">
+                                        {{ __('platform.contacts.revenue') }}
+                                    </div>
+
+                                    <strong>
+                                        @if (
+                                            $contact->contracted_revenue_minor !== null
+                                            && filled(
+                                                $contact->contracted_revenue_currency
+                                            )
                                         )
-                                    }}
-                                @else
-                                    —
-                                @endif
+                                            {{
+                                                \App\Support\MoneyFormatter::format(
+                                                    \App\Support\Money::fromMinor(
+                                                        (int) $contact->contracted_revenue_minor,
+                                                        (string) $contact->contracted_revenue_currency
+                                                    ),
+                                                    app()->getLocale()
+                                                )
+                                            }}
+                                        @else
+                                            —
+                                        @endif
+                                    </strong>
+                                </div>
                             </td>
 
                             <td class="contact-message">
-                                <div>
+                                <div class="contact-message__text">
                                     {{ $contact->message }}
                                 </div>
 
@@ -326,7 +387,7 @@
                                     );
                                 @endphp
 
-                                <details style="margin-top:10px;">
+                                <details class="contact-history">
                                     <summary>
                                         {{ __('platform.contacts.history') }}
                                     </summary>
@@ -390,7 +451,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td class="platform-empty-cell" colspan="9">
+                            <td class="platform-empty-cell" colspan="5">
                                 {{ __('platform.contacts.empty') }}
                             </td>
                         </tr>
