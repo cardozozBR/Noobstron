@@ -5,17 +5,325 @@
 @section('body')
 
 <style>
-.platform-tenant-show .platform-toolbar{align-items:flex-end;gap:18px}
-.platform-tenant-show .platform-toolbar h1{margin:4px 0 0;font-size:32px;letter-spacing:-.03em}
-.platform-tenant-show .detail-grid{gap:14px}
-.platform-tenant-show .platform-card{border-radius:16px}
-.platform-tenant-show .platform-card h2{margin-top:0}
-.platform-tenant-show .detail-list{display:grid;gap:0}
-.platform-tenant-show .detail-list>div{padding:12px 0;border-bottom:1px solid #e5e7eb}
-.platform-tenant-show .detail-list>div:last-child{border-bottom:0}
-.platform-tenant-show .detail-list dt{color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.platform-tenant-show .detail-list dd{margin:5px 0 0;font-weight:600}
-@media(max-width:800px){.platform-tenant-show .platform-toolbar{align-items:flex-start;flex-direction:column}}
+.platform-tenant-show {
+    --tenant-border: #e5e7eb;
+    --tenant-muted: #64748b;
+    --tenant-surface: #f8fafc;
+}
+
+.platform-tenant-show .tenant-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--tenant-border);
+    border-radius: 16px;
+}
+
+.platform-tenant-show .tenant-summary__item {
+    min-width: 0;
+    padding: 16px 18px;
+    border-right: 1px solid var(--tenant-border);
+}
+
+.platform-tenant-show .tenant-summary__item:last-child {
+    border-right: 0;
+}
+
+.platform-tenant-show .tenant-summary__label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--tenant-muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: .055em;
+}
+
+.platform-tenant-show .tenant-summary__item strong {
+    display: block;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+    .platform-tenant-show .tenant-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .platform-tenant-show .tenant-summary__item {
+        border-bottom: 1px solid var(--tenant-border);
+    }
+
+    .platform-tenant-show .tenant-summary__item:nth-child(2) {
+        border-right: 0;
+    }
+
+    .platform-tenant-show .tenant-summary__item:nth-last-child(-n + 2) {
+        border-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .platform-tenant-show .tenant-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-tenant-show .tenant-summary__item {
+        border-right: 0;
+        border-bottom: 1px solid var(--tenant-border);
+    }
+
+    .platform-tenant-show .tenant-summary__item:nth-last-child(2) {
+        border-bottom: 1px solid var(--tenant-border);
+    }
+
+    .platform-tenant-show .tenant-summary__item:last-child {
+        border-bottom: 0;
+    }
+}
+
+.platform-tenant-show .platform-toolbar {
+    align-items: flex-end;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.platform-tenant-show .platform-toolbar h1 {
+    margin: 4px 0 0;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -.03em;
+}
+
+.platform-tenant-show .platform-toolbar .platform-muted {
+    margin-bottom: 0;
+}
+
+.platform-tenant-show .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.platform-tenant-show .platform-card {
+    min-width: 0;
+    border-radius: 16px;
+}
+
+.platform-tenant-show .platform-card h2 {
+    margin: 0 0 16px;
+    font-size: 17px;
+    line-height: 1.3;
+    letter-spacing: -.01em;
+}
+
+.platform-tenant-show .detail-list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+}
+
+.platform-tenant-show .detail-list > div {
+    display: grid;
+    grid-template-columns: minmax(120px, .8fr) minmax(0, 1.2fr);
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--tenant-border);
+}
+
+.platform-tenant-show .detail-list > div:first-child {
+    padding-top: 0;
+}
+
+.platform-tenant-show .detail-list > div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.platform-tenant-show .detail-list dt {
+    color: var(--tenant-muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .055em;
+}
+
+.platform-tenant-show .detail-list dd {
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.platform-tenant-show .platform-card form {
+    padding-top: 16px;
+    margin-top: 18px !important;
+    border-top: 1px solid var(--tenant-border);
+}
+
+.platform-tenant-show .platform-card form label {
+    display: block;
+}
+
+.platform-tenant-show .platform-card form input,
+.platform-tenant-show .platform-card form select {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+.platform-tenant-show .table-wrap {
+    margin-top: 4px;
+}
+
+.platform-tenant-show .platform-table {
+    font-size: 13px;
+}
+
+.platform-tenant-show .platform-table th {
+    white-space: nowrap;
+}
+
+.platform-tenant-show .platform-table td {
+    vertical-align: middle;
+}
+
+.platform-tenant-show .platform-card:has(.platform-table) {
+    grid-column: 1 / -1;
+}
+
+.platform-tenant-show .platform-card:has(.table-wrap) h2 {
+    margin-bottom: 14px;
+}
+
+.platform-tenant-show .platform-card > .platform-muted:first-child {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+@media (max-width: 980px) {
+    .platform-tenant-show .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-tenant-show .platform-card:has(.platform-table) {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 800px) {
+    .platform-tenant-show .platform-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .platform-tenant-show .platform-toolbar h1 {
+        font-size: 27px;
+    }
+
+    .platform-tenant-show .detail-list > div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
+
+@media (max-width: 560px) {
+    .platform-tenant-show .platform-toolbar .button {
+        width: 100%;
+    }
+
+    .platform-tenant-show .platform-card {
+        border-radius: 14px;
+    }
+}
+
+/* Tenant detail final polish */
+.platform-tenant-show .detail-grid {
+    grid-auto-flow: row dense;
+}
+
+.platform-tenant-show .detail-list + form {
+    margin-top: 14px !important;
+}
+
+.platform-tenant-show .platform-card form {
+    padding-top: 14px;
+    margin-top: 14px !important;
+}
+
+.platform-tenant-show .platform-card form > p:first-child,
+.platform-tenant-show .platform-card form > label:first-child {
+    margin-top: 0;
+}
+
+.platform-tenant-show .platform-card form label {
+    margin-bottom: 10px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.platform-tenant-show .platform-card form input,
+.platform-tenant-show .platform-card form select {
+    min-height: 42px;
+}
+
+.platform-tenant-show .platform-card form .button {
+    min-height: 40px;
+}
+
+.platform-tenant-show .platform-card form p.platform-muted {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Forms inside informational cards read as secondary admin actions. */
+.platform-tenant-show .detail-list ~ form {
+    padding: 14px;
+    margin-right: -2px;
+    margin-left: -2px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+/* Avoid a second separator when the action already has its own panel. */
+.platform-tenant-show .detail-list ~ form + form {
+    margin-top: 10px !important;
+}
+
+/* Keep destructive controls visually distinct without dominating the page. */
+.platform-tenant-show form .button-danger,
+.platform-tenant-show form .button--danger {
+    font-weight: 700;
+}
+
+/* Long administrative cards should remain comfortable but compact. */
+.platform-tenant-show .platform-card > form:last-child {
+    margin-bottom: 0;
+}
+
+/* Historical/operational tables remain visually separate from editing UI. */
+.platform-tenant-show .platform-card:has(.table-wrap) {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.platform-tenant-show .platform-card:has(.table-wrap) form {
+    background: transparent;
+}
+
 </style>
 
 <div class="platform-tenant-show">
@@ -62,6 +370,55 @@
                 {{ __('platform.tenants.back') }}
             </a>
         </div>
+
+        <div class="tenant-summary">
+    <div class="tenant-summary__item">
+        <span class="tenant-summary__label">
+            {{ __('platform.tenants.status') }}
+        </span>
+
+        <strong>
+            <x-platform.badge
+                :variant="match ($tenant->status) {
+                    'active' => 'success',
+                    'blocked' => 'danger',
+                    'inactive' => 'neutral',
+                    default => 'neutral',
+                }"
+            >
+                {{ $tenant->status }}
+            </x-platform.badge>
+        </strong>
+    </div>
+
+    <div class="tenant-summary__item">
+        <span class="tenant-summary__label">
+            {{ __('platform.tenants.plan') }}
+        </span>
+
+        <strong>
+            {{ $subscription?->plan?->name ?? '—' }}
+        </strong>
+    </div>
+
+    <div class="tenant-summary__item">
+        <span class="tenant-summary__label">
+            {{ __('platform.tenants.trial') }}
+        </span>
+
+        <strong>
+            {{ $tenant->trial_ends_at?->format('d/m/Y') ?? '—' }}
+        </strong>
+    </div>
+
+    <div class="tenant-summary__item">
+        <span class="tenant-summary__label">
+            {{ __('platform.tenants.users') }}
+        </span>
+
+        <strong>{{ number_format($userCount) }}</strong>
+    </div>
+</div>
 
         <div class="detail-grid">
 @if (
