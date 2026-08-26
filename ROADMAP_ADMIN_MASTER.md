@@ -364,7 +364,7 @@ Validação em produção:
 -   [x] Tenant convertido
 -   [x] Plano contratado
 -   [x] Receita por plano
--   [ ] Novas assinaturas
+-   [x] Novas assinaturas
 -   [ ] Cancelamentos
 -   [ ] Trials convertidos
 -   [ ] Trials expirados sem conversão

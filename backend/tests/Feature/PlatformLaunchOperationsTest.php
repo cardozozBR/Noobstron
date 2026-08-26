@@ -1999,4 +1999,57 @@ public function test_platform_webhooks_redact_sensitive_data(): void
         ]);
     }
 
+    public function test_platform_dashboard_shows_new_subscriptions_from_last_thirty_days(): void
+{
+    $admin = PlatformAdmin::query()->create([
+        'name' => 'Platform Admin',
+        'email' => 'new-subscriptions@example.test',
+        'password' => Hash::make('SenhaSegura123'),
+        'is_active' => true,
+    ]);
+
+    $tenant = Tenant::query()->create([
+        'name' => 'Tenant Novas Assinaturas',
+        'slug' => 'tenant-novas-assinaturas',
+        'status' => 'active',
+    ]);
+
+    $plan = Plan::query()->create([
+        'code' => 'new-subscriptions-plan',
+        'name' => 'Plano Novas Assinaturas',
+        'active' => true,
+    ]);
+
+    Subscription::query()->create([
+        'tenant_id' => $tenant->id,
+        'plan_id' => $plan->id,
+        'status' => 'active',
+        'current_period_start' => now(),
+        'current_period_end' => now()->addMonth(),
+        'created_at' => now()->subDays(5),
+        'updated_at' => now()->subDays(5),
+    ]);
+
+    Subscription::query()->create([
+        'tenant_id' => $tenant->id,
+        'plan_id' => $plan->id,
+        'status' => 'cancelled',
+        'current_period_start' => now()->subMonths(2),
+        'current_period_end' => now()->subMonth(),
+        'created_at' => now()->subDays(40),
+        'updated_at' => now()->subDays(40),
+    ]);
+
+    $this
+        ->actingAs($admin, 'platform')
+        ->get(
+            route('platform.dashboard')
+        )
+        ->assertOk()
+        ->assertSee(
+            __('platform.dashboard.new_subscriptions')
+        )
+        ->assertSee('1');
+}
+
 }

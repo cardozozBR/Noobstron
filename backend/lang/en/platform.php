@@ -51,6 +51,7 @@ return [
         'contacts' => 'Contacts',
         'health' => 'Operational health',
         'active_subscriptions' => 'Active subscriptions',
+        'new_subscriptions' => 'New subscriptions (30 days)',
         'suspended' => 'Suspended',
         'active_trials' => 'Active trials',
         'trials_expiring' => 'Trials expiring in 7 days',

@@ -177,6 +177,16 @@
 
             <div class="metric-card">
                 <div class="metric-label">
+                    {{ __('platform.dashboard.new_subscriptions') }}
+                </div>
+
+                <div class="metric-value">
+                    {{ $newSubscriptions }}
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">
                     {{ __('platform.dashboard.active_subscriptions') }}
                 </div>
 

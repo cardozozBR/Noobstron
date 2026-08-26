@@ -92,6 +92,14 @@ class PlatformAdminController extends Controller
 
         $now = now();
 
+        $newSubscriptions = Subscription::query()
+            ->where(
+                'created_at',
+                '>=',
+                $now->copy()->subDays(30)
+            )
+            ->count();
+
         $trialActive = Tenant::query()
             ->whereNotNull('trial_ends_at')
             ->where('trial_ends_at', '>=', $now)
@@ -222,6 +230,7 @@ class PlatformAdminController extends Controller
         return view('platform.dashboard', [
             'tenantCount' => Tenant::query()->count(),
             'subscriptionCounts' => $subscriptionCounts,
+            'newSubscriptions' => $newSubscriptions,
             'trialActive' => $trialActive,
             'trialExpiring' => $trialExpiring,
             'mrr' => $mrr,
