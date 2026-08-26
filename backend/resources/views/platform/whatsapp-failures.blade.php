@@ -106,17 +106,6 @@
     white-space: nowrap;
 }
 
-.platform-whatsapp-failures-page .status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 9px;
-    border-radius: 999px;
-    background: #fee2e2;
-    color: #991b1b;
-    font-size: 12px;
-    font-weight: 700;
-}
-
 .platform-whatsapp-failures-page .retry-form {
     margin: 0;
 }
@@ -305,9 +294,9 @@
                                     </td>
 
                                     <td>
-                                        <span class="status-badge">
+                                        <x-platform.badge variant="danger">
                                             Falhou
-                                        </span>
+                                        </x-platform.badge>
                                     </td>
 
                                     <td class="failure-reason">

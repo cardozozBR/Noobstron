@@ -118,25 +118,6 @@
     margin: 0;
 }
 
-.platform-jobs-page .status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 9px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.platform-jobs-page .status-badge--pending {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.platform-jobs-page .status-badge--failed {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
 .platform-jobs-page .empty-state {
     padding: 28px 10px;
     text-align: center;
@@ -326,11 +307,9 @@
                                     </td>
 
                                     <td>
-                                        <span
-                                            class="status-badge status-badge--pending"
-                                        >
+                                        <x-platform.badge variant="warning">
                                             Pendente
-                                        </span>
+                                        </x-platform.badge>
                                     </td>
                                 </tr>
                             @endforeach
@@ -422,11 +401,9 @@
                                     </td>
 
                                     <td>
-                                        <span
-                                            class="status-badge status-badge--failed"
-                                        >
+                                        <x-platform.badge variant="danger">
                                             Falhou
-                                        </span>
+                                        </x-platform.badge>
                                     </td>
 
                                     <td class="job-action">

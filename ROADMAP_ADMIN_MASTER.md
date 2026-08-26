@@ -379,7 +379,7 @@ Validação em produção:
 -   [x] Cards clicáveis com comportamento consistente
 -   [x] Estados vazios
 -   [x] Estados de erro
--   [ ] Badges
+-   [x] Badges
 -   [ ] Tabelas responsivas
 -   [ ] Paginação consistente
 -   [ ] Confirmações de ações

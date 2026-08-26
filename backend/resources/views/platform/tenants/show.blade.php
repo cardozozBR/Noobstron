@@ -123,7 +123,18 @@
                 <dl class="detail-list">
                     <div>
                         <dt>{{ __('platform.tenants.status') }}</dt>
-                        <dd>{{ $tenant->status }}</dd>
+                        <dd>
+                            <x-platform.badge
+                                :variant="match ($tenant->status) {
+                                    'active' => 'success',
+                                    'blocked' => 'danger',
+                                    'inactive' => 'neutral',
+                                    default => 'neutral',
+                                }"
+                            >
+                                {{ $tenant->status }}
+                            </x-platform.badge>
+                        </dd>
                     </div>
 
                     <div>
@@ -258,7 +269,17 @@
                         <div>
                             <dt>{{ __('platform.tenants.status') }}</dt>
                             <dd>
-                                {{ $subscription->status->value }}
+                                <x-platform.badge
+                                    :variant="match ($subscription->status->value) {
+                                        'active' => 'success',
+                                        'suspended' => 'warning',
+                                        'cancelled',
+                                        'expired' => 'neutral',
+                                        default => 'neutral',
+                                    }"
+                                >
+                                    {{ $subscription->status->value }}
+                                </x-platform.badge>
                             </dd>
                         </div>
 
@@ -524,7 +545,19 @@
                                 @foreach ($subscriptionHistory as $item)
                                     <tr>
                                         <td>{{ $item->plan?->name ?? '—' }}</td>
-                                        <td>{{ $item->status->value }}</td>
+                                        <td>
+                                            <x-platform.badge
+                                                :variant="match ($item->status->value) {
+                                                    'active' => 'success',
+                                                    'suspended' => 'warning',
+                                                    'cancelled',
+                                                    'expired' => 'neutral',
+                                                    default => 'neutral',
+                                                }"
+                                            >
+                                                {{ $item->status->value }}
+                                            </x-platform.badge>
+                                        </td>
                                         <td>{{ strtoupper($item->payment_provider ?? '—') }}</td>
                                         <td>{{ $item->external_reference ?? '—' }}</td>
                                         <td>
@@ -565,7 +598,20 @@
                                     <tr>
                                         <td>{{ strtoupper($invoice->provider) }}</td>
                                         <td>{{ $invoice->external_invoice_id }}</td>
-                                        <td>{{ strtoupper($invoice->status) }}</td>
+                                        <td>
+                                            <x-platform.badge
+                                                :variant="match ($invoice->status) {
+                                                    'paid' => 'success',
+                                                    'pending',
+                                                    'processing' => 'warning',
+                                                    'failed' => 'danger',
+                                                    'cancelled' => 'neutral',
+                                                    default => 'neutral',
+                                                }"
+                                            >
+                                                {{ strtoupper($invoice->status) }}
+                                            </x-platform.badge>
+                                        </td>
                                         <td>
                                             {{ $invoice->currency }}
                                             {{ number_format(
@@ -657,7 +703,28 @@
                                         <td>#{{ $message->id }}</td>
                                         <td>{{ $message->to_email }}</td>
                                         <td>{{ $message->subject }}</td>
-                                        <td>{{ strtoupper($message->status instanceof \BackedEnum ? $message->status->value : (string) $message->status) }}</td>
+                                        <td>
+                                            @php
+                                                $messageStatus = $message->status instanceof \BackedEnum
+                                                    ? $message->status->value
+                                                    : (string) $message->status;
+                                            @endphp
+
+                                            <x-platform.badge
+                                                :variant="match ($messageStatus) {
+                                                    'sent',
+                                                    'delivered',
+                                                    'read',
+                                                    'received' => 'success',
+                                                    'pending',
+                                                    'processing' => 'warning',
+                                                    'failed' => 'danger',
+                                                    default => 'neutral',
+                                                }"
+                                            >
+                                                {{ strtoupper($messageStatus) }}
+                                            </x-platform.badge>
+                                        </td>
                                         <td>{{ $message->failure_reason ?? '—' }}</td>
                                     </tr>
                                 @endforeach
@@ -693,7 +760,28 @@
                                         <td>#{{ $message->id }}</td>
                                         <td>{{ $message->phone }}</td>
                                         <td>{{ $message->body }}</td>
-                                        <td>{{ strtoupper($message->status instanceof \BackedEnum ? $message->status->value : (string) $message->status) }}</td>
+                                        <td>
+                                            @php
+                                                $messageStatus = $message->status instanceof \BackedEnum
+                                                    ? $message->status->value
+                                                    : (string) $message->status;
+                                            @endphp
+
+                                            <x-platform.badge
+                                                :variant="match ($messageStatus) {
+                                                    'sent',
+                                                    'delivered',
+                                                    'read',
+                                                    'received' => 'success',
+                                                    'pending',
+                                                    'processing' => 'warning',
+                                                    'failed' => 'danger',
+                                                    default => 'neutral',
+                                                }"
+                                            >
+                                                {{ strtoupper($messageStatus) }}
+                                            </x-platform.badge>
+                                        </td>
                                         <td>{{ $message->failure_reason ?? '—' }}</td>
                                     </tr>
                                 @endforeach
@@ -727,7 +815,18 @@
                                     <tr>
                                         <td>{{ strtoupper($webhook->provider) }}</td>
                                         <td>{{ $webhook->event_type }}</td>
-                                        <td>{{ strtoupper($webhook->status) }}</td>
+                                        <td>
+                                            <x-platform.badge
+                                                :variant="match ($webhook->status) {
+                                                    'processed' => 'success',
+                                                    'processing' => 'warning',
+                                                    'failed' => 'danger',
+                                                    default => 'neutral',
+                                                }"
+                                            >
+                                                {{ strtoupper($webhook->status) }}
+                                            </x-platform.badge>
+                                        </td>
                                         <td>{{ $webhook->attempts }}</td>
                                     </tr>
                                 @endforeach

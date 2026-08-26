@@ -246,13 +246,40 @@
             text-transform: uppercase;
             letter-spacing: .04em;
         }
-
         .status-badge {
             display: inline-flex;
-            padding: 4px 9px;
+            align-items: center;
+            padding: 5px 9px;
             border-radius: 999px;
             background: #f3f4f6;
-            font-size: 13px;
+            color: #374151;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-badge--neutral {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-badge--success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge--warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge--danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge--info {
+            background: #eef2ff;
+            color: #3730a3;
         }
 
         .button-secondary {

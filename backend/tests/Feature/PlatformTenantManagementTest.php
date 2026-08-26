@@ -588,4 +588,36 @@ class PlatformTenantManagementTest extends TestCase
                 'role="alert"',
                 false
             );
-    }}
+    }
+    public function test_platform_badge_component_uses_semantic_variants(): void
+    {
+        $danger = $this->blade(
+            '<x-platform.badge variant="danger">Falhou</x-platform.badge>'
+        );
+
+        $danger
+            ->assertSee(
+                'status-badge',
+                false
+            )
+            ->assertSee(
+                'status-badge--danger',
+                false
+            )
+            ->assertSee('Falhou');
+
+        $fallback = $this->blade(
+            '<x-platform.badge variant="unsupported">Estado</x-platform.badge>'
+        );
+
+        $fallback
+            ->assertSee(
+                'status-badge--neutral',
+                false
+            )
+            ->assertDontSee(
+                'status-badge--unsupported',
+                false
+            );
+    }
+}

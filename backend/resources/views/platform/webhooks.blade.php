@@ -85,25 +85,6 @@
     white-space: nowrap;
 }
 
-.platform-webhooks-page .status-badge--stripe {
-    background: #eef2ff;
-}
-
-.platform-webhooks-page .status-badge--processed {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.platform-webhooks-page .status-badge--processing {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.platform-webhooks-page .status-badge--failed {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
 .platform-webhooks-page .webhook-error {
     white-space: normal;
     overflow-wrap: anywhere;
@@ -374,14 +355,13 @@
                         @forelse ($receipts as $receipt)
                             <tr>
                                 <td>
-                                    <span
-                                        class="status-badge
-                                        {{ $receipt->provider === 'stripe'
-                                            ? 'status-badge--stripe'
-                                            : '' }}"
+                                    <x-platform.badge
+                                        :variant="$receipt->provider === 'stripe'
+                                            ? 'info'
+                                            : 'neutral'"
                                     >
                                         {{ strtoupper($receipt->provider) }}
-                                    </span>
+                                    </x-platform.badge>
                                 </td>
 
                                 <td class="webhook-event-id">
@@ -397,12 +377,16 @@
                                 </td>
 
                                 <td class="webhook-status">
-                                    <span
-                                        class="status-badge
-                                        status-badge--{{ $receipt->status }}"
+                                    <x-platform.badge
+                                        :variant="match ($receipt->status) {
+                                            'processed' => 'success',
+                                            'processing' => 'warning',
+                                            'failed' => 'danger',
+                                            default => 'neutral',
+                                        }"
                                     >
                                         {{ strtoupper($receipt->status) }}
-                                    </span>
+                                    </x-platform.badge>
                                 </td>
 
                                 <td class="webhook-attempts">

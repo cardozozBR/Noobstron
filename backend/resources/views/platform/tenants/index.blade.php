@@ -154,9 +154,16 @@
                                 </td>
 
                                 <td>
-                                    <span class="status-badge">
+                                    <x-platform.badge
+                                        :variant="match ($tenant->status) {
+                                            'active' => 'success',
+                                            'blocked' => 'danger',
+                                            'inactive' => 'neutral',
+                                            default => 'neutral',
+                                        }"
+                                    >
                                         {{ $tenant->status }}
-                                    </span>
+                                    </x-platform.badge>
                                 </td>
 
                                 <td>
@@ -164,7 +171,21 @@
                                 </td>
 
                                 <td>
-                                    {{ $subscription?->status?->value ?? __('platform.tenants.no_subscription') }}
+                                    @if ($subscription?->status !== null)
+                                        <x-platform.badge
+                                            :variant="match ($subscription->status->value) {
+                                                'active' => 'success',
+                                                'suspended' => 'warning',
+                                                'cancelled',
+                                                'expired' => 'neutral',
+                                                default => 'neutral',
+                                            }"
+                                        >
+                                            {{ $subscription->status->value }}
+                                        </x-platform.badge>
+                                    @else
+                                        {{ __('platform.tenants.no_subscription') }}
+                                    @endif
                                 </td>
 
                                 <td>
