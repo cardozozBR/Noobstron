@@ -163,15 +163,15 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th>{{ __('platform.contacts.date') }}</th>
-                            <th>{{ __('platform.contacts.name') }}</th>
-                            <th>{{ __('platform.contacts.company') }}</th>
-                            <th>{{ __('platform.email') }}</th>
-                            <th>{{ __('platform.contacts.status') }}</th>
-                            <th>{{ __('platform.contacts.tenant') }}</th>
-                            <th>{{ __('platform.contacts.contracted_plan') }}</th>
-                            <th>{{ __('platform.contacts.revenue') }}</th>
-                            <th>{{ __('platform.contacts.message') }}</th>
+                            <th scope="col">{{ __('platform.contacts.date') }}</th>
+                            <th scope="col">{{ __('platform.contacts.name') }}</th>
+                            <th scope="col">{{ __('platform.contacts.company') }}</th>
+                            <th scope="col">{{ __('platform.email') }}</th>
+                            <th scope="col">{{ __('platform.contacts.status') }}</th>
+                            <th scope="col">{{ __('platform.contacts.tenant') }}</th>
+                            <th scope="col">{{ __('platform.contacts.contracted_plan') }}</th>
+                            <th scope="col">{{ __('platform.contacts.revenue') }}</th>
+                            <th scope="col">{{ __('platform.contacts.message') }}</th>
                         </tr>
                     </thead>
 

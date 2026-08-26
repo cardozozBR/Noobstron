@@ -451,6 +451,54 @@
     color: #64748b;
     text-align: center !important;
 }
+
+        /* Platform accessibility */
+        .button:focus-visible,
+        .logout-button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        /* Platform mobile baseline */
+        @media (max-width: 640px) {
+            .platform-main {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .platform-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .platform-toolbar > * {
+                max-width: 100%;
+            }
+
+            .button,
+            .logout-button {
+                min-height: 44px;
+            }
+
+            input,
+            select,
+            textarea {
+                max-width: 100%;
+            }
+
+            .filter-actions {
+                flex-wrap: wrap;
+            }
+
+            .table-wrap {
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
 </style>
 </head>
 <body>

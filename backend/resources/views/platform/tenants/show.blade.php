@@ -435,9 +435,9 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>{{ __('platform.tenants.feature') }}</th>
-                                    <th>{{ __('platform.tenants.enabled') }}</th>
-                                    <th>{{ __('platform.tenants.limit') }}</th>
+                                    <th scope="col">{{ __('platform.tenants.feature') }}</th>
+                                    <th scope="col">{{ __('platform.tenants.enabled') }}</th>
+                                    <th scope="col">{{ __('platform.tenants.limit') }}</th>
                                 </tr>
                             </thead>
 
@@ -473,8 +473,8 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>{{ __('platform.tenants.metric') }}</th>
-                                    <th>{{ __('platform.tenants.limit') }}</th>
+                                    <th scope="col">{{ __('platform.tenants.metric') }}</th>
+                                    <th scope="col">{{ __('platform.tenants.limit') }}</th>
                                 </tr>
                             </thead>
 
@@ -533,11 +533,11 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>Plano</th>
-                                    <th>Status</th>
-                                    <th>Provider</th>
-                                    <th>Referência</th>
-                                    <th>Período</th>
+                                    <th scope="col">Plano</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Provider</th>
+                                    <th scope="col">Referência</th>
+                                    <th scope="col">Período</th>
                                 </tr>
                             </thead>
 
@@ -585,11 +585,11 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>Provider</th>
-                                    <th>Fatura</th>
-                                    <th>Status</th>
-                                    <th>Valor</th>
-                                    <th>Pago em</th>
+                                    <th scope="col">Provider</th>
+                                    <th scope="col">Fatura</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Valor</th>
+                                    <th scope="col">Pago em</th>
                                 </tr>
                             </thead>
 
@@ -689,11 +689,11 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Destinatário</th>
-                                    <th>Assunto</th>
-                                    <th>Status</th>
-                                    <th>Erro</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Destinatário</th>
+                                    <th scope="col">Assunto</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Erro</th>
                                 </tr>
                             </thead>
 
@@ -746,11 +746,11 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Destinatário</th>
-                                    <th>Mensagem</th>
-                                    <th>Status</th>
-                                    <th>Erro</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Destinatário</th>
+                                    <th scope="col">Mensagem</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Erro</th>
                                 </tr>
                             </thead>
 
@@ -803,10 +803,10 @@
                         <table class="platform-table">
                             <thead>
                                 <tr>
-                                    <th>Provider</th>
-                                    <th>Evento</th>
-                                    <th>Status</th>
-                                    <th>Tentativas</th>
+                                    <th scope="col">Provider</th>
+                                    <th scope="col">Evento</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Tentativas</th>
                                 </tr>
                             </thead>
 

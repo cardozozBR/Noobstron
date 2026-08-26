@@ -228,13 +228,13 @@
                     <table class="platform-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Fila</th>
-                                <th>Job</th>
-                                <th>Tentativas</th>
-                                <th>Disponível em</th>
-                                <th>Criado em</th>
-                                <th>Status</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Fila</th>
+                                <th scope="col">Job</th>
+                                <th scope="col">Tentativas</th>
+                                <th scope="col">Disponível em</th>
+                                <th scope="col">Criado em</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
 
@@ -323,14 +323,14 @@
                     <table class="platform-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>UUID</th>
-                                <th>Conexão</th>
-                                <th>Fila</th>
-                                <th>Job</th>
-                                <th>Falhou em</th>
-                                <th>Status</th>
-                                <th>Ação</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">UUID</th>
+                                <th scope="col">Conexão</th>
+                                <th scope="col">Fila</th>
+                                <th scope="col">Job</th>
+                                <th scope="col">Falhou em</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Ação</th>
                             </tr>
                         </thead>
 

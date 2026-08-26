@@ -384,8 +384,8 @@ Validação em produção:
 -   [x] Paginação consistente
 -   [x] Confirmações de ações
 -   [x] Mensagens de sucesso/erro
--   [ ] Revisão mobile
--   [ ] Acessibilidade básica
+-   [x] Revisão mobile
+-   [x] Acessibilidade básica
 -   [ ] Padronizar português e acentuação
 
 ## Fase 12 --- Fechamento para produção

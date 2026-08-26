@@ -123,13 +123,13 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th>{{ __('platform.tenants.tenant') }}</th>
-                            <th>{{ __('platform.tenants.status') }}</th>
-                            <th>{{ __('platform.tenants.plan') }}</th>
-                            <th>{{ __('platform.tenants.subscription') }}</th>
-                            <th>{{ __('platform.tenants.trial_until') }}</th>
-                            <th>{{ __('platform.tenants.users') }}</th>
-                            <th></th>
+                            <th scope="col">{{ __('platform.tenants.tenant') }}</th>
+                            <th scope="col">{{ __('platform.tenants.status') }}</th>
+                            <th scope="col">{{ __('platform.tenants.plan') }}</th>
+                            <th scope="col">{{ __('platform.tenants.subscription') }}</th>
+                            <th scope="col">{{ __('platform.tenants.trial_until') }}</th>
+                            <th scope="col">{{ __('platform.tenants.users') }}</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
 

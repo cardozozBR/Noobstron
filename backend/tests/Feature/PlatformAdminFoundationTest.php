@@ -993,4 +993,67 @@ public function test_platform_sensitive_actions_require_confirmation(): void
             );
         }
     }
-}
+
+    public function test_platform_pages_provide_basic_accessibility(): void
+    {
+        $layout = file_get_contents(
+            resource_path('views/platform/layout.blade.php')
+        );
+
+        $this->assertStringContainsString(
+            '.button:focus-visible',
+            $layout
+        );
+
+        $views = [
+            'platform/email-failures.blade.php',
+            'platform/jobs.blade.php',
+            'platform/webhooks.blade.php',
+            'platform/whatsapp-failures.blade.php',
+            'platform/contacts/index.blade.php',
+            'platform/tenants/index.blade.php',
+            'platform/tenants/show.blade.php',
+        ];
+
+        foreach ($views as $view) {
+            $contents = file_get_contents(
+                resource_path('views/'.$view)
+            );
+
+            preg_match_all(
+                '/<th\b[^>]*>/i',
+                $contents,
+                $matches
+            );
+
+            foreach ($matches[0] as $heading) {
+                $this->assertStringContainsString(
+                    'scope="col"',
+                    $heading,
+                    "Table heading without scope in {$view}"
+                );
+            }
+        }
+    }
+
+    public function test_platform_layout_provides_mobile_baseline(): void
+    {
+        $layout = file_get_contents(
+            resource_path('views/platform/layout.blade.php')
+        );
+
+        $this->assertStringContainsString(
+            '/* Platform mobile baseline */',
+            $layout
+        );
+
+        $this->assertStringContainsString(
+            'min-height: 44px',
+            $layout
+        );
+
+        $this->assertStringContainsString(
+            '-webkit-overflow-scrolling: touch',
+            $layout
+        );
+    }}

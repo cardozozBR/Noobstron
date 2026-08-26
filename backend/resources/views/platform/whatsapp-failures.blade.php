@@ -206,15 +206,15 @@
                     <table class="platform-table">
                         <thead>
                             <tr>
-                                <th>Tenant</th>
-                                <th>Destinatário</th>
-                                <th>Telefone</th>
-                                <th>Mensagem</th>
-                                <th>Provider</th>
-                                <th>Status</th>
-                                <th>Motivo</th>
-                                <th>Falhou em</th>
-                                <th>Ação</th>
+                                <th scope="col">Tenant</th>
+                                <th scope="col">Destinatário</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">Mensagem</th>
+                                <th scope="col">Provider</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Motivo</th>
+                                <th scope="col">Falhou em</th>
+                                <th scope="col">Ação</th>
                             </tr>
                         </thead>
 

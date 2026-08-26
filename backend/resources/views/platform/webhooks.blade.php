@@ -302,31 +302,31 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th class="col-provider">
+                            <th scope="col" class="col-provider">
                                 Provedor
                             </th>
-                            <th class="col-event">
+                            <th scope="col" class="col-event">
                                 Evento
                             </th>
-                            <th class="col-type">
+                            <th scope="col" class="col-type">
                                 Tipo
                             </th>
-                            <th class="col-reference">
+                            <th scope="col" class="col-reference">
                                 Referência
                             </th>
-                            <th class="col-status">
+                            <th scope="col" class="col-status">
                                 Status
                             </th>
-                            <th class="col-attempts">
+                            <th scope="col" class="col-attempts">
                                 Tentativas
                             </th>
-                            <th class="col-error">
+                            <th scope="col" class="col-error">
                                 Último erro
                             </th>
-                            <th class="col-processed">
+                            <th scope="col" class="col-processed">
                                 Processado em
                             </th>
-                            <th class="col-action">
+                            <th scope="col" class="col-action">
                                 Ação
                             </th>
                         </tr>
