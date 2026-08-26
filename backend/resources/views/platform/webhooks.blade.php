@@ -405,7 +405,9 @@
                                 </td>
 
                                 <td class="webhook-error">
-                                    {{ $receipt->last_error ?: '—' }}
+                                    {{ \App\Support\AdminSensitiveDataSanitizer::sanitize(
+                                       $receipt->last_error
+                                      ) ?? '—' }}
                                 </td>
 
                                 <td class="webhook-processed">

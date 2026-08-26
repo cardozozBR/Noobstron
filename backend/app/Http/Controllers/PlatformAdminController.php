@@ -306,12 +306,13 @@ class PlatformAdminController extends Controller
                 );
             });
         } catch (\Throwable $exception) {
+            report($exception);
+
             return redirect()
                 ->route('platform.email-failures')
                 ->with(
                     'error',
-                    'O e-mail não pôde ser reprocessado: '
-                        .$exception->getMessage()
+                    'O e-mail não pôde ser reprocessado.'
                 );
         } finally {
             $tenantContext->clear();
@@ -343,36 +344,36 @@ class PlatformAdminController extends Controller
     }
 
     public function whatsappFailures(Request $request): View
-{
-    $tenantId = $request->integer('tenant_id');
+    {
+        $tenantId = $request->integer('tenant_id');
 
-    $tenant = $tenantId > 0
-        ? Tenant::query()
+        $tenant = $tenantId > 0
+            ? Tenant::query()
+                ->withoutGlobalScopes()
+                ->find($tenantId)
+            : null;
+
+        $messages = WhatsAppMessage::query()
             ->withoutGlobalScopes()
-            ->find($tenantId)
-        : null;
-
-    $messages = WhatsAppMessage::query()
-        ->withoutGlobalScopes()
-        ->with('tenant')
-        ->where('status', 'failed')
-        ->when(
-            $tenant !== null,
-            fn ($query) => $query->where(
-                'tenant_id',
-                $tenant->id
+            ->with('tenant')
+            ->where('status', 'failed')
+            ->when(
+                $tenant !== null,
+                fn ($query) => $query->where(
+                    'tenant_id',
+                    $tenant->id
+                )
             )
-        )
-        ->orderByDesc('failed_at')
-        ->orderByDesc('id')
-        ->paginate(50)
-        ->withQueryString();
+            ->orderByDesc('failed_at')
+            ->orderByDesc('id')
+            ->paginate(50)
+            ->withQueryString();
 
-    return view('platform.whatsapp-failures', [
-        'messages' => $messages,
-        'tenant' => $tenant,
-    ]);
-}
+        return view('platform.whatsapp-failures', [
+            'messages' => $messages,
+            'tenant' => $tenant,
+        ]);
+    }
 
     public function retryWhatsAppFailure(
         int $message,
@@ -423,12 +424,13 @@ class PlatformAdminController extends Controller
                 );
             });
         } catch (\Throwable $exception) {
+            report($exception);
+
             return redirect()
                 ->route('platform.whatsapp-failures')
                 ->with(
                     'error',
-                    'A mensagem WhatsApp não pôde ser reprocessada: '
-                        .$exception->getMessage()
+                    'A mensagem WhatsApp não pôde ser reprocessada.'
                 );
         } finally {
             $tenantContext->clear();
@@ -593,8 +595,7 @@ class PlatformAdminController extends Controller
                 );
         }
     }
-
-        public function webhooks(Request $request): View
+    public function webhooks(Request $request): View
     {
         $status = trim(
             (string) $request->query('status', '')
@@ -696,6 +697,8 @@ class PlatformAdminController extends Controller
                     );
             }
         } catch (\Throwable $exception) {
+            report($exception);
+
             return redirect()
                 ->route(
                     'platform.webhooks',
@@ -703,8 +706,7 @@ class PlatformAdminController extends Controller
                 )
                 ->with(
                     'error',
-                    'O reprocessamento falhou: '
-                    .$exception->getMessage()
+                    'O webhook não pôde ser reprocessado.'
                 );
         }
 

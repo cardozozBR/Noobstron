@@ -1875,6 +1875,120 @@ $response->assertSee(
             ->assertSee('Crítico');
     }
 
+    public function test_platform_email_failures_redact_sensitive_data(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Sensitive Failure Tenant',
+            'slug' => 'sensitive-failure-tenant',
+            'status' => 'active',
+            'currency' => 'BRL',
+        ]);
+
+        app(TenantContext::class)->set($tenant);
+
+        EmailMessage::query()
+            ->withoutGlobalScopes()
+            ->create([
+                'tenant_id' => $tenant->id,
+                'to_email' => 'sensitive@example.test',
+                'subject' => 'Falha sensível',
+                'body' => 'Mensagem.',
+                'status' => EmailMessageStatus::FAILED,
+                'failed_at' => now(),
+                'failure_reason' =>
+                    'Authorization: Bearer SUPER_SECRET_VALUE',
+            ]);
+
+        app(TenantContext::class)->clear();
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.email-failures')
+            )
+            ->assertOk()
+            ->assertDontSee('SUPER_SECRET_VALUE')
+            ->assertSee('[REDACTED]');
+    }
+
+    public function test_platform_whatsapp_failures_redact_sensitive_data(): void
+{
+    $admin = $this->platformAdmin();
+
+    $tenant = Tenant::query()->create([
+        'name' => 'Sensitive WhatsApp Tenant',
+        'slug' => 'sensitive-whatsapp-tenant',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    app(TenantContext::class)->set($tenant);
+
+    WhatsAppMessage::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenant->id,
+            'phone' => '5511999999999',
+            'body' => 'Mensagem sensível.',
+            'status' => WhatsAppMessageStatus::FAILED,
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' =>
+                'Provider error Authorization: Bearer super-secret-token',
+        ]);
+
+    app(TenantContext::class)->clear();
+
+    $response = $this
+        ->actingAs($admin, 'platform')
+        ->get(
+            route('platform.whatsapp-failures')
+        );
+
+    $response
+        ->assertOk()
+        ->assertDontSee('super-secret-token')
+        ->assertDontSee(
+            'Authorization: Bearer super-secret-token'
+        );
+}
+
+public function test_platform_webhooks_redact_sensitive_data(): void
+{
+    $admin = $this->platformAdmin();
+
+    PaymentEventReceipt::query()->create([
+        'provider' => 'stripe',
+        'event_id' => 'evt_sensitive_webhook',
+        'event_type' => 'invoice.payment_failed',
+        'external_reference' => 'sub_sensitive_webhook',
+        'status' => 'failed',
+        'attempts' => 1,
+        'last_error' =>
+            'Stripe error api_key=sk_test_super_secret_value',
+        'processed_at' => null,
+    ]);
+
+    $response = $this
+        ->actingAs($admin, 'platform')
+        ->get(
+            route(
+                'platform.webhooks',
+                ['status' => 'failed']
+            )
+        );
+
+    $response
+        ->assertOk()
+        ->assertDontSee('sk_test_super_secret_value')
+        ->assertDontSee(
+            'api_key=sk_test_super_secret_value'
+        );
+}
+
     private function platformAdmin(): PlatformAdmin
     {
         return PlatformAdmin::query()->create([
@@ -1884,4 +1998,5 @@ $response->assertSee(
             'is_active' => true,
         ]);
     }
+
 }

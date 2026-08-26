@@ -287,13 +287,9 @@
                                     </td>
 
                                     <td class="failure-reason">
-                                        @if (filled($message->failure_reason))
-                                            {{ $message->failure_reason }}
-                                        @else
-                                            <span class="platform-muted">
-                                                Motivo não informado
-                                            </span>
-                                        @endif
+                                       {{ \App\Support\AdminSensitiveDataSanitizer::sanitize(
+                                        $message->failure_reason
+                                       ) ?? 'Motivo não informado' }}
                                     </td>
 
                                     <td class="failure-date">

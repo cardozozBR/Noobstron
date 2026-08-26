@@ -331,19 +331,19 @@ Validação em produção:
 
 ## Fase 9 --- Segurança do Platform Admin
 
--   [ ] Revisar todas as rotas protegidas por `platform.admin`
--   [ ] Garantir isolamento correto de `ResolveTenant`
--   [ ] Revisar rate limiting do login
--   [ ] Revisar CSRF
--   [ ] Revisar sessões
--   [ ] Revisar logout
--   [ ] Proteção contra enumeração
--   [ ] Confirmação para ações destrutivas
--   [ ] Revisão de exposição de payloads
--   [ ] Garantir que secrets/tokens não sejam exibidos
--   [ ] Sanitizar erros apresentados ao administrador
--   [ ] Testes de autorização
--   [ ] Garantir que administrador inativo não tenha acesso
+-   [x] Revisar todas as rotas protegidas por platform.admin
+-   [x] Garantir isolamento correto de ResolveTenant
+-   [x] Revisar rate limiting do login
+-   [x] Revisar CSRF
+-   [x] Revisar sessões
+-   [x] Revisar logout
+-   [x] Proteção contra enumeração
+-   [x] Confirmação para ações destrutivas
+-   [x] Revisão de exposição de payloads
+-   [x] Garantir que secrets/tokens não sejam exibidos
+-   [x] Sanitizar erros apresentados ao administrador
+-   [x] Testes de autorização
+-   [x] Garantir que administrador inativo não tenha acesso
 
 ## Fase 10 --- Operação comercial
 
