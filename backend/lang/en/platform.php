@@ -182,4 +182,4 @@ return [
         'email_failures_empty' => 'No email failures found.',
         'tenant_no_invoices' => 'No invoices found.',
         'whatsapp_failures_empty' => 'No WhatsApp failures found.',
-    ],];
+    ], ];

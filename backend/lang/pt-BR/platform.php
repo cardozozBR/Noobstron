@@ -21,7 +21,7 @@ return [
     'login' => [
         'title' => 'Administração da plataforma',
         'description' => 'Acesso exclusivo para administradores internos da plataforma.',
-    'submit' => 'Entrar',
+        'submit' => 'Entrar',
     ],
     'contacts' => [
         'title' => 'Contatos comerciais',
@@ -177,4 +177,4 @@ return [
         'email_failures_empty' => 'Nenhuma falha de e-mail encontrada.',
         'tenant_no_invoices' => 'Nenhuma fatura encontrada.',
         'whatsapp_failures_empty' => 'Nenhuma falha de WhatsApp encontrada.',
-    ],];
+    ], ];

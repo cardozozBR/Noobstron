@@ -23,6 +23,8 @@ use App\Services\TenantContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 use Tests\TestCase;
 
 class PlatformTenantManagementTest extends TestCase
@@ -561,11 +563,11 @@ class PlatformTenantManagementTest extends TestCase
 
     public function test_platform_error_state_component_displays_errors(): void
     {
-        $errors = new \Illuminate\Support\ViewErrorBag();
+        $errors = new ViewErrorBag;
 
         $errors->put(
             'default',
-            new \Illuminate\Support\MessageBag([
+            new MessageBag([
                 'Não foi possível atualizar este tenant.',
             ])
         );
@@ -589,6 +591,7 @@ class PlatformTenantManagementTest extends TestCase
                 false
             );
     }
+
     public function test_platform_badge_component_uses_semantic_variants(): void
     {
         $danger = $this->blade(

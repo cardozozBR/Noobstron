@@ -21,7 +21,7 @@ return [
     'login' => [
         'title' => 'プラットフォーム管理',
         'description' => 'プラットフォーム内部管理者専用アクセスです。',
-    'submit' => 'ログイン',
+        'submit' => 'ログイン',
     ],
     'contacts' => [
         'title' => '営業問い合わせ',
@@ -143,4 +143,4 @@ return [
         'email_failures_empty' => 'メール送信の障害は見つかりませんでした。',
         'tenant_no_invoices' => '請求書は見つかりませんでした。',
         'whatsapp_failures_empty' => 'WhatsApp送信の障害は見つかりませんでした。',
-    ],];
+    ], ];

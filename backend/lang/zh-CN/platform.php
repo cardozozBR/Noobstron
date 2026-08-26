@@ -21,7 +21,7 @@ return [
     'login' => [
         'title' => '平台管理',
         'description' => '仅供平台内部管理员访问。',
-    'submit' => '登录',
+        'submit' => '登录',
     ],
     'contacts' => [
         'title' => '商务联系',
@@ -143,4 +143,4 @@ return [
         'email_failures_empty' => '未发现电子邮件发送失败。',
         'tenant_no_invoices' => '未找到发票。',
         'whatsapp_failures_empty' => '未发现 WhatsApp 发送失败。',
-    ],];
+    ], ];
