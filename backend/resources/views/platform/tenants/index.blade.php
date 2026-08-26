@@ -20,6 +20,20 @@
     @include('platform.partials.navigation')
 
     <main class="platform-main">
+        @php
+            $breadcrumbs = [
+                [
+                    'label' => __('platform.nav.dashboard'),
+                    'url' => route('platform.dashboard'),
+                ],
+                [
+                    'label' => __('platform.nav.tenants'),
+                    'url' => null,
+                ],
+            ];
+        @endphp
+
+        @include('platform.partials.breadcrumbs')
         <div class="platform-toolbar">
             <div>
                 <h1>{{ __('platform.tenants.title') }}</h1>

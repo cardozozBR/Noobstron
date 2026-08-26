@@ -14,7 +14,9 @@ return [
         'email_failures' => 'Email',
         'whatsapp_failures' => 'WhatsApp',
     ],    'back_dashboard' => 'Back to dashboard',
-    'email' => 'Email',
+    'breadcrumbs' => [
+        'aria_label' => 'Breadcrumb navigation',
+    ],    'email' => 'Email',
     'password' => 'Password',
 
     'login' => [

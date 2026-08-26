@@ -639,4 +639,67 @@ public function test_authenticated_platform_pages_share_admin_master_navigation(
             );
     }
 }
+
+public function test_platform_authenticated_pages_show_breadcrumb_navigation(): void
+{
+    $admin = PlatformAdmin::query()->create([
+        'name' => 'Platform Breadcrumb Admin',
+        'email' => 'platform-breadcrumb@example.test',
+        'password' => Hash::make('SenhaSegura123'),
+        'is_active' => true,
+    ]);
+
+    $tenant = Tenant::query()->create([
+        'name' => 'Tenant Breadcrumb',
+        'slug' => 'tenant-breadcrumb',
+        'status' => 'active',
+    ]);
+
+    $this
+        ->actingAs($admin, 'platform')
+        ->get(route('platform.dashboard'))
+        ->assertOk()
+        ->assertSee(
+            __('platform.breadcrumbs.aria_label')
+        )
+        ->assertSee(
+            __('platform.nav.dashboard')
+        );
+
+    $this
+        ->actingAs($admin, 'platform')
+        ->get(route('platform.tenants.index'))
+        ->assertOk()
+        ->assertSee(
+            __('platform.breadcrumbs.aria_label')
+        )
+        ->assertSee(
+            __('platform.nav.dashboard')
+        )
+        ->assertSee(
+            __('platform.nav.tenants')
+        );
+
+    $this
+        ->actingAs($admin, 'platform')
+        ->get(
+            route(
+                'platform.tenants.show',
+                $tenant
+            )
+        )
+        ->assertOk()
+        ->assertSee(
+            __('platform.breadcrumbs.aria_label')
+        )
+        ->assertSee(
+            __('platform.nav.dashboard')
+        )
+        ->assertSee(
+            __('platform.nav.tenants')
+        )
+        ->assertSee(
+            $tenant->name
+        );
+}
 }

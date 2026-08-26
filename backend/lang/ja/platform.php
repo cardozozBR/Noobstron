@@ -14,7 +14,9 @@ return [
         'email_failures' => 'メール',
         'whatsapp_failures' => 'WhatsApp',
     ],    'back_dashboard' => 'ダッシュボードに戻る',
-    'email' => 'メール',
+    'breadcrumbs' => [
+        'aria_label' => 'パンくずナビゲーション',
+    ],    'email' => 'メール',
     'password' => 'パスワード',
     'login' => [
         'title' => 'プラットフォーム管理',

@@ -22,6 +22,24 @@
     @include('platform.partials.navigation')
 
     <main class="platform-main">
+        @php
+            $breadcrumbs = [
+                [
+                    'label' => __('platform.nav.dashboard'),
+                    'url' => route('platform.dashboard'),
+                ],
+                [
+                    'label' => __('platform.nav.tenants'),
+                    'url' => route('platform.tenants.index'),
+                ],
+                [
+                    'label' => $tenant->name,
+                    'url' => null,
+                ],
+            ];
+        @endphp
+
+        @include('platform.partials.breadcrumbs')
         <div class="platform-toolbar">
             <div>
                 <div class="platform-muted">

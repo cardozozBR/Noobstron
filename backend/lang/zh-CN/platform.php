@@ -14,7 +14,9 @@ return [
         'email_failures' => '电子邮件',
         'whatsapp_failures' => 'WhatsApp',
     ],    'back_dashboard' => '返回仪表板',
-    'email' => '电子邮件',
+    'breadcrumbs' => [
+        'aria_label' => '面包屑导航',
+    ],    'email' => '电子邮件',
     'password' => '密码',
     'login' => [
         'title' => '平台管理',

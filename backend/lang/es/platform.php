@@ -14,7 +14,9 @@ return [
         'email_failures' => 'Correos',
         'whatsapp_failures' => 'WhatsApp',
     ],    'back_dashboard' => 'Volver al panel',
-    'email' => 'E-mail',
+    'breadcrumbs' => [
+        'aria_label' => 'Navegación estructural',
+    ],    'email' => 'E-mail',
     'password' => 'Contraseña',
     'login' => [
         'title' => 'Administración de la plataforma',
