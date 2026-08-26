@@ -362,7 +362,7 @@ Validação em produção:
 -   [x] Status do lead
 -   [ ] Histórico
 -   [x] Tenant convertido
--   [ ] Plano contratado
+-   [x] Plano contratado
 -   [ ] Receita por plano
 -   [ ] Novas assinaturas
 -   [ ] Cancelamentos

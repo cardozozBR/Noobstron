@@ -23,6 +23,7 @@ return [
         'status' => 'Status',
         'tenant' => 'Tenant',
         'converted_tenant' => 'Tenant convertido',
+        'contracted_plan' => 'Plano contratado',
         'convert' => 'Vincular tenant',
         'converted' => 'Contato vinculado ao tenant com sucesso.',
         'select_tenant' => 'Selecione o tenant',

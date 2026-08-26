@@ -27,7 +27,9 @@ class PlatformCommercialContactController extends Controller
         );
 
         $query = CommercialContact::query()
-            ->with('convertedTenant')
+            ->with(
+                'convertedTenant.latestSubscription.plan'
+            )
             ->latest();
 
         if (

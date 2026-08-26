@@ -25,6 +25,7 @@ return [
         'status' => 'Status',
         'tenant' => 'Tenant',
         'converted_tenant' => 'Converted tenant',
+        'contracted_plan' => 'Contracted plan',
         'convert' => 'Link tenant',
         'converted' => 'Contact successfully linked to tenant.',
         'select_tenant' => 'Select tenant',

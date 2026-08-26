@@ -6,6 +6,7 @@ use App\Support\TenantBrandingSettings;
 use App\Support\TenantGlobalSettings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tenant extends Model
 {
@@ -96,6 +97,14 @@ class Tenant extends Model
             Subscription::class
         );
     }
+
+    public function latestSubscription(): HasOne
+    {
+        return $this->hasOne(
+            Subscription::class
+        )->latestOfMany('id');
+    }
+
     public function effectiveBrandPrimaryColor(): string
     {
         return TenantBrandingSettings::primaryColor(

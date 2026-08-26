@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Enums\CommercialContactStatus;
 use App\Models\CommercialContact;
 use App\Models\PlatformAdmin;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -438,6 +440,114 @@ class PlatformCommercialContactManagementTest extends TestCase
                 ),
                 false
             );
+    }
+
+    public function test_platform_contacts_page_shows_latest_contracted_plan(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant com Plano',
+            'slug' => 'tenant-com-plano',
+            'status' => 'active',
+        ]);
+
+        $oldPlan = Plan::query()->create([
+            'code' => 'commercial-old',
+            'name' => 'Plano Antigo',
+            'active' => true,
+        ]);
+
+        $currentPlan = Plan::query()->create([
+            'code' => 'commercial-pro',
+            'name' => 'Plano Pro Comercial',
+            'active' => true,
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $oldPlan->id,
+            'status' => 'cancelled',
+            'current_period_start' => now()->subMonths(2),
+            'current_period_end' => now()->subMonth(),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $currentPlan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+        CommercialContact::query()->create([
+            'name' => 'Contato com plano',
+            'email' => 'contracted-plan@example.test',
+            'company' => 'Empresa com plano',
+            'message' => 'Contato convertido com assinatura.',
+            'status' => CommercialContactStatus::CONVERTED,
+            'converted_tenant_id' => $tenant->id,
+            'converted_at' => now(),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.contacts.index')
+            )
+            ->assertOk()
+            ->assertSee(
+                __('platform.contacts.contracted_plan')
+            )
+            ->assertSee('Plano Pro Comercial')
+            ->assertDontSee('Plano Antigo');
+    }
+
+    public function test_platform_contacts_page_handles_converted_tenant_without_subscription(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant Sem Assinatura',
+            'slug' => 'tenant-sem-assinatura',
+            'status' => 'active',
+        ]);
+
+        CommercialContact::query()->create([
+            'name' => 'Contato sem assinatura',
+            'email' => 'without-subscription@example.test',
+            'company' => 'Empresa sem assinatura',
+            'message' => 'Contato sem plano contratado.',
+            'status' => CommercialContactStatus::CONVERTED,
+            'converted_tenant_id' => $tenant->id,
+            'converted_at' => now(),
+        ]);
+
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get(
+                route('platform.contacts.index')
+            );
+
+        $response
+            ->assertOk()
+            ->assertSee('Tenant Sem Assinatura')
+            ->assertSee(
+                __('platform.contacts.contracted_plan')
+            );
+
+        $contact = CommercialContact::query()
+            ->where(
+                'email',
+                'without-subscription@example.test'
+            )
+            ->firstOrFail();
+
+        $this->assertNull(
+            $contact
+                ->convertedTenant
+                ->latestSubscription
+        );
     }
     private function platformAdmin(): PlatformAdmin
     {

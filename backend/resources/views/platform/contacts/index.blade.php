@@ -168,6 +168,7 @@
                             <th>{{ __('platform.email') }}</th>
                             <th>{{ __('platform.contacts.status') }}</th>
                             <th>{{ __('platform.contacts.tenant') }}</th>
+                            <th>{{ __('platform.contacts.contracted_plan') }}</th>
                             <th>{{ __('platform.contacts.message') }}</th>
                         </tr>
                     </thead>
@@ -277,13 +278,23 @@
                                 @endif
                             </td>
 
+                            <td class="contracted-plan">
+                                {{
+                                    $contact->convertedTenant
+                                        ?->latestSubscription
+                                        ?->plan
+                                        ?->name
+                                    ?? '—'
+                                }}
+                            </td>
+
                             <td class="contact-message">
                                 {{ $contact->message }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 {{ __('platform.contacts.empty') }}
                             </td>
                         </tr>
