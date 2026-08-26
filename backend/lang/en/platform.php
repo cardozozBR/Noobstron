@@ -34,6 +34,13 @@ return [
         'all_statuses' => 'All statuses',
         'update_status' => 'Update status',
         'status_updated' => 'Contact status updated.',
+        'history' => 'History',
+        'history_empty' => 'No events recorded.',
+        'history_status_changed' => 'Status changed',
+        'history_converted' => 'Contact converted',
+        'history_admin' => 'Administrator',
+        'history_from' => 'From',
+        'history_to' => 'to',
         'statuses' => [
             'new' => 'New',
             'contacted' => 'Contacted',

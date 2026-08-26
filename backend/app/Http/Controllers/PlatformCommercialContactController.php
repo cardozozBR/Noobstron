@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CommercialContactStatus;
 use App\Models\CommercialContact;
+use App\Models\PlatformAdminAuditLog;
 use App\Models\Tenant;
 use App\Services\PlatformAdminAuditService;
 use Illuminate\Http\RedirectResponse;
@@ -48,10 +49,41 @@ class PlatformCommercialContactController extends Controller
             $status = '';
         }
 
+        $contacts = $query
+            ->paginate(30)
+            ->withQueryString();
+
+        $contactIds = $contacts
+            ->getCollection()
+            ->pluck('id')
+            ->map(
+                fn ($id): string => (string) $id
+            )
+            ->all();
+
+        $contactHistory = PlatformAdminAuditLog::query()
+            ->with('platformAdmin')
+            ->where(
+                'entity_type',
+                CommercialContact::class
+            )
+            ->whereIn(
+                'entity_id',
+                $contactIds
+            )
+            ->whereIn(
+                'action',
+                [
+                    'commercial_contact.status_updated',
+                    'commercial_contact.converted',
+                ]
+            )
+            ->latest()
+            ->get()
+            ->groupBy('entity_id');
+
         return view('platform.contacts.index', [
-            'contacts' => $query
-                ->paginate(30)
-                ->withQueryString()
+            'contacts' => $contacts
                 ->through(
                     function (CommercialContact $contact): CommercialContact {
                         $subscription = $contact
@@ -97,6 +129,8 @@ class PlatformCommercialContactController extends Controller
 
             'status' => $status,
 
+            'contactHistory' => $contactHistory,
+
             'statuses' =>
                 CommercialContactStatus::cases(),
 
@@ -114,7 +148,8 @@ class PlatformCommercialContactController extends Controller
 
     public function updateStatus(
         Request $request,
-        CommercialContact $contact
+        CommercialContact $contact,
+        PlatformAdminAuditService $audit
     ): RedirectResponse {
         $data = $request->validate([
             'status' => [
@@ -125,9 +160,23 @@ class PlatformCommercialContactController extends Controller
             ],
         ]);
 
+        $before = [
+            'status' => $contact->status->value,
+        ];
+
         $contact->forceFill([
             'status' => $data['status'],
         ])->save();
+
+        $audit->log(
+            action: 'commercial_contact.status_updated',
+            entityType: CommercialContact::class,
+            entityId: $contact->id,
+            beforeState: $before,
+            afterState: [
+                'status' => $contact->status->value,
+            ],
+        );
 
         return redirect()
             ->route(

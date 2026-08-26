@@ -32,6 +32,13 @@ return [
         'all_statuses' => 'Todos os status',
         'update_status' => 'Atualizar status',
         'status_updated' => 'Status do contato atualizado.',
+        'history' => 'Histórico',
+        'history_empty' => 'Nenhum evento registrado.',
+        'history_status_changed' => 'Status alterado',
+        'history_converted' => 'Contato convertido',
+        'history_admin' => 'Administrador',
+        'history_from' => 'De',
+        'history_to' => 'para',
         'statuses' => [
             'new' => 'Novo',
             'contacted' => 'Contatado',

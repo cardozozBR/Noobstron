@@ -311,7 +311,77 @@
                             </td>
 
                             <td class="contact-message">
-                                {{ $contact->message }}
+                                <div>
+                                    {{ $contact->message }}
+                                </div>
+
+                                @php
+                                    $history = $contactHistory->get(
+                                        (string) $contact->id,
+                                        collect()
+                                    );
+                                @endphp
+
+                                <details style="margin-top:10px;">
+                                    <summary>
+                                        {{ __('platform.contacts.history') }}
+                                    </summary>
+
+                                    @forelse ($history as $event)
+                                        <div style="margin-top:10px;">
+                                            <div>
+                                                <strong>
+                                                    {{ $event->created_at?->format('d/m/Y H:i') }}
+                                                </strong>
+                                            </div>
+
+                                            @if (
+                                                $event->action ===
+                                                'commercial_contact.status_updated'
+                                            )
+                                                <div>
+                                                    {{ __('platform.contacts.history_status_changed') }}:
+                                                    {{ __('platform.contacts.history_from') }}
+                                                    <strong>
+                                                        {{
+                                                            __('platform.contacts.statuses.'
+                                                                . ($event->before_state['status'] ?? ''))
+                                                        }}
+                                                    </strong>
+                                                    {{ __('platform.contacts.history_to') }}
+                                                    <strong>
+                                                        {{
+                                                            __('platform.contacts.statuses.'
+                                                                . ($event->after_state['status'] ?? ''))
+                                                        }}
+                                                    </strong>
+                                                </div>
+                                            @elseif (
+                                                $event->action ===
+                                                'commercial_contact.converted'
+                                            )
+                                                <div>
+                                                    {{ __('platform.contacts.history_converted') }}
+                                                </div>
+                                            @endif
+
+                                            <div class="platform-muted">
+                                                {{ __('platform.contacts.history_admin') }}:
+                                                {{
+                                                    $event->platformAdmin?->name
+                                                    ?? '—'
+                                                }}
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div
+                                            class="platform-muted"
+                                            style="margin-top:10px;"
+                                        >
+                                            {{ __('platform.contacts.history_empty') }}
+                                        </div>
+                                    @endforelse
+                                </details>
                             </td>
                         </tr>
                     @empty

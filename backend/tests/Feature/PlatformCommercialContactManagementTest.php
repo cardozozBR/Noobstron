@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\CommercialContactStatus;
 use App\Models\CommercialContact;
 use App\Models\PlatformAdmin;
+use App\Models\PlatformAdminAuditLog;
 use App\Models\Plan;
 use App\Models\PlanPrice;
 use App\Models\Subscription;
@@ -143,6 +144,70 @@ class PlatformCommercialContactManagementTest extends TestCase
         $this->assertSame(
             CommercialContactStatus::CONTACTED,
             $contact->refresh()->status
+        );
+    }
+
+    public function test_commercial_contact_status_update_is_audited(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $contact = CommercialContact::query()->create([
+            'name' => 'Lead auditado',
+            'email' => 'status-audit@example.test',
+            'message' => 'Mudança de status auditada.',
+            'status' => CommercialContactStatus::NEW,
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->patch(
+                route(
+                    'platform.contacts.status.update',
+                    $contact
+                ),
+                [
+                    'status' =>
+                        CommercialContactStatus::CONTACTED->value,
+                ]
+            )
+            ->assertRedirect();
+
+        $this->assertDatabaseHas(
+            'platform_admin_audit_logs',
+            [
+                'platform_admin_id' => $admin->id,
+                'action' =>
+                    'commercial_contact.status_updated',
+                'entity_type' => CommercialContact::class,
+                'entity_id' => (string) $contact->id,
+                'result' => 'success',
+            ]
+        );
+
+        $audit = PlatformAdminAuditLog::query()
+            ->where(
+                'action',
+                'commercial_contact.status_updated'
+            )
+            ->where(
+                'entity_type',
+                CommercialContact::class
+            )
+            ->where(
+                'entity_id',
+                (string) $contact->id
+            )
+            ->latest('id')
+            ->firstOrFail();
+
+        $this->assertSame(
+            CommercialContactStatus::NEW->value,
+            $audit->before_state['status']
+        );
+
+        $this->assertSame(
+            CommercialContactStatus::CONTACTED->value,
+            $audit->after_state['status']
         );
     }
 
@@ -661,6 +726,74 @@ class PlatformCommercialContactManagementTest extends TestCase
             ->assertOk()
             ->assertSee('Plano Receita Fallback')
             ->assertSee('299,00');
+    }
+    public function test_platform_contacts_page_shows_commercial_contact_history(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant Histórico',
+            'slug' => 'tenant-historico',
+            'status' => 'active',
+        ]);
+
+        $contact = CommercialContact::query()->create([
+            'name' => 'Contato Histórico',
+            'email' => 'history@example.test',
+            'message' => 'Contato com histórico.',
+            'status' => CommercialContactStatus::NEW,
+        ]);
+
+        PlatformAdminAuditLog::query()->create([
+            'platform_admin_id' => $admin->id,
+            'action' => 'commercial_contact.status_updated',
+            'entity_type' => CommercialContact::class,
+            'entity_id' => (string) $contact->id,
+            'before_state' => [
+                'status' => CommercialContactStatus::NEW->value,
+            ],
+            'after_state' => [
+                'status' => CommercialContactStatus::CONTACTED->value,
+            ],
+            'result' => 'success',
+        ]);
+
+        PlatformAdminAuditLog::query()->create([
+            'platform_admin_id' => $admin->id,
+            'tenant_id' => $tenant->id,
+            'action' => 'commercial_contact.converted',
+            'entity_type' => CommercialContact::class,
+            'entity_id' => (string) $contact->id,
+            'before_state' => [
+                'status' => CommercialContactStatus::CONTACTED->value,
+            ],
+            'after_state' => [
+                'status' => CommercialContactStatus::CONVERTED->value,
+                'converted_tenant_id' => $tenant->id,
+            ],
+            'result' => 'success',
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.contacts.index'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.contacts.history')
+            )
+            ->assertSee(
+                __('platform.contacts.history_status_changed')
+            )
+            ->assertSee(
+                __('platform.contacts.history_converted')
+            )
+            ->assertSee(
+                __('platform.contacts.statuses.new')
+            )
+            ->assertSee(
+                __('platform.contacts.statuses.contacted')
+            )
+            ->assertSee($admin->name);
     }
     private function platformAdmin(): PlatformAdmin
     {
