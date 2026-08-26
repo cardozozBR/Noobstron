@@ -2179,4 +2179,63 @@ public function test_platform_dashboard_shows_effective_cancellations_from_last_
             )
             ->assertSee('1');
     }
+
+    public function test_platform_dashboard_shows_expired_trials_without_conversion(): void
+    {
+        $admin = PlatformAdmin::query()->create([
+            'name' => 'Platform Admin',
+            'email' => 'expired-trials@example.test',
+            'password' => Hash::make('SenhaSegura123'),
+            'is_active' => true,
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'expired-trial-plan',
+            'name' => 'Plano Trial Expirado',
+            'active' => true,
+        ]);
+
+        Tenant::query()->create([
+            'name' => 'Trial Expirado Sem Conversão',
+            'slug' => 'trial-expirado-sem-conversao',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(40),
+            'trial_ends_at' => now()->subDays(10),
+        ]);
+
+        $converted = Tenant::query()->create([
+            'name' => 'Trial Expirado Convertido',
+            'slug' => 'trial-expirado-convertido',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(40),
+            'trial_ends_at' => now()->subDays(10),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $converted->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'created_at' => now()->subDays(20),
+            'updated_at' => now()->subDays(20),
+        ]);
+
+        Tenant::query()->create([
+            'name' => 'Trial Ainda Ativo',
+            'slug' => 'trial-ainda-ativo',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(10),
+            'trial_ends_at' => now()->addDays(10),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.expired_trials_without_conversion')
+            )
+            ->assertSee('1');
+    }
 }

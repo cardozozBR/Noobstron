@@ -207,6 +207,16 @@
 
             <div class="metric-card">
                 <div class="metric-label">
+                    {{ __('platform.dashboard.expired_trials_without_conversion') }}
+                </div>
+
+                <div class="metric-value">
+                    {{ $expiredTrialsWithoutConversion }}
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">
                     {{ __('platform.dashboard.active_subscriptions') }}
                 </div>
 

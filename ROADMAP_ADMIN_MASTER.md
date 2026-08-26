@@ -367,7 +367,7 @@ Validação em produção:
 -   [x] Novas assinaturas
 -   [x] Cancelamentos
 -   [x] Trials convertidos
--   [ ] Trials expirados sem conversão
+-   [x] Trials expirados sem conversão
 -   [ ] Churn básico
 -   [ ] Indicadores comerciais no dashboard
 
