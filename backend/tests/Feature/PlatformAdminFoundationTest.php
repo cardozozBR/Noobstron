@@ -881,4 +881,58 @@ public function test_platform_paginations_use_consistent_structure(): void
     );
 }
 
+public function test_platform_sensitive_actions_require_confirmation(): void
+{
+    $views = [
+        resource_path(
+            'views/platform/email-failures.blade.php'
+        ) => 1,
+
+        resource_path(
+            'views/platform/jobs.blade.php'
+        ) => 2,
+
+        resource_path(
+            'views/platform/webhooks.blade.php'
+        ) => 1,
+
+        resource_path(
+            'views/platform/whatsapp-failures.blade.php'
+        ) => 1,
+
+        resource_path(
+            'views/platform/contacts/index.blade.php'
+        ) => 1,
+
+        resource_path(
+            'views/platform/tenants/show.blade.php'
+        ) => 5,
+    ];
+
+    $confirmationCount = 0;
+
+    foreach ($views as $view => $expectedCount) {
+        $contents = file_get_contents($view);
+
+        $actualCount = preg_match_all(
+            '/onclick="return confirm\s*\(/',
+            $contents
+        );
+
+        $this->assertSame(
+            $expectedCount,
+            $actualCount,
+            'Quantidade inesperada de confirmações em '.$view
+        );
+
+        $confirmationCount += $actualCount;
+    }
+
+    $this->assertSame(
+        11,
+        $confirmationCount,
+        'Quantidade inesperada de confirmações sensíveis Platform.'
+    );
+}
+
 }

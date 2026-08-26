@@ -382,7 +382,7 @@ Validação em produção:
 -   [x] Badges
 -   [x] Tabelas responsivas
 -   [x] Paginação consistente
--   [ ] Confirmações de ações
+-   [x] Confirmações de ações
 -   [ ] Mensagens de sucesso/erro
 -   [ ] Revisão mobile
 -   [ ] Acessibilidade básica

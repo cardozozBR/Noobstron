@@ -273,6 +273,9 @@
                                         <button
                                             type="submit"
                                             class="button"
+                                            onclick="return confirm(
+                                                'Confirma a conversão deste contato para o tenant selecionado?'
+                                            )"
                                         >
                                             {{ __('platform.contacts.convert') }}
                                         </button>
