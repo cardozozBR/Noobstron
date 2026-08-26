@@ -215,7 +215,7 @@
                 />
             @else
                 <div class="table-wrap">
-                    <table>
+                    <table class="platform-table">
                         <thead>
                             <tr>
                                 <th>Tenant</th>

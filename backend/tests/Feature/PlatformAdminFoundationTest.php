@@ -762,4 +762,59 @@ public function test_platform_authenticated_pages_show_breadcrumb_navigation(): 
             $view
         );
     }
+
+    public function test_platform_tables_use_responsive_table_structure(): void
+{
+    $viewsPath = resource_path('views/platform');
+
+    $iterator = new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator(
+            $viewsPath,
+            \FilesystemIterator::SKIP_DOTS
+        )
+    );
+
+    $tableCount = 0;
+
+    foreach ($iterator as $file) {
+        if (
+            ! $file->isFile()
+            || $file->getExtension() !== 'php'
+            || ! str_ends_with(
+                $file->getFilename(),
+                '.blade.php'
+            )
+        ) {
+            continue;
+        }
+
+        $contents = file_get_contents(
+            $file->getPathname()
+        );
+
+        preg_match_all(
+            '/<table\b[^>]*>/i',
+            $contents,
+            $tables
+        );
+
+        foreach ($tables[0] as $table) {
+            $tableCount++;
+
+            $this->assertMatchesRegularExpression(
+                '/class="[^"]*\bplatform-table\b[^"]*"/i',
+                $table,
+                'Tabela sem platform-table em '
+                    .$file->getPathname()
+            );
+        }
+    }
+
+    $this->assertSame(
+        14,
+        $tableCount,
+        'Quantidade inesperada de tabelas Platform.'
+    );
+}
+
 }

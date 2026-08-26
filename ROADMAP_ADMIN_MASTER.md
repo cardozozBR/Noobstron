@@ -380,7 +380,7 @@ Validação em produção:
 -   [x] Estados vazios
 -   [x] Estados de erro
 -   [x] Badges
--   [ ] Tabelas responsivas
+-   [x] Tabelas responsivas
 -   [ ] Paginação consistente
 -   [ ] Confirmações de ações
 -   [ ] Mensagens de sucesso/erro
