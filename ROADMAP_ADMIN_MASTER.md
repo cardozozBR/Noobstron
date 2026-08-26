@@ -306,9 +306,9 @@ Registrar, quando aplicável:
 ### Eventos instrumentados
 
 -   [x] Admin prorrogou trial
--   [ ] Admin reprocessou webhook
--   [ ] Admin reprocessou e-mail
--   [ ] Admin reprocessou WhatsApp
+-   [x] Admin reprocessou webhook
+-   [x] Admin reprocessou e-mail
+-   [x] Admin reprocessou WhatsApp
 -   [x] Admin suspendeu tenant
 -   [x] Admin reativou tenant
 
@@ -319,6 +319,11 @@ Validação em produção:
 -   Registro `tenant.trial_extended` validado em produção
 -   `before_state` e `after_state` validados
 -   IP, administrador, tenant e resultado validados
+-   Auditoria `webhook.reprocessed` validada.
+-   Auditoria `email.reprocessed` validada.
+-   Auditoria `whatsapp.reprocessed` validada.
+-   Administrador, tenant, entidade e resultado registrados em `platform_admin_audit_logs`.
+
 ## Fase 9 --- Segurança do Platform Admin
 
 -   [ ] Revisar todas as rotas protegidas por `platform.admin`

@@ -10,6 +10,7 @@ use App\Models\Tenant;
 use App\Models\WhatsAppMessage;
 use App\Services\EmailMessageService;
 use App\Services\EmailQueueService;
+use App\Services\PlatformAdminAuditService;
 use App\Services\StripeSubscriptionWebhookService;
 use App\Services\TenantContext;
 use App\Services\WhatsAppMessageService;
@@ -268,14 +269,18 @@ class PlatformAdminController extends Controller
         int $message,
         EmailMessageService $messages,
         EmailQueueService $queue,
-        TenantContext $tenantContext
+        TenantContext $tenantContext,
+        PlatformAdminAuditService $audit,
     ): RedirectResponse {
+        $emailMessage = null;
+
         try {
             DB::transaction(function () use (
                 $message,
                 $messages,
                 $queue,
-                $tenantContext
+                $tenantContext,
+                &$emailMessage
             ): void {
                 $emailMessage = EmailMessage::query()
                     ->withoutGlobalScopes()
@@ -310,6 +315,23 @@ class PlatformAdminController extends Controller
                 );
         } finally {
             $tenantContext->clear();
+        }
+
+        if ($emailMessage !== null) {
+            $emailMessage->refresh();
+
+            $audit->log(
+                action: 'email.reprocessed',
+                tenant: $emailMessage->tenant,
+                entityType: EmailMessage::class,
+                entityId: $emailMessage->id,
+                afterState: [
+                    'status' => $emailMessage->status->value,
+                    'to_email' => $emailMessage->to_email,
+                    'subject' => $emailMessage->subject,
+                ],
+                result: PlatformAdminAuditService::RESULT_SUCCESS,
+            );
         }
 
         return redirect()
@@ -356,14 +378,18 @@ class PlatformAdminController extends Controller
         int $message,
         WhatsAppMessageService $messages,
         WhatsAppQueueService $queue,
-        TenantContext $tenantContext
+        TenantContext $tenantContext,
+        PlatformAdminAuditService $audit,
     ): RedirectResponse {
+        $whatsAppMessage = null;
+
         try {
             DB::transaction(function () use (
                 $message,
                 $messages,
                 $queue,
-                $tenantContext
+                $tenantContext,
+                &$whatsAppMessage
             ): void {
                 $whatsAppMessage = WhatsAppMessage::query()
                     ->withoutGlobalScopes()
@@ -406,6 +432,23 @@ class PlatformAdminController extends Controller
                 );
         } finally {
             $tenantContext->clear();
+        }
+
+        if ($whatsAppMessage !== null) {
+            $whatsAppMessage->refresh();
+
+            $audit->log(
+                action: 'whatsapp.reprocessed',
+                tenant: $whatsAppMessage->tenant,
+                entityType: WhatsAppMessage::class,
+                entityId: $whatsAppMessage->id,
+                afterState: [
+                    'status' => $whatsAppMessage->status->value,
+                    'phone' => $whatsAppMessage->phone,
+                    'provider' => $whatsAppMessage->provider,
+                ],
+                result: PlatformAdminAuditService::RESULT_SUCCESS,
+            );
         }
 
         return redirect()
@@ -623,6 +666,7 @@ class PlatformAdminController extends Controller
     public function retryWebhook(
         PaymentEventReceipt $receipt,
         StripeSubscriptionWebhookService $webhook,
+        PlatformAdminAuditService $audit,
     ): RedirectResponse {
         if (
             $receipt->provider !== 'stripe'
@@ -663,6 +707,31 @@ class PlatformAdminController extends Controller
                     .$exception->getMessage()
                 );
         }
+
+        $subscription = Subscription::query()
+            ->withoutGlobalScopes()
+            ->where(
+                'external_reference',
+                $receipt->external_reference
+            )
+            ->first();
+
+        $receipt->refresh();
+
+        $audit->log(
+            action: 'webhook.reprocessed',
+            tenant: $subscription?->tenant,
+            entityType: PaymentEventReceipt::class,
+            entityId: $receipt->id,
+            afterState: [
+                'status' => $receipt->status,
+                'attempts' => $receipt->attempts,
+                'event_id' => $receipt->event_id,
+                'event_type' => $receipt->event_type,
+                'provider' => $receipt->provider,
+            ],
+            result: PlatformAdminAuditService::RESULT_SUCCESS,
+        );
 
         return redirect()
             ->route('platform.webhooks')

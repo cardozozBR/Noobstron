@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Enums\SubscriptionStatus;
 use App\Enums\EmailMessageStatus;
+use App\Enums\SubscriptionStatus;
 use App\Enums\WhatsAppMessageStatus;
 use App\Jobs\SendEmailMessageJob;
 use App\Jobs\SendWhatsAppMessageJob;
@@ -13,6 +13,7 @@ use App\Models\PaymentEventReceipt;
 use App\Models\Plan;
 use App\Models\PlanPrice;
 use App\Models\PlatformAdmin;
+use App\Models\PlatformAdminAuditLog;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\WhatsAppMessage;
@@ -104,6 +105,17 @@ class PlatformLaunchOperationsTest extends TestCase
                 'tenant_id' => $tenant->id,
                 'user_id' => null,
                 'action' => 'email.retried',
+            ]
+        );
+        $this->assertDatabaseHas(
+            'platform_admin_audit_logs',
+            [
+                'platform_admin_id' => $admin->id,
+                'tenant_id' => $tenant->id,
+                'action' => 'email.reprocessed',
+                'entity_type' => EmailMessage::class,
+                'entity_id' => (string) $message->id,
+                'result' => 'success',
             ]
         );
     }
@@ -779,6 +791,17 @@ class PlatformLaunchOperationsTest extends TestCase
                 'tenant_id' => $tenant->id,
                 'user_id' => null,
                 'action' => 'whatsapp.retried',
+            ]
+        );
+        $this->assertDatabaseHas(
+            'platform_admin_audit_logs',
+            [
+                'platform_admin_id' => $admin->id,
+                'tenant_id' => $tenant->id,
+                'action' => 'whatsapp.reprocessed',
+                'entity_type' => WhatsAppMessage::class,
+                'entity_id' => (string) $message->id,
+                'result' => 'success',
             ]
         );
     }
@@ -1582,6 +1605,33 @@ $response->assertSee(
         $this->assertSame(
             'active',
             $subscription->refresh()->status->value
+        );
+        $this->assertDatabaseHas(
+            'platform_admin_audit_logs',
+            [
+                'platform_admin_id' => $admin->id,
+                'tenant_id' => $tenant->id,
+                'action' => 'webhook.reprocessed',
+                'entity_type' => PaymentEventReceipt::class,
+                'entity_id' => (string) $receipt->id,
+                'result' => 'success',
+            ]
+        );
+
+        $log = PlatformAdminAuditLog::query()
+            ->where('action', 'webhook.reprocessed')
+            ->latest('id')
+            ->firstOrFail();
+
+        $this->assertSame(
+            [
+                'status' => 'processed',
+                'attempts' => 2,
+                'event_id' => 'evt_platform_retry_123',
+                'event_type' => 'customer.subscription.updated',
+                'provider' => 'stripe',
+            ],
+            $log->after_state
         );
     }
 
