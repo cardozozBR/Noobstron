@@ -124,10 +124,6 @@
     text-align: center;
 }
 
-.platform-whatsapp-failures-page .pagination-wrap {
-    margin-top: 20px;
-}
-
 @media (max-width: 800px) {
     .platform-whatsapp-failures-page .platform-toolbar {
         align-items: flex-start;

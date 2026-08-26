@@ -123,10 +123,6 @@
     text-align: center;
 }
 
-.platform-jobs-page .pagination-wrap {
-    margin-top: 20px;
-}
-
 @media (max-width: 800px) {
     .platform-jobs-page .platform-toolbar {
         align-items: flex-start;

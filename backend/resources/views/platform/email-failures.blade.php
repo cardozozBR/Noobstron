@@ -108,10 +108,6 @@
     text-align: center;
 }
 
-.platform-email-failures-page .pagination-wrap {
-    margin-top: 20px;
-}
-
 @media (max-width: 800px) {
     .platform-email-failures-page .platform-toolbar {
         align-items: flex-start;

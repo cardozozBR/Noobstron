@@ -62,10 +62,6 @@
     gap: 4px;
 }
 
-.platform-contacts-page .pagination-wrap {
-    margin-top: 16px;
-}
-
 @media (max-width: 800px) {
     .platform-contacts-page .platform-toolbar {
         align-items: flex-start;
@@ -400,9 +396,11 @@
                 </table>
             </div>
 
-            <div class="pagination-wrap">
-                {{ $contacts->links() }}
-            </div>
+            @if ($contacts->hasPages())
+                <div class="pagination-wrap">
+                     {{ $contacts->links() }}
+                </div>
+            @endif
         </div>
     </main>
 </div>

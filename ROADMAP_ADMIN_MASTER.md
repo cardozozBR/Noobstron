@@ -381,7 +381,7 @@ Validação em produção:
 -   [x] Estados de erro
 -   [x] Badges
 -   [x] Tabelas responsivas
--   [ ] Paginação consistente
+-   [x] Paginação consistente
 -   [ ] Confirmações de ações
 -   [ ] Mensagens de sucesso/erro
 -   [ ] Revisão mobile

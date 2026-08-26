@@ -817,4 +817,68 @@ public function test_platform_authenticated_pages_show_breadcrumb_navigation(): 
     );
 }
 
+public function test_platform_paginations_use_consistent_structure(): void
+{
+    $views = [
+        resource_path(
+            'views/platform/email-failures.blade.php'
+        ),
+        resource_path(
+            'views/platform/jobs.blade.php'
+        ),
+        resource_path(
+            'views/platform/webhooks.blade.php'
+        ),
+        resource_path(
+            'views/platform/whatsapp-failures.blade.php'
+        ),
+        resource_path(
+            'views/platform/contacts/index.blade.php'
+        ),
+        resource_path(
+            'views/platform/tenants/index.blade.php'
+        ),
+    ];
+
+    $linksCount = 0;
+
+    foreach ($views as $view) {
+        $contents = file_get_contents($view);
+
+        preg_match_all(
+            '/->links\s*\(\s*\)/',
+            $contents,
+            $links
+        );
+
+        $linksCount += count(
+            $links[0]
+        );
+
+        $this->assertSame(
+            count($links[0]),
+            preg_match_all(
+                '/->hasPages\s*\(\s*\)/',
+                $contents
+            ),
+            'Paginação sem hasPages em '.$view
+        );
+
+        $this->assertSame(
+            count($links[0]),
+            preg_match_all(
+                '/class="pagination-wrap"/',
+                $contents
+            ),
+            'Paginação sem pagination-wrap em '.$view
+        );
+    }
+
+    $this->assertSame(
+        7,
+        $linksCount,
+        'Quantidade inesperada de paginações Platform.'
+    );
+}
+
 }
