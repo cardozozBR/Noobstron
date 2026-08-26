@@ -383,7 +383,7 @@ Validação em produção:
 -   [x] Tabelas responsivas
 -   [x] Paginação consistente
 -   [x] Confirmações de ações
--   [ ] Mensagens de sucesso/erro
+-   [x] Mensagens de sucesso/erro
 -   [ ] Revisão mobile
 -   [ ] Acessibilidade básica
 -   [ ] Padronizar português e acentuação

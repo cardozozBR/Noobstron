@@ -5,6 +5,7 @@
 @section('body')
 
 <style>
+
 .platform-email-failures-page .platform-toolbar {
     align-items: flex-end;
     gap: 18px;
@@ -30,22 +31,6 @@
     line-height: 1;
     font-weight: 800;
     letter-spacing: -.035em;
-}
-
-.platform-email-failures-page .flash-message {
-    margin-bottom: 18px;
-}
-
-.platform-email-failures-page .flash-message--success {
-    border-color: #bbf7d0;
-    background: #f0fdf4;
-    color: #166534;
-}
-
-.platform-email-failures-page .flash-message--error {
-    border-color: #fecaca;
-    background: #fef2f2;
-    color: #991b1b;
 }
 
 .platform-email-failures-page .table-wrap {
@@ -135,24 +120,16 @@
 
         @include('platform.partials.breadcrumbs')
         @if (session('success'))
-            <section
-                class="platform-card flash-message flash-message--success"
-            >
-                <strong>
-                    {{ session('success') }}
-                </strong>
-            </section>
-        @endif
+    <x-platform.flash type="success">
+        {{ session('success') }}
+    </x-platform.flash>
+@endif
 
-        @if (session('error'))
-            <section
-                class="platform-card flash-message flash-message--error"
-            >
-                <strong>
-                    {{ session('error') }}
-                </strong>
-            </section>
-        @endif
+@if (session('error'))
+    <x-platform.flash type="error">
+        {{ session('error') }}
+    </x-platform.flash>
+@endif
 
         <div class="platform-toolbar">
             <div>

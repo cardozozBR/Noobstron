@@ -935,4 +935,62 @@ public function test_platform_sensitive_actions_require_confirmation(): void
     );
 }
 
+
+    public function test_platform_flash_messages_use_consistent_structure(): void
+    {
+        $component = file_get_contents(
+            resource_path('views/components/platform/flash.blade.php')
+        );
+
+        $this->assertStringContainsString(
+            "'platform-flash'",
+            $component
+        );
+
+        $this->assertStringContainsString(
+            "'platform-flash--'",
+            $component
+        );
+
+        $this->assertStringContainsString(
+            "'success'",
+            $component
+        );
+
+        $this->assertStringContainsString(
+            "'error'",
+            $component
+        );
+
+        $views = [
+            'platform/email-failures.blade.php',
+            'platform/jobs.blade.php',
+            'platform/webhooks.blade.php',
+            'platform/whatsapp-failures.blade.php',
+        ];
+
+        foreach ($views as $view) {
+            $contents = file_get_contents(
+                resource_path('views/'.$view)
+            );
+
+            $this->assertStringContainsString(
+                '<x-platform.flash',
+                $contents,
+                $view
+            );
+
+            $this->assertStringContainsString(
+                "session('success')",
+                $contents,
+                $view
+            );
+
+            $this->assertStringContainsString(
+                "session('error')",
+                $contents,
+                $view
+            );
+        }
+    }
 }

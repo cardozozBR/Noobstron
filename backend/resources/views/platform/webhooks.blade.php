@@ -5,6 +5,7 @@
 @section('body')
 
 <style>
+
 .platform-webhooks-page .platform-toolbar {
     align-items: flex-end;
     gap: 18px;
@@ -119,18 +120,6 @@
     color: white;
 }
 
-.platform-webhooks-page .webhook-feedback {
-    margin-bottom: 16px;
-}
-
-.platform-webhooks-page .webhook-feedback--success {
-    color: #166534;
-}
-
-.platform-webhooks-page .webhook-feedback--error {
-    color: #991b1b;
-}
-
 .platform-webhooks-page .webhook-action {
     white-space: nowrap;
 }
@@ -232,24 +221,16 @@
         </div>
 
         @if (session('success'))
-            <div
-                class="platform-card
-                webhook-feedback
-                webhook-feedback--success"
-            >
-                {{ session('success') }}
-            </div>
-        @endif
+    <x-platform.flash type="success">
+        {{ session('success') }}
+    </x-platform.flash>
+@endif
 
-        @if (session('error'))
-            <div
-                class="platform-card
-                webhook-feedback
-                webhook-feedback--error"
-            >
-                {{ session('error') }}
-            </div>
-        @endif
+@if (session('error'))
+    <x-platform.flash type="error">
+        {{ session('error') }}
+    </x-platform.flash>
+@endif
 
         <div class="webhook-filters">
             <a

@@ -23,6 +23,29 @@
             color: #111827;
         }
 
+           .platform-flash {
+           margin-bottom: 18px;
+           padding: 16px 18px;
+           border: 1px solid transparent;
+           border-radius: 12px;
+        }
+
+        .platform-flash--success {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .platform-flash--error {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .platform-flash strong {
+            display: block;
+        }
+
         .platform-header {
             background: #111827;
             color: white;
