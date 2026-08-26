@@ -1,4 +1,4 @@
-﻿@extends('platform.layout')
+@extends('platform.layout')
 
 @section('title', __('platform.contacts.title'))
 
@@ -20,17 +20,47 @@
     border-radius: 16px;
 }
 
+.platform-contacts-page .platform-table {
+    table-layout: fixed;
+    min-width: 980px;
+}
+
+.platform-contacts-page .platform-table th,
 .platform-contacts-page .platform-table td {
     vertical-align: top;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.platform-contacts-page .platform-table th:nth-child(1) {
+    width: 20%;
+}
+
+.platform-contacts-page .platform-table th:nth-child(2) {
+    width: 15%;
+}
+
+.platform-contacts-page .platform-table th:nth-child(3) {
+    width: 17%;
+}
+
+.platform-contacts-page .platform-table th:nth-child(4) {
+    width: 22%;
+}
+
+.platform-contacts-page .platform-table th:nth-child(5) {
+    width: 26%;
 }
 
 .platform-contacts-page .contact-summary {
-    min-width: 220px;
+    min-width: 0;
 }
 
 .platform-contacts-page .contact-summary strong {
     display: block;
     margin-bottom: 4px;
+    font-size: 14px;
+    line-height: 1.35;
 }
 
 .platform-contacts-page .contact-summary__meta {
@@ -38,44 +68,77 @@
     flex-direction: column;
     gap: 3px;
     margin-top: 6px;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .platform-contacts-page .contact-commercial {
-    min-width: 170px;
+    min-width: 0;
+}
+
+.platform-contacts-page .contact-commercial__item {
+    line-height: 1.4;
 }
 
 .platform-contacts-page .contact-commercial__item + .contact-commercial__item {
-    margin-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(148, 163, 184, .16);
 }
 
 .platform-contacts-page .contact-actions {
-    min-width: 230px;
+    min-width: 0;
 }
 
 .platform-contacts-page .contact-actions select {
     width: 100%;
-    max-width: 240px;
+    max-width: none;
+}
+
+.platform-contacts-page .contact-status-form,
+.platform-contacts-page .conversion-form {
+    gap: 8px;
+}
+
+.platform-contacts-page .contact-status-form .button,
+.platform-contacts-page .conversion-form .button {
+    width: 100%;
+    justify-content: center;
+}
+
+.platform-contacts-page .converted-tenant {
+    padding: 10px 12px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 10px;
+    background: rgba(248, 250, 252, .7);
 }
 
 .platform-contacts-page .contact-message {
-    min-width: 220px;
-    max-width: 360px;
+    min-width: 0;
+    max-width: none;
     white-space: normal;
     line-height: 1.5;
 }
 
 .platform-contacts-page .contact-message__text {
+    max-height: 6em;
+    overflow: auto;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+    font-size: 13px;
+    color: #475569;
 }
 
 .platform-contacts-page .contact-history {
-    margin-top: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(148, 163, 184, .16);
 }
 
 .platform-contacts-page .contact-history summary {
     cursor: pointer;
+    font-size: 12px;
     font-weight: 600;
 }
 
