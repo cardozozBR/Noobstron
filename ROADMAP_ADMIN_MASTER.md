@@ -345,6 +345,17 @@ Validação em produção:
 -   [x] Testes de autorização
 -   [x] Garantir que administrador inativo não tenha acesso
 
+Validação em produção:
+
+-   Rotas `/platform` protegidas por `platform.admin` validadas em produção.
+-   Login público e redirecionamento de rotas protegidas sem sessão validados.
+-   Sessão em produção validada com `database`, `secure=true`, `http_only=true` e `same_site=lax`.
+-   Sanitização de dados sensíveis validada em e-mail, WhatsApp e webhooks.
+-   Secrets artificiais não foram renderizados nas telas administrativas.
+-   `[REDACTED]` validado nas três superfícies operacionais.
+-   Smoke executado com rollback, sem persistência dos dados temporários.
+-   Commit implantado: `06c3be6`.
+
 ## Fase 10 --- Operação comercial
 
 -   [ ] Melhorar gestão de contatos comerciais
