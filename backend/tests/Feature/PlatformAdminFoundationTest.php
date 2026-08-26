@@ -702,4 +702,64 @@ public function test_platform_authenticated_pages_show_breadcrumb_navigation(): 
             $tenant->name
         );
 }
+    public function test_platform_dashboard_uses_links_only_for_actionable_metric_cards(): void
+    {
+        $view = file_get_contents(
+            resource_path(
+                'views/platform/dashboard.blade.php'
+            )
+        );
+
+        $this->assertNotFalse($view);
+
+        $this->assertStringContainsString(
+            "route('platform.tenants.index')",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "'platform.webhooks'",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "['status' => 'failed']",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "['status' => 'processing']",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "route('platform.jobs')",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "route('platform.email-failures')",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            "route('platform.whatsapp-failures')",
+            $view
+        );
+
+        $this->assertStringContainsString(
+            '.platform-dashboard-page a.metric-card:hover',
+            $view
+        );
+
+        $this->assertStringContainsString(
+            '.platform-dashboard-page a.metric-card:focus-visible',
+            $view
+        );
+
+        $this->assertStringContainsString(
+            'cursor: pointer;',
+            $view
+        );
+    }
 }

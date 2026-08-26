@@ -376,7 +376,7 @@ Validação em produção:
 -   [x] Navegação consistente entre páginas
 -   [x] Menu do Admin Master
 -   [x] Breadcrumbs
--   [ ] Cards clicáveis com comportamento consistente
+-   [x] Cards clicáveis com comportamento consistente
 -   [ ] Estados vazios
 -   [ ] Estados de erro
 -   [ ] Badges
