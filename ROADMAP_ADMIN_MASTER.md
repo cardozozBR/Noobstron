@@ -390,14 +390,14 @@ Validação em produção:
 
 ## Fase 12 --- Fechamento para produção
 
--   [ ] Pint
--   [ ] `php -l`
--   [ ] Blade `view:cache`
--   [ ] `route:list`
--   [ ] Testes específicos do Platform Admin
--   [ ] Suíte completa
--   [ ] `git diff --check`
--   [ ] Revisão de segurança
+-   [x] Pint
+-   [x] `php -l`
+-   [x] Blade `view:cache`
+-   [x] `route:list`
+-   [x] Testes específicos do Platform Admin
+-   [x] Suíte completa
+-   [x] `git diff --check`
+-   [x] Revisão de segurança
 -   [ ] Deploy
 -   [ ] Health dos containers
 -   [ ] Smoke test em produção
