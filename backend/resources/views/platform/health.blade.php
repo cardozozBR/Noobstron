@@ -5,62 +5,136 @@
 @section('body')
 
 <style>
+.platform-health-page {
+    --health-border: #e5e7eb;
+    --health-muted: #64748b;
+}
+
 .platform-health-page .platform-toolbar {
     align-items: flex-end;
     gap: 18px;
+    margin-bottom: 8px;
 }
 
 .platform-health-page .platform-toolbar h1 {
     margin: 4px 0 0;
     font-size: 32px;
+    line-height: 1.1;
     letter-spacing: -.03em;
 }
 
+.platform-health-page .checked-at {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 18px;
+    font-size: 12px;
+}
+
 .platform-health-page .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
+    align-items: stretch;
 }
 
 .platform-health-page .platform-card {
-    min-height: 126px;
+    position: relative;
+    min-width: 0;
+    min-height: 142px;
+    padding: 20px;
+    overflow: hidden;
     border-radius: 16px;
 }
 
 .platform-health-page .platform-card h2 {
-    margin-top: 0;
+    margin: 0;
+    padding-right: 90px;
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: -.01em;
 }
 
 .platform-health-page .platform-card p {
-    margin: 6px 0 0;
+    margin: 14px 0 0;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.55;
 }
 
 .platform-health-page .health-status {
+    position: absolute;
+    top: 17px;
+    right: 17px;
     display: inline-flex;
     align-items: center;
-    margin-top: 10px;
+    justify-content: center;
+    min-width: 46px;
     padding: 5px 9px;
     border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .02em;
+}
+
+.platform-health-page .health-status::before {
+    width: 7px;
+    height: 7px;
+    margin-right: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    content: "";
 }
 
 .platform-health-page .health-status--ok {
-    background: #dcfce7;
+    background: #f0fdf4;
     color: #166534;
 }
 
 .platform-health-page .health-status--warning {
-    background: #fef3c7;
+    background: #fffbeb;
     color: #92400e;
 }
 
 .platform-health-page .health-status--critical {
-    background: #fee2e2;
+    background: #fef2f2;
     color: #991b1b;
 }
 
-.platform-health-page .checked-at {
-    margin: 0 0 18px;
-    text-align: right;
+.platform-health-page .platform-card:has(.health-status--warning) {
+    border-color: #fde68a;
+    background: linear-gradient(
+        180deg,
+        #fffdf7 0%,
+        #ffffff 72%
+    );
+}
+
+.platform-health-page .platform-card:has(.health-status--critical) {
+    border-color: #fecaca;
+    background: linear-gradient(
+        180deg,
+        #fff8f8 0%,
+        #ffffff 72%
+    );
+}
+
+.platform-health-page .platform-card:has(.health-status--critical)::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    background: #dc2626;
+    content: "";
+}
+
+@media (max-width: 1050px) {
+    .platform-health-page .detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 800px) {
@@ -69,8 +143,23 @@
         flex-direction: column;
     }
 
+    .platform-health-page .platform-toolbar h1 {
+        font-size: 27px;
+    }
+
     .platform-health-page .checked-at {
+        justify-content: flex-start;
         text-align: left;
+    }
+}
+
+@media (max-width: 620px) {
+    .platform-health-page .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-health-page .platform-card {
+        min-height: 120px;
     }
 }
 </style>
