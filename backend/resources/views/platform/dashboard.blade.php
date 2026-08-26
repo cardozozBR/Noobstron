@@ -197,6 +197,16 @@
 
             <div class="metric-card">
                 <div class="metric-label">
+                    {{ __('platform.dashboard.churn') }}
+                </div>
+
+                <div class="metric-value">
+                    {{ number_format($churnRate, 2, ',', '.') }}%
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">
                     {{ __('platform.dashboard.trial_conversions') }}
                 </div>
 

@@ -50,6 +50,7 @@ return [
         'active_subscriptions' => 'Assinaturas ativas',
         'new_subscriptions' => 'Novas assinaturas (30 dias)',
         'cancellations' => 'Cancelamentos (30 dias)',
+        'churn' => 'Churn básico (30 dias)',
         'trial_conversions' => 'Trials convertidos',
         'expired_trials_without_conversion' => 'Trials expirados sem conversão',
         'suspended' => 'Suspensas',

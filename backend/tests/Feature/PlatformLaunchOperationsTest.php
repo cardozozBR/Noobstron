@@ -2238,4 +2238,79 @@ public function test_platform_dashboard_shows_effective_cancellations_from_last_
             )
             ->assertSee('1');
     }
+
+    public function test_platform_dashboard_shows_basic_churn_rate(): void
+    {
+        $admin = PlatformAdmin::query()->create([
+            'name' => 'Platform Admin',
+            'email' => 'churn@example.test',
+            'password' => Hash::make('SenhaSegura123'),
+            'is_active' => true,
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'churn-plan',
+            'name' => 'Plano Churn',
+            'active' => true,
+        ]);
+
+        foreach (range(1, 3) as $index) {
+            $tenant = Tenant::query()->create([
+                'name' => "Tenant Ativo {$index}",
+                'slug' => "tenant-ativo-{$index}",
+                'status' => 'active',
+            ]);
+
+            Subscription::query()->create([
+                'tenant_id' => $tenant->id,
+                'plan_id' => $plan->id,
+                'status' => 'active',
+                'current_period_start' => now(),
+                'current_period_end' => now()->addMonth(),
+            ]);
+        }
+
+        $cancelledTenant = Tenant::query()->create([
+            'name' => 'Tenant Cancelado',
+            'slug' => 'tenant-cancelado-churn',
+            'status' => 'active',
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $cancelledTenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'cancelled',
+            'current_period_start' => now()->subMonth(),
+            'current_period_end' => now(),
+            'canceled_at' => now()->subDays(5),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.churn')
+            )
+            ->assertSee('25,00%');
+    }
+
+    public function test_platform_dashboard_shows_zero_churn_when_base_is_empty(): void
+    {
+        $admin = PlatformAdmin::query()->create([
+            'name' => 'Platform Admin',
+            'email' => 'zero-churn@example.test',
+            'password' => Hash::make('SenhaSegura123'),
+            'is_active' => true,
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.churn')
+            )
+            ->assertSee('0,00%');
+    }
 }

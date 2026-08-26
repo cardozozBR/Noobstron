@@ -109,6 +109,20 @@ class PlatformAdminController extends Controller
             )
             ->count();
 
+        $activeSubscriptions = (int) (
+            $subscriptionCounts['active'] ?? 0
+        );
+
+        $churnBase = $activeSubscriptions
+            + $cancellations;
+
+        $churnRate = $churnBase > 0
+            ? round(
+                ($cancellations / $churnBase) * 100,
+                2
+            )
+            : 0.0;
+
         $trialConversions = Tenant::query()
             ->whereNotNull('trial_started_at')
             ->whereNotNull('trial_ends_at')
@@ -295,6 +309,7 @@ class PlatformAdminController extends Controller
             'subscriptionCounts' => $subscriptionCounts,
             'newSubscriptions' => $newSubscriptions,
             'cancellations' => $cancellations,
+            'churnRate' => $churnRate,
             'trialConversions' => $trialConversions,
             'expiredTrialsWithoutConversion' => $expiredTrialsWithoutConversion,
             'trialActive' => $trialActive,
