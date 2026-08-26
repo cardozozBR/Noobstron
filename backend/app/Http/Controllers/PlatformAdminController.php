@@ -109,6 +109,32 @@ class PlatformAdminController extends Controller
             )
             ->count();
 
+        $trialConversions = Tenant::query()
+            ->whereNotNull('trial_started_at')
+            ->whereNotNull('trial_ends_at')
+            ->whereExists(
+                function ($query): void {
+                    $query
+                        ->selectRaw('1')
+                        ->from('subscriptions')
+                        ->whereColumn(
+                            'subscriptions.tenant_id',
+                            'tenants.id'
+                        )
+                        ->whereColumn(
+                            'subscriptions.created_at',
+                            '>=',
+                            'tenants.trial_started_at'
+                        )
+                        ->whereColumn(
+                            'subscriptions.created_at',
+                            '<=',
+                            'tenants.trial_ends_at'
+                        );
+                }
+            )
+            ->count();
+
         $trialActive = Tenant::query()
             ->whereNotNull('trial_ends_at')
             ->where('trial_ends_at', '>=', $now)
@@ -241,6 +267,7 @@ class PlatformAdminController extends Controller
             'subscriptionCounts' => $subscriptionCounts,
             'newSubscriptions' => $newSubscriptions,
             'cancellations' => $cancellations,
+            'trialConversions' => $trialConversions,
             'trialActive' => $trialActive,
             'trialExpiring' => $trialExpiring,
             'mrr' => $mrr,

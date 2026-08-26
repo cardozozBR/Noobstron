@@ -53,6 +53,7 @@ return [
         'active_subscriptions' => 'Active subscriptions',
         'new_subscriptions' => 'New subscriptions (30 days)',
         'cancellations' => 'Cancellations (30 days)',
+        'trial_conversions' => 'Converted trials',
         'suspended' => 'Suspended',
         'active_trials' => 'Active trials',
         'trials_expiring' => 'Trials expiring in 7 days',

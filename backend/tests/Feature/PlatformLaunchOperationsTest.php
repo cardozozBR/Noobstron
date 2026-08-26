@@ -2110,4 +2110,73 @@ public function test_platform_dashboard_shows_effective_cancellations_from_last_
             )
             ->assertSee('1');
     }
+
+    public function test_platform_dashboard_shows_converted_trials(): void
+    {
+        $admin = PlatformAdmin::query()->create([
+            'name' => 'Platform Admin',
+            'email' => 'trial-conversions@example.test',
+            'password' => Hash::make('SenhaSegura123'),
+            'is_active' => true,
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'trial-conversion-plan',
+            'name' => 'Plano Conversão Trial',
+            'active' => true,
+        ]);
+
+        $converted = Tenant::query()->create([
+            'name' => 'Trial Convertido',
+            'slug' => 'trial-convertido',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(20),
+            'trial_ends_at' => now()->addDays(10),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $converted->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'created_at' => now()->subDays(5),
+            'updated_at' => now()->subDays(5),
+        ]);
+
+        $afterTrial = Tenant::query()->create([
+            'name' => 'Assinatura Pós Trial',
+            'slug' => 'assinatura-pos-trial',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(60),
+            'trial_ends_at' => now()->subDays(30),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $afterTrial->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'created_at' => now()->subDays(10),
+            'updated_at' => now()->subDays(10),
+        ]);
+
+        Tenant::query()->create([
+            'name' => 'Trial Sem Assinatura',
+            'slug' => 'trial-sem-assinatura',
+            'status' => 'active',
+            'trial_started_at' => now()->subDays(10),
+            'trial_ends_at' => now()->addDays(20),
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.trial_conversions')
+            )
+            ->assertSee('1');
+    }
 }
