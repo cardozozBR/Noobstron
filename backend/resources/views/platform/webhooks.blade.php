@@ -217,16 +217,32 @@
                 <h1>Webhooks</h1>
 
                 <p class="platform-muted">
-                    Últimos eventos recebidos dos provedores de pagamento.
+                    @if ($tenant !== null)
+                        Eventos de pagamento recebidos para o tenant
+                        <strong>{{ $tenant->name }}</strong>.
+                    @else
+                        Eventos de pagamento recebidos em todos os tenants.
+                    @endif
                 </p>
             </div>
 
-            <a
-                class="button"
-                href="{{ route('platform.dashboard') }}"
-            >
-                {{ __('platform.back_dashboard') }}
-            </a>
+            <div>
+                @if ($tenant !== null)
+                    <a
+                        class="button"
+                        href="{{ route('platform.tenants.show', $tenant) }}"
+                    >
+                        Voltar ao tenant
+                    </a>
+                @else
+                    <a
+                        class="button"
+                        href="{{ route('platform.dashboard') }}"
+                    >
+                        {{ __('platform.back_dashboard') }}
+                    </a>
+                @endif
+            </div>
         </div>
 
         @if (session('success'))
@@ -251,7 +267,12 @@
 
         <div class="webhook-filters">
             <a
-                href="{{ route('platform.webhooks') }}"
+                href="{{ route(
+                    'platform.webhooks',
+                    $tenant !== null
+                        ? ['tenant_id' => $tenant->id]
+                        : []
+                ) }}"
                 class="webhook-filter
                 {{ $status === ''
                     ? 'webhook-filter--active'
@@ -263,7 +284,10 @@
             <a
                 href="{{ route(
                     'platform.webhooks',
-                    ['status' => 'processed']
+                    array_filter([
+                        'tenant_id' => $tenant?->id,
+                        'status' => 'processed',
+                    ])
                 ) }}"
                 class="webhook-filter
                 {{ $status === 'processed'
@@ -276,7 +300,10 @@
             <a
                 href="{{ route(
                     'platform.webhooks',
-                    ['status' => 'processing']
+                    array_filter([
+                        'tenant_id' => $tenant?->id,
+                        'status' => 'processing',
+                    ])
                 ) }}"
                 class="webhook-filter
                 {{ $status === 'processing'
@@ -289,7 +316,10 @@
             <a
                 href="{{ route(
                     'platform.webhooks',
-                    ['status' => 'failed']
+                    array_filter([
+                        'tenant_id' => $tenant?->id,
+                        'status' => 'failed',
+                    ])
                 ) }}"
                 class="webhook-filter
                 {{ $status === 'failed'

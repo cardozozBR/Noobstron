@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\SubscriptionStatus;
 use App\Enums\EmailMessageStatus;
 use App\Enums\WhatsAppMessageStatus;
 use App\Jobs\SendEmailMessageJob;
@@ -621,6 +622,69 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('Provider indisponível.');
     }
 
+    public function test_platform_admin_can_filter_whatsapp_failures_by_tenant(): void
+{
+    $admin = $this->platformAdmin();
+
+    $tenantA = Tenant::query()->create([
+        'name' => 'WhatsApp Tenant A',
+        'slug' => 'whatsapp-tenant-a',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    $tenantB = Tenant::query()->create([
+        'name' => 'WhatsApp Tenant B',
+        'slug' => 'whatsapp-tenant-b',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    app(TenantContext::class)->set($tenantA);
+    WhatsAppMessage::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantA->id,
+            'phone' => '5511991111111',
+            'recipient_name' => 'Cliente WhatsApp A',
+            'body' => 'Mensagem WhatsApp A.',
+            'status' => 'failed',
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' => 'Provider A.',
+        ]);
+
+    app(TenantContext::class)->set($tenantB);
+    WhatsAppMessage::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantB->id,
+            'phone' => '5511992222222',
+            'recipient_name' => 'Cliente WhatsApp B',
+            'body' => 'Mensagem WhatsApp B.',
+            'status' => 'failed',
+            'direction' => 'outbound',
+            'provider' => 'test',
+            'failed_at' => now(),
+            'failure_reason' => 'Provider B.',
+        ]);
+
+    $this->actingAs($admin, 'platform')
+        ->get(
+            'http://localhost/platform/whatsapp-failures?tenant_id='
+            .$tenantA->id
+        )
+        ->assertOk()
+        ->assertSee('WhatsApp Tenant A')
+        ->assertSee('Cliente WhatsApp A')
+        ->assertSee('5511991111111')
+        ->assertDontSee('WhatsApp Tenant B')
+        ->assertDontSee('Cliente WhatsApp B')
+        ->assertDontSee('5511992222222')
+        ->assertSee('Voltar ao tenant');
+}
+
     public function test_platform_admin_can_retry_failed_whatsapp_message(): void
     {
         Queue::fake();
@@ -1037,6 +1101,63 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('SMTP indisponível.');
     }
 
+public function test_platform_admin_can_filter_email_failures_by_tenant(): void
+{
+    $admin = $this->platformAdmin();
+
+    $tenantA = Tenant::query()->create([
+        'name' => 'Email Tenant A',
+        'slug' => 'email-tenant-a',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    $tenantB = Tenant::query()->create([
+        'name' => 'Email Tenant B',
+        'slug' => 'email-tenant-b',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    EmailMessage::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantA->id,
+            'to_email' => 'tenant-a@example.test',
+            'subject' => 'Falha Tenant A',
+            'body' => 'Mensagem A.',
+            'status' => 'failed',
+            'failed_at' => now(),
+            'failure_reason' => 'SMTP A.',
+        ]);
+
+    EmailMessage::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantB->id,
+            'to_email' => 'tenant-b@example.test',
+            'subject' => 'Falha Tenant B',
+            'body' => 'Mensagem B.',
+            'status' => 'failed',
+            'failed_at' => now(),
+            'failure_reason' => 'SMTP B.',
+        ]);
+
+    $this->actingAs($admin, 'platform')
+        ->get(
+            'http://localhost/platform/email-failures?tenant_id='
+            .$tenantA->id
+        )
+        ->assertOk()
+        ->assertSee('Email Tenant A')
+        ->assertSee('tenant-a@example.test')
+        ->assertSee('Falha Tenant A')
+        ->assertDontSee('Email Tenant B')
+        ->assertDontSee('tenant-b@example.test')
+        ->assertDontSee('Falha Tenant B')
+        ->assertSee('Voltar ao tenant');
+}
+
     public function test_platform_dashboard_shows_no_pending_webhook_failure_message(): void
     {
         $admin = $this->platformAdmin();
@@ -1127,6 +1248,142 @@ class PlatformLaunchOperationsTest extends TestCase
             ->assertSee('PROCESSED')
             ->assertSee('1');
     }
+
+    public function test_platform_admin_can_filter_payment_webhooks_by_tenant(): void
+{
+    $admin = $this->platformAdmin();
+
+    $tenantA = Tenant::query()->create([
+        'name' => 'Webhook Tenant A',
+        'slug' => 'webhook-tenant-a',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    $tenantB = Tenant::query()->create([
+        'name' => 'Webhook Tenant B',
+        'slug' => 'webhook-tenant-b',
+        'status' => 'active',
+        'currency' => 'BRL',
+    ]);
+
+    $plan = Plan::query()->create([
+        'code' => 'webhook-filter-plan',
+        'name' => 'Webhook Filter Plan',
+        'active' => true,
+    ]);
+
+    Subscription::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantA->id,
+            'plan_id' => $plan->id,
+            'status' => SubscriptionStatus::ACTIVE,
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub-webhook-filter-a',
+            'currency' => 'BRL',
+            'amount_minor' => 9900,
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+    Subscription::query()
+        ->withoutGlobalScopes()
+        ->create([
+            'tenant_id' => $tenantB->id,
+            'plan_id' => $plan->id,
+            'status' => SubscriptionStatus::ACTIVE,
+            'payment_provider' => 'stripe',
+            'external_reference' => 'sub-webhook-filter-b',
+            'currency' => 'BRL',
+            'amount_minor' => 24900,
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+        ]);
+
+    PaymentEventReceipt::query()->create([
+        'provider' => 'stripe',
+        'event_id' => 'evt-webhook-filter-a',
+        'event_type' => 'invoice.payment_failed',
+        'external_reference' => 'sub-webhook-filter-a',
+        'status' => 'failed',
+        'attempts' => 1,
+        'last_error' => 'WEBHOOK-ERROR-A',
+        'processed_at' => null,
+    ]);
+
+    PaymentEventReceipt::query()->create([
+        'provider' => 'stripe',
+        'event_id' => 'evt-webhook-filter-b',
+        'event_type' => 'invoice.payment_failed',
+        'external_reference' => 'sub-webhook-filter-b',
+        'status' => 'failed',
+        'attempts' => 1,
+        'last_error' => 'WEBHOOK-ERROR-B',
+        'processed_at' => null,
+    ]);
+
+    app(TenantContext::class)->clear();
+
+    $response = $this
+        ->actingAs($admin, 'platform')
+        ->get(
+            'http://localhost/platform/webhooks'
+            .'?tenant_id='.$tenantA->id
+            .'&status=failed'
+        );
+
+    $response
+        ->assertOk()
+        ->assertSee('Webhook Tenant A')
+        ->assertSee('evt-webhook-filter-a')
+        ->assertSee('sub-webhook-filter-a')
+        ->assertSee('WEBHOOK-ERROR-A')
+        ->assertDontSee('Webhook Tenant B')
+        ->assertDontSee('evt-webhook-filter-b')
+        ->assertDontSee('sub-webhook-filter-b')
+        ->assertDontSee('WEBHOOK-ERROR-B')
+        ->assertSee('Voltar ao tenant');
+
+    $response->assertSee(
+    e(
+        route(
+            'platform.webhooks',
+            [
+                'tenant_id' => $tenantA->id,
+                'status' => 'processed',
+            ]
+        )
+    ),
+    false
+);
+
+$response->assertSee(
+    e(
+        route(
+            'platform.webhooks',
+            [
+                'tenant_id' => $tenantA->id,
+                'status' => 'processing',
+            ]
+        )
+    ),
+    false
+);
+
+$response->assertSee(
+    e(
+        route(
+            'platform.webhooks',
+            [
+                'tenant_id' => $tenantA->id,
+                'status' => 'failed',
+            ]
+        )
+    ),
+    false
+);
+}
 
     public function test_platform_admin_can_filter_failed_payment_webhook_receipts(): void
     {

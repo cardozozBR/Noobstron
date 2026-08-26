@@ -589,6 +589,51 @@
                 @endif
             </section>
 
+            <section class="platform-card" style="margin-top:18px">
+    <div class="platform-muted">
+        Atalhos operacionais
+    </div>
+
+    <div
+        style="
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:12px;
+        "
+    >
+        <a
+            class="button button-secondary"
+            href="{{ route(
+                'platform.email-failures',
+                ['tenant_id' => $tenant->id]
+            ) }}"
+        >
+            E-mails falhos
+        </a>
+
+        <a
+            class="button button-secondary"
+            href="{{ route(
+                'platform.whatsapp-failures',
+                ['tenant_id' => $tenant->id]
+            ) }}"
+        >
+            WhatsApps falhos
+        </a>
+
+        <a
+            class="button button-secondary"
+            href="{{ route(
+                'platform.webhooks',
+                ['tenant_id' => $tenant->id]
+            ) }}"
+        >
+            Webhooks
+        </a>
+    </div>
+</section>
+
             <section class="platform-card">
                 <h2>Falhas de e-mail</h2>
 

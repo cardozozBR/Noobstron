@@ -204,19 +204,33 @@
                     Falhas de WhatsApp
                 </h1>
 
-                <p class="platform-muted">
-                    Mensagens de WhatsApp com falha de envio em todos os tenants.
-                </p>
+            <p class="platform-muted">
+            @if ($tenant !== null)
+               Mensagens de WhatsApp com falha de envio do tenant
+               <strong>{{ $tenant->name }}</strong>.
+            @else
+               Mensagens de WhatsApp com falha de envio em todos os tenants.
+            @endif
+            </p>
             </div>
 
-            <div>
-                <a
-                    class="button"
-                    href="{{ route('platform.dashboard') }}"
-                >
-                    Voltar ao painel
-                </a>
-            </div>
+        <div>
+            @if ($tenant !== null)
+              <a
+                 class="button"
+                 href="{{ route('platform.tenants.show', $tenant) }}"
+              >
+                 Voltar ao tenant
+            </a>
+        @else
+            <a
+                 class="button"
+                 href="{{ route('platform.dashboard') }}"
+             >
+            Voltar ao painel
+          </a>
+         @endif
+        </div>
         </div>
 
         <section class="platform-card whatsapp-failures-summary">

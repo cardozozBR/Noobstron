@@ -232,18 +232,35 @@ class PlatformAdminController extends Controller
         ]);
     }
 
-    public function emailFailures(): View
+    public function emailFailures(Request $request): View
     {
+        $tenantId = $request->integer('tenant_id');
+
+        $tenant = $tenantId > 0
+            ? Tenant::query()
+                ->withoutGlobalScopes()
+                ->find($tenantId)
+            : null;
+
         $messages = EmailMessage::query()
             ->withoutGlobalScopes()
             ->with('tenant')
             ->where('status', 'failed')
+            ->when(
+                $tenant !== null,
+                fn ($query) => $query->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+            )
             ->orderByDesc('failed_at')
             ->orderByDesc('id')
-            ->paginate(50);
+            ->paginate(50)
+            ->withQueryString();
 
         return view('platform.email-failures', [
             'messages' => $messages,
+            'tenant' => $tenant,
         ]);
     }
 
@@ -303,20 +320,37 @@ class PlatformAdminController extends Controller
             );
     }
 
-    public function whatsappFailures(): View
-    {
-        $messages = WhatsAppMessage::query()
-            ->withoutGlobalScopes()
-            ->with('tenant')
-            ->where('status', 'failed')
-            ->orderByDesc('failed_at')
-            ->orderByDesc('id')
-            ->paginate(50);
+    public function whatsappFailures(Request $request): View
+{
+    $tenantId = $request->integer('tenant_id');
 
-        return view('platform.whatsapp-failures', [
-            'messages' => $messages,
-        ]);
-    }
+    $tenant = $tenantId > 0
+        ? Tenant::query()
+            ->withoutGlobalScopes()
+            ->find($tenantId)
+        : null;
+
+    $messages = WhatsAppMessage::query()
+        ->withoutGlobalScopes()
+        ->with('tenant')
+        ->where('status', 'failed')
+        ->when(
+            $tenant !== null,
+            fn ($query) => $query->where(
+                'tenant_id',
+                $tenant->id
+            )
+        )
+        ->orderByDesc('failed_at')
+        ->orderByDesc('id')
+        ->paginate(50)
+        ->withQueryString();
+
+    return view('platform.whatsapp-failures', [
+        'messages' => $messages,
+        'tenant' => $tenant,
+    ]);
+}
 
     public function retryWhatsAppFailure(
         int $message,
@@ -517,7 +551,7 @@ class PlatformAdminController extends Controller
         }
     }
 
-    public function webhooks(Request $request): View
+        public function webhooks(Request $request): View
     {
         $status = trim(
             (string) $request->query('status', '')
@@ -528,6 +562,32 @@ class PlatformAdminController extends Controller
             'processing',
             'failed',
         ];
+
+        $tenantId = $request->integer('tenant_id');
+
+        $tenant = $tenantId > 0
+            ? Tenant::query()
+                ->withoutGlobalScopes()
+                ->find($tenantId)
+            : null;
+
+        $externalReferences = $tenant !== null
+            ? Subscription::query()
+                ->withoutGlobalScopes()
+                ->where(
+                    'tenant_id',
+                    $tenant->id
+                )
+                ->whereNotNull(
+                    'external_reference'
+                )
+                ->pluck(
+                    'external_reference'
+                )
+                ->filter()
+                ->unique()
+                ->values()
+            : collect();
 
         $receipts = PaymentEventReceipt::query()
             ->when(
@@ -541,6 +601,13 @@ class PlatformAdminController extends Controller
                     $status
                 )
             )
+            ->when(
+                $tenant !== null,
+                fn ($query) => $query->whereIn(
+                    'external_reference',
+                    $externalReferences
+                )
+            )
             ->orderByDesc('processed_at')
             ->orderByDesc('id')
             ->paginate(50)
@@ -549,6 +616,7 @@ class PlatformAdminController extends Controller
         return view('platform.webhooks', [
             'receipts' => $receipts,
             'status' => $status,
+            'tenant' => $tenant,
         ]);
     }
 

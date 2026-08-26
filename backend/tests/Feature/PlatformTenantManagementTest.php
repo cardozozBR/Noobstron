@@ -234,7 +234,25 @@ class PlatformTenantManagementTest extends TestCase
             ->assertSee('Features')
             ->assertSee('Limites do plano')
             ->assertSee('users')
-            ->assertSee('12');
+            ->assertSee('12')
+            ->assertSee(
+                route(
+                    'platform.email-failures',
+                    ['tenant_id' => $tenant->id]
+                )
+            )
+            ->assertSee(
+                route(
+                    'platform.whatsapp-failures',
+                    ['tenant_id' => $tenant->id]
+                )
+            )
+            ->assertSee(
+                route(
+                    'platform.webhooks',
+                    ['tenant_id' => $tenant->id]
+                )
+            );
     }
 
     public function test_tenant_admin_cannot_access_global_tenant_management(): void
