@@ -373,8 +373,8 @@ Validação em produção:
 
 ## Fase 11 --- UX final do painel
 
--   [ ] Navegação consistente entre páginas
--   [ ] Menu do Admin Master
+-   [x] Navegação consistente entre páginas
+-   [x] Menu do Admin Master
 -   [ ] Breadcrumbs
 -   [ ] Cards clicáveis com comportamento consistente
 -   [ ] Estados vazios

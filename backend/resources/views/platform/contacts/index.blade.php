@@ -80,16 +80,7 @@
 </style>
 
 <div class="platform-contacts-page">
-    <header class="platform-header">
-        <div class="platform-header__inner">
-            <a
-                class="platform-brand"
-                href="{{ route('platform.dashboard') }}"
-            >
-                {{ __('platform.brand') }}
-            </a>
-        </div>
-    </header>
+    @include('platform.partials.navigation')
 
     <main class="platform-main">
         <div class="platform-toolbar">

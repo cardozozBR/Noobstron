@@ -3,7 +3,17 @@
 return [
     'brand' => 'Administración de la plataforma',
     'logout' => 'Salir',
-    'back_dashboard' => 'Volver al panel',
+    'nav' => [
+        'aria_label' => 'Navegación del Admin Master',
+        'dashboard' => 'Panel',
+        'tenants' => 'Tenants',
+        'contacts' => 'Contactos',
+        'health' => 'Salud',
+        'jobs' => 'Colas',
+        'webhooks' => 'Webhooks',
+        'email_failures' => 'Correos',
+        'whatsapp_failures' => 'WhatsApp',
+    ],    'back_dashboard' => 'Volver al panel',
     'email' => 'E-mail',
     'password' => 'Contraseña',
     'login' => [

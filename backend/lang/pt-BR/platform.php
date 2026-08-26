@@ -3,7 +3,17 @@
 return [
     'brand' => 'Administração da plataforma',
     'logout' => 'Sair',
-    'back_dashboard' => 'Voltar ao painel',
+    'nav' => [
+        'aria_label' => 'Navegação do Admin Master',
+        'dashboard' => 'Painel',
+        'tenants' => 'Tenants',
+        'contacts' => 'Contatos',
+        'health' => 'Saúde',
+        'jobs' => 'Filas',
+        'webhooks' => 'Webhooks',
+        'email_failures' => 'E-mails',
+        'whatsapp_failures' => 'WhatsApp',
+    ],    'back_dashboard' => 'Voltar ao painel',
     'email' => 'E-mail',
     'password' => 'Senha',
     'login' => [

@@ -3,7 +3,17 @@
 return [
     'brand' => '平台管理',
     'logout' => '退出',
-    'back_dashboard' => '返回仪表板',
+    'nav' => [
+        'aria_label' => 'Admin Master 导航',
+        'dashboard' => '仪表盘',
+        'tenants' => '租户',
+        'contacts' => '联系人',
+        'health' => '运行状态',
+        'jobs' => '队列',
+        'webhooks' => 'Webhooks',
+        'email_failures' => '电子邮件',
+        'whatsapp_failures' => 'WhatsApp',
+    ],    'back_dashboard' => '返回仪表板',
     'email' => '电子邮件',
     'password' => '密码',
     'login' => [

@@ -578,4 +578,65 @@ public function test_platform_login_does_not_reveal_account_existence(): void
     $this->assertGuest('platform');
 }
 
+
+public function test_authenticated_platform_pages_share_admin_master_navigation(): void
+{
+    $admin = PlatformAdmin::query()->create([
+        'name' => 'Navigation Admin',
+        'email' => 'navigation-admin@example.test',
+        'password' => Hash::make('SenhaSegura123'),
+        'is_active' => true,
+    ]);
+
+    $routes = [
+        'platform.dashboard',
+        'platform.tenants.index',
+        'platform.contacts.index',
+        'platform.health',
+        'platform.jobs',
+        'platform.webhooks',
+        'platform.email-failures',
+        'platform.whatsapp-failures',
+    ];
+
+    foreach ($routes as $routeName) {
+        $response = $this
+            ->actingAs($admin, 'platform')
+            ->get(route($routeName));
+
+        $response
+            ->assertOk()
+            ->assertSee(
+                __('platform.nav.aria_label')
+            )
+            ->assertSee(
+                __('platform.nav.dashboard')
+            )
+            ->assertSee(
+                __('platform.nav.tenants')
+            )
+            ->assertSee(
+                __('platform.nav.contacts')
+            )
+            ->assertSee(
+                __('platform.nav.health')
+            )
+            ->assertSee(
+                __('platform.nav.jobs')
+            )
+            ->assertSee(
+                __('platform.nav.webhooks')
+            )
+            ->assertSee(
+                __('platform.nav.email_failures')
+            )
+            ->assertSee(
+                __('platform.nav.whatsapp_failures')
+            )
+            ->assertSee(
+                'platform-navigation__link is-active',
+                false
+            );
+    }
+}
 }

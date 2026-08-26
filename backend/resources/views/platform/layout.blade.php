@@ -45,6 +45,44 @@
         .platform-brand {
             font-size: 18px;
             font-weight: 700;
+            flex: 0 0 auto;
+        }
+
+        .platform-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex: 1 1 auto;
+            flex-wrap: wrap;
+        }
+
+        .platform-navigation__link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 38px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #d1d5db;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .platform-navigation__link:hover,
+        .platform-navigation__link:focus-visible {
+            background: rgba(255, 255, 255, .1);
+            color: white;
+        }
+
+        .platform-navigation__link.is-active {
+            background: white;
+            color: #111827;
+        }
+
+        .platform-navigation__logout {
+            margin: 0;
+            flex: 0 0 auto;
         }
 
         .platform-main {
@@ -236,6 +274,16 @@
 
             .platform-header__inner {
                 align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .platform-navigation {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .platform-navigation__link {
+                min-height: 36px;
             }
 
             .platform-main {

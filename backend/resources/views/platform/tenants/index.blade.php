@@ -17,32 +17,7 @@
 </style>
 
 <div class="platform-tenants-index">
-    <header class="platform-header">
-        <div class="platform-header__inner">
-            <div>
-                <a
-                    class="platform-brand"
-                    href="{{ route('platform.dashboard') }}"
-                >
-                    {{ __('platform.brand') }}
-                </a>
-            </div>
-
-            <form
-                method="POST"
-                action="{{ route('platform.logout') }}"
-            >
-                @csrf
-
-                <button
-                    class="logout-button"
-                    type="submit"
-                >
-                    {{ __('platform.logout') }}
-                </button>
-            </form>
-        </div>
-    </header>
+    @include('platform.partials.navigation')
 
     <main class="platform-main">
         <div class="platform-toolbar">

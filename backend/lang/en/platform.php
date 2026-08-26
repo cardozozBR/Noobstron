@@ -3,7 +3,17 @@
 return [
     'brand' => 'Platform administration',
     'logout' => 'Sign out',
-    'back_dashboard' => 'Back to dashboard',
+    'nav' => [
+        'aria_label' => 'Admin Master navigation',
+        'dashboard' => 'Dashboard',
+        'tenants' => 'Tenants',
+        'contacts' => 'Contacts',
+        'health' => 'Health',
+        'jobs' => 'Queues',
+        'webhooks' => 'Webhooks',
+        'email_failures' => 'Email',
+        'whatsapp_failures' => 'WhatsApp',
+    ],    'back_dashboard' => 'Back to dashboard',
     'email' => 'Email',
     'password' => 'Password',
 

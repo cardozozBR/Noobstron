@@ -3,7 +3,17 @@
 return [
     'brand' => 'プラットフォーム管理',
     'logout' => 'ログアウト',
-    'back_dashboard' => 'ダッシュボードに戻る',
+    'nav' => [
+        'aria_label' => 'Admin Master ナビゲーション',
+        'dashboard' => 'ダッシュボード',
+        'tenants' => 'テナント',
+        'contacts' => 'お問い合わせ',
+        'health' => '稼働状況',
+        'jobs' => 'キュー',
+        'webhooks' => 'Webhooks',
+        'email_failures' => 'メール',
+        'whatsapp_failures' => 'WhatsApp',
+    ],    'back_dashboard' => 'ダッシュボードに戻る',
     'email' => 'メール',
     'password' => 'パスワード',
     'login' => [
