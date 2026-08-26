@@ -361,7 +361,7 @@ Validação em produção:
 -   [ ] Melhorar gestão de contatos comerciais
 -   [x] Status do lead
 -   [ ] Histórico
--   [ ] Tenant convertido
+-   [x] Tenant convertido
 -   [ ] Plano contratado
 -   [ ] Receita por plano
 -   [ ] Novas assinaturas

@@ -38,19 +38,28 @@
     border-bottom: 1px solid rgba(148, 163, 184, .2);
 }
 
-.platform-contacts-page .contacts-filter__field {
+.platform-contacts-page .contacts-filter__field,
+.platform-contacts-page .conversion-form {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
 .platform-contacts-page .contacts-filter select,
-.platform-contacts-page .contact-status-form select {
+.platform-contacts-page .contact-status-form select,
+.platform-contacts-page .conversion-form select {
     min-height: 38px;
 }
 
-.platform-contacts-page .contact-status-form {
+.platform-contacts-page .contact-status-form,
+.platform-contacts-page .conversion-form {
     margin: 0;
+}
+
+.platform-contacts-page .converted-tenant {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .platform-contacts-page .pagination-wrap {
@@ -153,29 +162,13 @@
                 <table class="platform-table">
                     <thead>
                         <tr>
-                            <th>
-                                {{ __('platform.contacts.date') }}
-                            </th>
-
-                            <th>
-                                {{ __('platform.contacts.name') }}
-                            </th>
-
-                            <th>
-                                {{ __('platform.contacts.company') }}
-                            </th>
-
-                            <th>
-                                {{ __('platform.email') }}
-                            </th>
-
-                            <th>
-                                {{ __('platform.contacts.status') }}
-                            </th>
-
-                            <th>
-                                {{ __('platform.contacts.message') }}
-                            </th>
+                            <th>{{ __('platform.contacts.date') }}</th>
+                            <th>{{ __('platform.contacts.name') }}</th>
+                            <th>{{ __('platform.contacts.company') }}</th>
+                            <th>{{ __('platform.email') }}</th>
+                            <th>{{ __('platform.contacts.status') }}</th>
+                            <th>{{ __('platform.contacts.tenant') }}</th>
+                            <th>{{ __('platform.contacts.message') }}</th>
                         </tr>
                     </thead>
 
@@ -186,9 +179,7 @@
                                 {{ $contact->created_at?->format('d/m/Y H:i') }}
                             </td>
 
-                            <td>
-                                {{ $contact->name }}
-                            </td>
+                            <td>{{ $contact->name }}</td>
 
                             <td>
                                 {{ $contact->company ?: '—' }}
@@ -231,13 +222,68 @@
                                 </form>
                             </td>
 
+                            <td>
+                                @if ($contact->convertedTenant)
+                                    <div class="converted-tenant">
+                                        <strong>
+                                            {{ $contact->convertedTenant->name }}
+                                        </strong>
+
+                                        <a
+                                            href="{{ route(
+                                                'platform.tenants.show',
+                                                $contact->convertedTenant
+                                            ) }}"
+                                        >
+                                            {{ __('platform.contacts.converted_tenant') }}
+                                        </a>
+                                    </div>
+                                @else
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+                                            'platform.contacts.convert',
+                                            $contact
+                                        ) }}"
+                                        class="conversion-form"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <select
+                                            name="tenant_id"
+                                            required
+                                            aria-label="{{ __('platform.contacts.select_tenant') }}"
+                                        >
+                                            <option value="">
+                                                {{ __('platform.contacts.select_tenant') }}
+                                            </option>
+
+                                            @foreach ($tenants as $tenant)
+                                                <option value="{{ $tenant->id }}">
+                                                    {{ $tenant->name }}
+                                                    ({{ $tenant->slug }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        <button
+                                            type="submit"
+                                            class="button"
+                                        >
+                                            {{ __('platform.contacts.convert') }}
+                                        </button>
+                                    </form>
+                                @endif
+                            </td>
+
                             <td class="contact-message">
                                 {{ $contact->message }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 {{ __('platform.contacts.empty') }}
                             </td>
                         </tr>

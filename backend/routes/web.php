@@ -622,6 +622,19 @@ Route::patch(
     ->middleware('platform.admin')
     ->name('platform.contacts.status.update');
 
+Route::patch(
+    '/platform/contacts/{contact}/convert',
+    [
+        PlatformCommercialContactController::class,
+        'convert',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.contacts.convert');
+
 Route::post(
     '/platform/logout',
     [PlatformAdminController::class, 'logout']
