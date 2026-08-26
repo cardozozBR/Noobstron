@@ -154,6 +154,7 @@ return [
         'metric' => 'Métrica',
     ],
 
+    'error_state_title' => 'Não foi possível concluir a operação.',
     'empty_states' => [
         'jobs_no_failed_description' => 'Não existem jobs registrados como falhos.',
         'email_failures_empty_description' => 'Não existem mensagens de e-mail com status de falha.',

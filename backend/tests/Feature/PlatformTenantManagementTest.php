@@ -558,4 +558,34 @@ class PlatformTenantManagementTest extends TestCase
                 'SECRET-WEBHOOK-ERROR-B'
             );
     }
-}
+
+    public function test_platform_error_state_component_displays_errors(): void
+    {
+        $errors = new \Illuminate\Support\ViewErrorBag();
+
+        $errors->put(
+            'default',
+            new \Illuminate\Support\MessageBag([
+                'Não foi possível atualizar este tenant.',
+            ])
+        );
+
+        $html = $this->blade(
+            '<x-platform.error-state :errors="$errors" />',
+            [
+                'errors' => $errors,
+            ]
+        );
+
+        $html
+            ->assertSee(
+                __('platform.error_state_title')
+            )
+            ->assertSee(
+                'Não foi possível atualizar este tenant.'
+            )
+            ->assertSee(
+                'role="alert"',
+                false
+            );
+    }}

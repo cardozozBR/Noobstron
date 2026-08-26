@@ -159,6 +159,7 @@ return [
         'metric' => 'Metric',
     ],
 
+    'error_state_title' => 'The operation could not be completed.',
     'empty_states' => [
         'jobs_no_failed_description' => 'There are no jobs registered as failed.',
         'email_failures_empty_description' => 'There are no email messages with failed status.',

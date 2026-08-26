@@ -351,6 +351,28 @@
             }
         }
 
+.platform-error-state {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.platform-error-state strong {
+    display: block;
+}
+
+.platform-error-state ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+}
+
+.platform-error-state li + li {
+    margin-top: 4px;
+}
+
 .platform-empty-state {
     display: flex;
     flex-direction: column;

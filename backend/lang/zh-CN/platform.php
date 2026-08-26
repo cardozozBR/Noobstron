@@ -120,6 +120,7 @@ return [
         'metric' => '指标',
     ],
 
+    'error_state_title' => '无法完成该操作。',
     'empty_states' => [
         'jobs_no_failed_description' => '没有被记录为失败的任务。',
         'email_failures_empty_description' => '没有状态为发送失败的电子邮件。',

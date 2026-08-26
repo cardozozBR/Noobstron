@@ -378,7 +378,7 @@ Validação em produção:
 -   [x] Breadcrumbs
 -   [x] Cards clicáveis com comportamento consistente
 -   [x] Estados vazios
--   [ ] Estados de erro
+-   [x] Estados de erro
 -   [ ] Badges
 -   [ ] Tabelas responsivas
 -   [ ] Paginação consistente

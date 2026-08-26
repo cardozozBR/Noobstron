@@ -120,6 +120,7 @@ return [
         'metric' => 'Métrica',
     ],
 
+    'error_state_title' => 'No se pudo completar la operación.',
     'empty_states' => [
         'jobs_no_failed_description' => 'No hay jobs registrados como fallidos.',
         'email_failures_empty_description' => 'No hay mensajes de correo electrónico con estado fallido.',

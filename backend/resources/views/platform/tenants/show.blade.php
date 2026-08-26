@@ -40,6 +40,8 @@
         @endphp
 
         @include('platform.partials.breadcrumbs')
+
+        <x-platform.error-state :errors="$errors" />
         <div class="platform-toolbar">
             <div>
                 <div class="platform-muted">

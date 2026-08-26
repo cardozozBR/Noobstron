@@ -120,6 +120,7 @@ return [
         'metric' => '指標',
     ],
 
+    'error_state_title' => '操作を完了できませんでした。',
     'empty_states' => [
         'jobs_no_failed_description' => '失敗として記録されたジョブはありません。',
         'email_failures_empty_description' => '送信失敗状態のメールメッセージはありません。',
