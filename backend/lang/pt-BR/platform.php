@@ -20,6 +20,18 @@ return [
         'company' => 'Empresa',
         'message' => 'Mensagem',
         'empty' => 'Nenhum contato recebido.',
+        'status' => 'Status',
+        'filter_status' => 'Filtrar por status',
+        'all_statuses' => 'Todos os status',
+        'update_status' => 'Atualizar status',
+        'status_updated' => 'Status do contato atualizado.',
+        'statuses' => [
+            'new' => 'Novo',
+            'contacted' => 'Contatado',
+            'qualified' => 'Qualificado',
+            'converted' => 'Convertido',
+            'lost' => 'Perdido',
+        ],
     ],
     'dashboard' => [
         'title' => 'Painel global',

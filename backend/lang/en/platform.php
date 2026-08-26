@@ -22,6 +22,18 @@ return [
         'company' => 'Company',
         'message' => 'Message',
         'empty' => 'No contacts received.',
+        'status' => 'Status',
+        'filter_status' => 'Filter by status',
+        'all_statuses' => 'All statuses',
+        'update_status' => 'Update status',
+        'status_updated' => 'Contact status updated.',
+        'statuses' => [
+            'new' => 'New',
+            'contacted' => 'Contacted',
+            'qualified' => 'Qualified',
+            'converted' => 'Converted',
+            'lost' => 'Lost',
+        ],
     ],
 
     'dashboard' => [

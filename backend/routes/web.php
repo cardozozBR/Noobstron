@@ -609,6 +609,19 @@ Route::get(
     ->middleware('platform.admin')
     ->name('platform.contacts.index');
 
+Route::patch(
+    '/platform/contacts/{contact}/status',
+    [
+        PlatformCommercialContactController::class,
+        'updateStatus',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->middleware('platform.admin')
+    ->name('platform.contacts.status.update');
+
 Route::post(
     '/platform/logout',
     [PlatformAdminController::class, 'logout']

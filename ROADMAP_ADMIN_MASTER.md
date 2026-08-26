@@ -359,7 +359,7 @@ Validação em produção:
 ## Fase 10 --- Operação comercial
 
 -   [ ] Melhorar gestão de contatos comerciais
--   [ ] Status do lead
+-   [x] Status do lead
 -   [ ] Histórico
 -   [ ] Tenant convertido
 -   [ ] Plano contratado
