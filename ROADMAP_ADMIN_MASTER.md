@@ -169,7 +169,7 @@ Validação concluída em produção:
 -   [x] WhatsApps falhos do tenant
 -   [x] Webhooks relacionados
 -   [x] Informações de cobrança
--   [ ] Atalhos operacionais
+-   [x] Atalhos operacionais
 
 ### Ações administrativas a avaliar
 
@@ -189,6 +189,12 @@ Validação concluída em produção:
 -   Histórico de assinaturas, cobrança, falhas e webhooks relacionados validados em produção
 -   Prorrogação de trial validada em produção
 -   Auditoria da prorrogação validada em `platform_admin_audit_logs`
+-   Atalhos operacionais por tenant validados em produção
+-   Filtros por `tenant_id` validados para falhas de e-mail e WhatsApp
+-   Filtro de webhooks por tenant validado via `external_reference` das assinaturas
+-   Combinação de `tenant_id` com filtro de status de webhooks validada
+-   Isolamento Tenant A → Tenant B validado nos atalhos operacionais
+-   Commit implantado: `8fde793`
 
 ### Fase 7B — Suspensão e reativação de tenant
 
