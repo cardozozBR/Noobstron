@@ -187,6 +187,16 @@
 
             <div class="metric-card">
                 <div class="metric-label">
+                    {{ __('platform.dashboard.cancellations') }}
+                </div>
+
+                <div class="metric-value">
+                    {{ $cancellations }}
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">
                     {{ __('platform.dashboard.active_subscriptions') }}
                 </div>
 

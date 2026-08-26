@@ -100,6 +100,15 @@ class PlatformAdminController extends Controller
             )
             ->count();
 
+        $cancellations = Subscription::query()
+            ->whereNotNull('canceled_at')
+            ->where(
+                'canceled_at',
+                '>=',
+                $now->copy()->subDays(30)
+            )
+            ->count();
+
         $trialActive = Tenant::query()
             ->whereNotNull('trial_ends_at')
             ->where('trial_ends_at', '>=', $now)
@@ -231,6 +240,7 @@ class PlatformAdminController extends Controller
             'tenantCount' => Tenant::query()->count(),
             'subscriptionCounts' => $subscriptionCounts,
             'newSubscriptions' => $newSubscriptions,
+            'cancellations' => $cancellations,
             'trialActive' => $trialActive,
             'trialExpiring' => $trialExpiring,
             'mrr' => $mrr,

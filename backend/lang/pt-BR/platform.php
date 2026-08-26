@@ -49,6 +49,7 @@ return [
         'health' => 'Saúde operacional',
         'active_subscriptions' => 'Assinaturas ativas',
         'new_subscriptions' => 'Novas assinaturas (30 dias)',
+        'cancellations' => 'Cancelamentos (30 dias)',
         'suspended' => 'Suspensas',
         'active_trials' => 'Trials ativos',
         'trials_expiring' => 'Trials vencendo em 7 dias',

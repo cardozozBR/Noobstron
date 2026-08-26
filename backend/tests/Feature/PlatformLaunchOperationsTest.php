@@ -2052,4 +2052,62 @@ public function test_platform_webhooks_redact_sensitive_data(): void
         ->assertSee('1');
 }
 
+public function test_platform_dashboard_shows_effective_cancellations_from_last_thirty_days(): void
+    {
+        $admin = PlatformAdmin::query()->create([
+            'name' => 'Platform Admin',
+            'email' => 'cancellations@example.test',
+            'password' => Hash::make('SenhaSegura123'),
+            'is_active' => true,
+        ]);
+
+        $tenant = Tenant::query()->create([
+            'name' => 'Tenant Cancelamentos',
+            'slug' => 'tenant-cancelamentos',
+            'status' => 'active',
+        ]);
+
+        $plan = Plan::query()->create([
+            'code' => 'cancellations-plan',
+            'name' => 'Plano Cancelamentos',
+            'active' => true,
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'cancelled',
+            'current_period_start' => now()->subMonth(),
+            'current_period_end' => now(),
+            'canceled_at' => now()->subDays(5),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'cancelled',
+            'current_period_start' => now()->subMonths(2),
+            'current_period_end' => now()->subMonth(),
+            'canceled_at' => now()->subDays(40),
+        ]);
+
+        Subscription::query()->create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'current_period_start' => now(),
+            'current_period_end' => now()->addMonth(),
+            'cancel_at' => now()->addDays(10),
+            'canceled_at' => null,
+        ]);
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.cancellations')
+            )
+            ->assertSee('1');
+    }
 }

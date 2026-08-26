@@ -365,7 +365,7 @@ Validação em produção:
 -   [x] Plano contratado
 -   [x] Receita por plano
 -   [x] Novas assinaturas
--   [ ] Cancelamentos
+-   [x] Cancelamentos
 -   [ ] Trials convertidos
 -   [ ] Trials expirados sem conversão
 -   [ ] Churn básico
