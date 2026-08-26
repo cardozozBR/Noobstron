@@ -323,6 +323,11 @@ Validação em produção:
 -   Auditoria `email.reprocessed` validada.
 -   Auditoria `whatsapp.reprocessed` validada.
 -   Administrador, tenant, entidade e resultado registrados em `platform_admin_audit_logs`.
+-   Smoke controlado de `whatsapp.reprocessed` validado em produção com `Queue::fake()` e rollback.
+-   Smoke controlado de `email.reprocessed` validado em produção com `Queue::fake()` e rollback.
+-   Smoke controlado de `webhook.reprocessed` validado em produção com dados temporários e rollback.
+-   Nenhum envio externo foi realizado nos smokes controlados.
+-   Commit implantado: `3217734`.
 
 ## Fase 9 --- Segurança do Platform Admin
 
