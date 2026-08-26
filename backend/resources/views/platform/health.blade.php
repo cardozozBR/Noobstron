@@ -236,7 +236,7 @@
             Última execução:
             {{ $checks['scheduler_last_run_at']->format('d/m/Y H:i:s') }}
         @else
-            Nenhuma execução recente registrada.
+            {{ __('platform.empty_states.health_no_executions') }}
         @endif
     </p>
 </section>
@@ -261,7 +261,7 @@
             Última atividade:
             {{ $checks['worker_last_seen_at']->format('d/m/Y H:i:s') }}
         @else
-            Nenhuma atividade recente registrada.
+            {{ __('platform.empty_states.health_no_activity') }}
         @endif
     </p>
 </section>
@@ -377,7 +377,7 @@
                         {{ $checks['whatsapp_configured_tenants'] }}
                         tenant(s) com provider ativo.
                     @else
-                        Nenhum tenant com provider ativo.
+                        {{ __('platform.empty_states.health_no_provider') }}
                     @endif
                 </p>
             </section>

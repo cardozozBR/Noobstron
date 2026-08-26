@@ -503,7 +503,7 @@
 
                 @if ($subscriptionHistory->isEmpty())
                     <p class="platform-muted">
-                        Nenhuma assinatura encontrada.
+                        {{ __('platform.empty_states.tenant_no_subscription') }}
                     </p>
                 @else
                     <div class="table-wrap">
@@ -543,7 +543,7 @@
 
                 @if ($invoices->isEmpty())
                     <p class="platform-muted">
-                        Nenhuma fatura encontrada.
+                        {{ __('platform.empty_states.tenant_no_invoices') }}
                     </p>
                 @else
                     <div class="table-wrap">
@@ -634,7 +634,7 @@
 
                 @if ($emailFailures->isEmpty())
                     <p class="platform-muted">
-                        Nenhuma falha de e-mail.
+                        {{ __('platform.empty_states.tenant_no_email_failures') }}
                     </p>
                 @else
                     <div class="table-wrap">
@@ -670,7 +670,7 @@
 
                 @if ($whatsAppFailures->isEmpty())
                     <p class="platform-muted">
-                        Nenhuma falha de WhatsApp.
+                        {{ __('platform.empty_states.tenant_no_whatsapp_failures') }}
                     </p>
                 @else
                     <div class="table-wrap">
@@ -706,7 +706,7 @@
 
                 @if ($webhooks->isEmpty())
                     <p class="platform-muted">
-                        Nenhum webhook relacionado.
+                        {{ __('platform.empty_states.tenant_no_webhooks') }}
                     </p>
                 @else
                     <div class="table-wrap">

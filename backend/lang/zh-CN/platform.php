@@ -119,4 +119,27 @@ return [
         'no_limits' => '当前套餐未配置使用限制。',
         'metric' => '指标',
     ],
-];
+
+    'empty_states' => [
+        'jobs_no_failed_description' => '没有被记录为失败的任务。',
+        'email_failures_empty_description' => '没有状态为发送失败的电子邮件。',
+        'jobs_no_pending_description' => '队列中没有等待处理的任务。',
+        'whatsapp_failures_empty_description' => '没有状态为发送失败的 WhatsApp 消息。',
+        'tenant_no_email_failures' => '没有电子邮件发送失败。',
+        'tenant_no_subscription' => '未找到订阅。',
+        'dashboard_email_ok' => '没有电子邮件发送失败',
+        'tenant_no_webhooks' => '没有相关的 Webhook。',
+        'jobs_no_failed' => '没有失败的任务。',
+        'jobs_no_pending' => '没有待处理的任务。',
+        'dashboard_webhooks_ok' => '没有待处理的失败',
+        'tenant_no_whatsapp_failures' => '没有 WhatsApp 发送失败。',
+        'webhooks_empty' => '尚未处理任何 Webhook。',
+        'health_no_activity' => '没有最近的活动记录。',
+        'health_no_executions' => '没有最近的执行记录。',
+        'dashboard_whatsapp_ok' => '没有 WhatsApp 发送失败',
+        'dashboard_jobs_ok' => '队列中没有失败',
+        'health_no_provider' => '没有启用提供商的租户。',
+        'email_failures_empty' => '未发现电子邮件发送失败。',
+        'tenant_no_invoices' => '未找到发票。',
+        'whatsapp_failures_empty' => '未发现 WhatsApp 发送失败。',
+    ],];

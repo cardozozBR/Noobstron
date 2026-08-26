@@ -158,4 +158,27 @@ return [
         'no_limits' => 'No usage limits configured for the current plan.',
         'metric' => 'Metric',
     ],
-];
+
+    'empty_states' => [
+        'jobs_no_failed_description' => 'There are no jobs registered as failed.',
+        'email_failures_empty_description' => 'There are no email messages with failed status.',
+        'jobs_no_pending_description' => 'The queue has no jobs waiting to be processed.',
+        'whatsapp_failures_empty_description' => 'There are no WhatsApp messages with failed status.',
+        'tenant_no_email_failures' => 'No email failures.',
+        'tenant_no_subscription' => 'No subscription found.',
+        'dashboard_email_ok' => 'No email failures',
+        'tenant_no_webhooks' => 'No related webhooks.',
+        'jobs_no_failed' => 'No failed jobs.',
+        'jobs_no_pending' => 'No pending jobs.',
+        'dashboard_webhooks_ok' => 'No pending failures',
+        'tenant_no_whatsapp_failures' => 'No WhatsApp failures.',
+        'webhooks_empty' => 'No webhooks processed yet.',
+        'health_no_activity' => 'No recent activity recorded.',
+        'health_no_executions' => 'No recent executions recorded.',
+        'dashboard_whatsapp_ok' => 'No WhatsApp failures',
+        'dashboard_jobs_ok' => 'No queue failures',
+        'health_no_provider' => 'No tenants with an active provider.',
+        'email_failures_empty' => 'No email failures found.',
+        'tenant_no_invoices' => 'No invoices found.',
+        'whatsapp_failures_empty' => 'No WhatsApp failures found.',
+    ],];

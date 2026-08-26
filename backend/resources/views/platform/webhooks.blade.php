@@ -454,8 +454,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9">
-                                    Nenhum webhook processado ainda.
+                                <td class="platform-empty-cell" colspan="9">
+                                    {{ __('platform.empty_states.webhooks_empty') }}
                                 </td>
                             </tr>
                         @endforelse

@@ -119,4 +119,27 @@ return [
         'no_limits' => '現在のプランに利用上限は設定されていません。',
         'metric' => '指標',
     ],
-];
+
+    'empty_states' => [
+        'jobs_no_failed_description' => '失敗として記録されたジョブはありません。',
+        'email_failures_empty_description' => '送信失敗状態のメールメッセージはありません。',
+        'jobs_no_pending_description' => '処理待ちのジョブはキューにありません。',
+        'whatsapp_failures_empty_description' => '送信失敗状態のWhatsAppメッセージはありません。',
+        'tenant_no_email_failures' => 'メール送信の障害はありません。',
+        'tenant_no_subscription' => 'サブスクリプションは見つかりませんでした。',
+        'dashboard_email_ok' => 'メール送信の障害はありません',
+        'tenant_no_webhooks' => '関連するWebhookはありません。',
+        'jobs_no_failed' => '失敗したジョブはありません。',
+        'jobs_no_pending' => '保留中のジョブはありません。',
+        'dashboard_webhooks_ok' => '保留中の障害はありません',
+        'tenant_no_whatsapp_failures' => 'WhatsApp送信の障害はありません。',
+        'webhooks_empty' => '処理済みのWebhookはまだありません。',
+        'health_no_activity' => '最近のアクティビティはありません。',
+        'health_no_executions' => '最近の実行履歴はありません。',
+        'dashboard_whatsapp_ok' => 'WhatsApp送信の障害はありません',
+        'dashboard_jobs_ok' => 'キューの障害はありません',
+        'health_no_provider' => '有効なプロバイダーを持つテナントはありません。',
+        'email_failures_empty' => 'メール送信の障害は見つかりませんでした。',
+        'tenant_no_invoices' => '請求書は見つかりませんでした。',
+        'whatsapp_failures_empty' => 'WhatsApp送信の障害は見つかりませんでした。',
+    ],];

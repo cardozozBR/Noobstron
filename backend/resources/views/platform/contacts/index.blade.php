@@ -391,7 +391,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9">
+                            <td class="platform-empty-cell" colspan="9">
                                 {{ __('platform.contacts.empty') }}
                             </td>
                         </tr>

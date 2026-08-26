@@ -377,7 +377,7 @@ Validação em produção:
 -   [x] Menu do Admin Master
 -   [x] Breadcrumbs
 -   [x] Cards clicáveis com comportamento consistente
--   [ ] Estados vazios
+-   [x] Estados vazios
 -   [ ] Estados de erro
 -   [ ] Badges
 -   [ ] Tabelas responsivas

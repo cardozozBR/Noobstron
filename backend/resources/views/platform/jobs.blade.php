@@ -261,15 +261,10 @@
             </div>
 
             @if ($pendingJobs->isEmpty())
-                <div class="empty-state">
-                    <strong>
-                        Nenhum job pendente.
-                    </strong>
-
-                    <p class="platform-muted">
-                        A fila não possui jobs aguardando processamento.
-                    </p>
-                </div>
+                                <x-platform.empty-state
+                    :title="__('platform.empty_states.jobs_no_pending')"
+                    :description="__('platform.empty_states.jobs_no_pending_description')"
+                />
             @else
                 <div class="table-wrap">
                     <table>
@@ -363,15 +358,10 @@
             </div>
 
             @if ($failedJobs->isEmpty())
-                <div class="empty-state">
-                    <strong>
-                        Nenhum job falho.
-                    </strong>
-
-                    <p class="platform-muted">
-                        Não existem jobs registrados como falhos.
-                    </p>
-                </div>
+                                <x-platform.empty-state
+                    :title="__('platform.empty_states.jobs_no_failed')"
+                    :description="__('platform.empty_states.jobs_no_failed_description')"
+                />
             @else
                 <div class="table-wrap">
                     <table>

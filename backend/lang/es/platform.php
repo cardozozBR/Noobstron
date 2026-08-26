@@ -119,4 +119,27 @@ return [
         'no_limits' => 'No hay límites de uso configurados para el plan actual.',
         'metric' => 'Métrica',
     ],
-];
+
+    'empty_states' => [
+        'jobs_no_failed_description' => 'No hay jobs registrados como fallidos.',
+        'email_failures_empty_description' => 'No hay mensajes de correo electrónico con estado fallido.',
+        'jobs_no_pending_description' => 'La cola no tiene jobs pendientes de procesamiento.',
+        'whatsapp_failures_empty_description' => 'No hay mensajes de WhatsApp con estado fallido.',
+        'tenant_no_email_failures' => 'No hay fallos de correo electrónico.',
+        'tenant_no_subscription' => 'No se encontró ninguna suscripción.',
+        'dashboard_email_ok' => 'No hay fallos de correo electrónico',
+        'tenant_no_webhooks' => 'No hay webhooks relacionados.',
+        'jobs_no_failed' => 'No hay jobs fallidos.',
+        'jobs_no_pending' => 'No hay jobs pendientes.',
+        'dashboard_webhooks_ok' => 'No hay fallos pendientes',
+        'tenant_no_whatsapp_failures' => 'No hay fallos de WhatsApp.',
+        'webhooks_empty' => 'Aún no se ha procesado ningún webhook.',
+        'health_no_activity' => 'No hay actividad reciente registrada.',
+        'health_no_executions' => 'No hay ejecuciones recientes registradas.',
+        'dashboard_whatsapp_ok' => 'No hay fallos de WhatsApp',
+        'dashboard_jobs_ok' => 'No hay fallos en la cola',
+        'health_no_provider' => 'No hay tenants con un proveedor activo.',
+        'email_failures_empty' => 'No se encontraron fallos de correo electrónico.',
+        'tenant_no_invoices' => 'No se encontraron facturas.',
+        'whatsapp_failures_empty' => 'No se encontraron fallos de WhatsApp.',
+    ],];

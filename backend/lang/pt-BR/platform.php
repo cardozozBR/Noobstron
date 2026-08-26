@@ -153,4 +153,27 @@ return [
         'no_limits' => 'Nenhum limite de uso configurado para o plano atual.',
         'metric' => 'Métrica',
     ],
-];
+
+    'empty_states' => [
+        'jobs_no_failed_description' => 'Não existem jobs registrados como falhos.',
+        'email_failures_empty_description' => 'Não existem mensagens de e-mail com status de falha.',
+        'jobs_no_pending_description' => 'A fila não possui jobs aguardando processamento.',
+        'whatsapp_failures_empty_description' => 'Não existem mensagens de WhatsApp com status de falha.',
+        'tenant_no_email_failures' => 'Nenhuma falha de e-mail.',
+        'tenant_no_subscription' => 'Nenhuma assinatura encontrada.',
+        'dashboard_email_ok' => 'Nenhuma falha de e-mail',
+        'tenant_no_webhooks' => 'Nenhum webhook relacionado.',
+        'jobs_no_failed' => 'Nenhum job falho.',
+        'jobs_no_pending' => 'Nenhum job pendente.',
+        'dashboard_webhooks_ok' => 'Nenhuma falha pendente',
+        'tenant_no_whatsapp_failures' => 'Nenhuma falha de WhatsApp.',
+        'webhooks_empty' => 'Nenhum webhook processado ainda.',
+        'health_no_activity' => 'Nenhuma atividade recente registrada.',
+        'health_no_executions' => 'Nenhuma execução recente registrada.',
+        'dashboard_whatsapp_ok' => 'Nenhuma falha de WhatsApp',
+        'dashboard_jobs_ok' => 'Nenhuma falha na fila',
+        'health_no_provider' => 'Nenhum tenant com provider ativo.',
+        'email_failures_empty' => 'Nenhuma falha de e-mail encontrada.',
+        'tenant_no_invoices' => 'Nenhuma fatura encontrada.',
+        'whatsapp_failures_empty' => 'Nenhuma falha de WhatsApp encontrada.',
+    ],];

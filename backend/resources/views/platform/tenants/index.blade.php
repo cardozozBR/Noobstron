@@ -185,7 +185,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7">
+                                <td class="platform-empty-cell" colspan="7">
                                     {{ __('platform.tenants.empty') }}
                                 </td>
                             </tr>

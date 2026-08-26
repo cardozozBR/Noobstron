@@ -308,12 +308,22 @@ class PlatformLaunchOperationsTest extends TestCase
                 false
             );
 
+        $jobCardPattern = sprintf(
+            '/<a\b(?=[^>]*\bclass="[^"]*\bmetric-card\b[^"]*")(?=[^>]*\bhref="%s")[^>]*>/i',
+            preg_quote(
+                route('platform.jobs'),
+                '/'
+            )
+        );
+
+        $jobCardCount = preg_match_all(
+            $jobCardPattern,
+            $response->getContent()
+        );
+
         $this->assertSame(
             2,
-            substr_count(
-                $response->getContent(),
-                route('platform.jobs')
-            )
+            $jobCardCount
         );
     }
 

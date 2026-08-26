@@ -350,7 +350,36 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+
+.platform-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 96px;
+    padding: 24px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #64748b;
+    text-align: center;
+}
+
+.platform-empty-state strong {
+    color: #334155;
+}
+
+.platform-empty-state p {
+    margin: 0;
+}
+
+.platform-empty-cell {
+    padding: 28px !important;
+    color: #64748b;
+    text-align: center !important;
+}
+</style>
 </head>
 <body>
     @yield('body')

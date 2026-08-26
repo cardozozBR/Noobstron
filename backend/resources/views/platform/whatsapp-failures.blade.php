@@ -236,15 +236,10 @@
 
         <section class="platform-card">
             @if ($messages->isEmpty())
-                <div class="empty-state">
-                    <strong>
-                        Nenhuma falha de WhatsApp encontrada.
-                    </strong>
-
-                    <p class="platform-muted">
-                        Não existem mensagens de WhatsApp com status de falha.
-                    </p>
-                </div>
+                                <x-platform.empty-state
+                    :title="__('platform.empty_states.whatsapp_failures_empty')"
+                    :description="__('platform.empty_states.whatsapp_failures_empty_description')"
+                />
             @else
                 <div class="table-wrap">
                     <table>

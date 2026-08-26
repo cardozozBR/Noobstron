@@ -318,7 +318,7 @@
                         Última falha:
                         {{ $latestFailedWebhook->updated_at?->format('d/m/Y H:i') }}
                     @else
-                        Nenhuma falha pendente
+                        {{ __('platform.empty_states.dashboard_webhooks_ok') }}
                     @endif
                 </div>
             </a>
@@ -372,7 +372,7 @@
                     @if ((int) ($queueCounts['failed'] ?? 0) > 0)
                         Falhas na fila precisam de atenção
                     @else
-                        Nenhuma falha na fila
+                        {{ __('platform.empty_states.dashboard_jobs_ok') }}
                     @endif
                 </div>
             </a>
@@ -393,7 +393,7 @@
                     @if ((int) ($messageFailureCounts['email'] ?? 0) > 0)
                         Falhas de envio de e-mail precisam de atenção
                     @else
-                        Nenhuma falha de e-mail
+                        {{ __('platform.empty_states.dashboard_email_ok') }}
                     @endif
                 </div>
             </a>
@@ -414,7 +414,7 @@
                     @if ((int) ($messageFailureCounts['whatsapp'] ?? 0) > 0)
                         Falhas de envio do WhatsApp precisam de atenção
                     @else
-                        Nenhuma falha de WhatsApp
+                        {{ __('platform.empty_states.dashboard_whatsapp_ok') }}
                     @endif
                 </div>
             </a>
