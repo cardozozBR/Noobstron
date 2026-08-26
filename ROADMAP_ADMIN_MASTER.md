@@ -369,7 +369,7 @@ Validação em produção:
 -   [x] Trials convertidos
 -   [x] Trials expirados sem conversão
 -   [x] Churn básico
--   [ ] Indicadores comerciais no dashboard
+-   [x] Indicadores comerciais no dashboard
 
 ## Fase 11 --- UX final do painel
 

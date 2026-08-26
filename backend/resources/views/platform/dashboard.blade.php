@@ -164,7 +164,105 @@
             </div>
         </div>
 
-        <div class="metric-grid">
+        <section
+            class="platform-card"
+            style="margin-top:24px;"
+        >
+            <h2>
+                {{ __('platform.dashboard.commercial_indicators') }}
+            </h2>
+
+            <p class="platform-muted">
+                {{ __('platform.dashboard.commercial_indicators_description') }}
+            </p>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.new_subscriptions') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $newSubscriptions }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.cancellations') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $cancellations }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.churn') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ number_format($churnRate, 2, ',', '.') }}%
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.trial_conversions') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $trialConversions }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.expired_trials_without_conversion') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $expiredTrialsWithoutConversion }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.active_subscriptions') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ (int) ($subscriptionCounts['active'] ?? 0) }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.active_trials') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $trialActive }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        {{ __('platform.dashboard.trials_expiring') }}
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $trialExpiring }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div
+            class="metric-grid"
+            style="margin-top:24px;"
+        >
             <div class="metric-card">
                 <div class="metric-label">
                     {{ __('platform.dashboard.tenants') }}
@@ -172,66 +270,6 @@
 
                 <div class="metric-value">
                     {{ $tenantCount }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.new_subscriptions') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $newSubscriptions }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.cancellations') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $cancellations }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.churn') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ number_format($churnRate, 2, ',', '.') }}%
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.trial_conversions') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $trialConversions }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.expired_trials_without_conversion') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $expiredTrialsWithoutConversion }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.active_subscriptions') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ (int) ($subscriptionCounts['active'] ?? 0) }}
                 </div>
             </div>
 
@@ -247,26 +285,6 @@
 
             <div class="metric-card">
                 <div class="metric-label">
-                    {{ __('platform.dashboard.active_trials') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $trialActive }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
-                    {{ __('platform.dashboard.trials_expiring') }}
-                </div>
-
-                <div class="metric-value">
-                    {{ $trialExpiring }}
-                </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">
                     {{ __('platform.dashboard.global_users') }}
                 </div>
 
@@ -274,7 +292,6 @@
                     {{ $usage['users'] }}
                 </div>
             </div>
-
             <a
                 class="metric-card{{ (int) ($webhookCounts['failed'] ?? 0) > 0 ? ' metric-card--alert' : '' }}"
                 href="{{ route(

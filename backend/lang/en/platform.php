@@ -47,6 +47,8 @@ return [
         'title' => 'Global dashboard',
         'eyebrow' => 'Global overview',
         'description' => 'Tenants, subscriptions, trials, contractual revenue and usage.',
+        'commercial_indicators' => 'Commercial indicators',
+        'commercial_indicators_description' => 'Acquisition, conversion and retention across recent commercial cycles.',
         'tenants' => 'Tenants',
         'contacts' => 'Contacts',
         'health' => 'Operational health',

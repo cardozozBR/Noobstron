@@ -44,6 +44,8 @@ return [
         'title' => 'Painel global',
         'eyebrow' => 'Visão global',
         'description' => 'Tenants, assinaturas, trials, receita contratual e uso.',
+        'commercial_indicators' => 'Indicadores comerciais',
+        'commercial_indicators_description' => 'Aquisição, conversão e retenção dos últimos ciclos comerciais.',
         'tenants' => 'Tenants',
         'contacts' => 'Contatos',
         'health' => 'Saúde operacional',

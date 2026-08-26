@@ -2313,4 +2313,35 @@ public function test_platform_dashboard_shows_effective_cancellations_from_last_
             )
             ->assertSee('0,00%');
     }
+
+    public function test_platform_dashboard_groups_commercial_indicators(): void
+    {
+        $admin = $this->platformAdmin();
+
+        $this
+            ->actingAs($admin, 'platform')
+            ->get(route('platform.dashboard'))
+            ->assertOk()
+            ->assertSee(
+                __('platform.dashboard.commercial_indicators')
+            )
+            ->assertSee(
+                __('platform.dashboard.commercial_indicators_description')
+            )
+            ->assertSee(
+                __('platform.dashboard.new_subscriptions')
+            )
+            ->assertSee(
+                __('platform.dashboard.cancellations')
+            )
+            ->assertSee(
+                __('platform.dashboard.churn')
+            )
+            ->assertSee(
+                __('platform.dashboard.trial_conversions')
+            )
+            ->assertSee(
+                __('platform.dashboard.expired_trials_without_conversion')
+            );
+    }
 }
