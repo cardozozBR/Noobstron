@@ -386,7 +386,7 @@ Validação em produção:
 -   [x] Mensagens de sucesso/erro
 -   [x] Revisão mobile
 -   [x] Acessibilidade básica
--   [ ] Padronizar português e acentuação
+-   [x] Padronizar português e acentuação
 
 ## Fase 12 --- Fechamento para produção
 

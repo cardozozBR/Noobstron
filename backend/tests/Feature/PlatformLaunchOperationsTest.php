@@ -1783,7 +1783,7 @@ $response->assertSee(
             ->assertSee('Verificado em')
             ->assertSee('Credencial principal configurada.')
             ->assertSee('1')
-            ->assertSee('tenant(s) com provider ativo.')
+            ->assertSee('tenant(s) com provedor ativo.')
             ->assertSee('OK');
     }
 

@@ -375,7 +375,7 @@
                         Não foi possível verificar as configurações.
                     @elseif ($whatsAppConfigured)
                         {{ $checks['whatsapp_configured_tenants'] }}
-                        tenant(s) com provider ativo.
+                        tenant(s) com provedor ativo.
                     @else
                         {{ __('platform.empty_states.health_no_provider') }}
                     @endif
