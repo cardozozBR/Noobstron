@@ -289,7 +289,37 @@
                             </p>
                         </div>
                         <div>
-                            <button
+                                        <div class="registration-field">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="terms_accepted"
+                        value="1"
+                        required
+                        @checked(old('terms_accepted'))
+                    >
+
+                    Li e aceito os
+                    <a
+                        href="{{ route('marketing.terms') }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >Termos de Uso</a>
+                    e a
+                    <a
+                        href="{{ route('marketing.privacy') }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >Política de Privacidade</a>.
+                </label>
+
+                @error('terms_accepted')
+                    <p class="field-error">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+<button
                                 type="submit"
                                 class="button"
                             >{{ __('registration.create') }}</button>

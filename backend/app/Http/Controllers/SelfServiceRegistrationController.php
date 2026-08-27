@@ -49,7 +49,7 @@ class SelfServiceRegistrationController extends Controller
                     \Closure $fail,
                 ): void {
                     if (
-                        !is_string($value) ||
+                        ! is_string($value) ||
                         filter_var(
                             $value,
                             FILTER_VALIDATE_EMAIL
@@ -57,8 +57,7 @@ class SelfServiceRegistrationController extends Controller
                     ) {
                         $fail(
                             __('validation.email', [
-                                'attribute' =>
-                                    __('registration.fields.email'),
+                                'attribute' => __('registration.fields.email'),
                             ])
                         );
                     }
@@ -100,12 +99,15 @@ class SelfServiceRegistrationController extends Controller
                 ]),
                 Rule::exists('plans', 'code')
                     ->where(
-                        static fn ($query) =>
-                            $query->where(
-                                'active',
-                                true
-                            )
+                        static fn ($query) => $query->where(
+                            'active',
+                            true
+                        )
                     ),
+            ],
+            'terms_accepted' => [
+                'required',
+                'accepted',
             ],
         ]);
 
@@ -113,8 +115,7 @@ class SelfServiceRegistrationController extends Controller
 
         if ($slug === '') {
             throw ValidationException::withMessages([
-                'company_name' =>
-                    'Não foi possível gerar o identificador da empresa.',
+                'company_name' => 'Não foi possível gerar o identificador da empresa.',
             ]);
         }
 
@@ -124,8 +125,7 @@ class SelfServiceRegistrationController extends Controller
                 ->exists()
         ) {
             throw ValidationException::withMessages([
-                'company_name' =>
-                    'Já existe uma empresa com este identificador.',
+                'company_name' => 'Já existe uma empresa com este identificador.',
             ]);
         }
 
@@ -225,19 +225,19 @@ class SelfServiceRegistrationController extends Controller
             }
         }
 
-        if (!$host) {
+        if (! $host) {
             throw new \RuntimeException(
                 'Application URL must contain a valid host.'
             );
         }
 
-        $tenantHost = $tenant->slug . '.' . $host;
+        $tenantHost = $tenant->slug.'.'.$host;
 
         $tenantUrl = $scheme
-            . '://'
-            . $tenantHost
-            . ($port ? ':' . $port : '')
-            . '/login';
+            .'://'
+            .$tenantHost
+            .($port ? ':'.$port : '')
+            .'/login';
 
         return redirect()->to(
             $tenantUrl

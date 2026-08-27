@@ -5,17 +5,19 @@ namespace Tests\Feature;
 use App\Models\Plan;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Services\TenantContext;
 use App\Services\TrialService;
+use Carbon\CarbonImmutable;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\PlanCatalogSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Services\TenantContext;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 use RuntimeException;
+use Tests\TestCase;
 
 class SelfServiceRegistrationTest extends TestCase
 {
@@ -206,12 +208,12 @@ class SelfServiceRegistrationTest extends TestCase
             ->where('code', 'start')
             ->firstOrFail();
 
-        $moment = \Carbon\CarbonImmutable::parse(
+        $moment = CarbonImmutable::parse(
             '2026-08-18 12:00:00',
             'UTC'
         );
 
-        \Carbon\CarbonImmutable::setTestNow(
+        CarbonImmutable::setTestNow(
             $moment
         );
 
@@ -228,9 +230,10 @@ class SelfServiceRegistrationTest extends TestCase
             'country_code' => 'BR',
             'locale' => 'pt-BR',
             'plan_code' => 'start',
+            'terms_accepted' => '1',
         ]);
 
-        \Carbon\CarbonImmutable::setTestNow();
+        CarbonImmutable::setTestNow();
 
         $response->assertRedirect(
             'https://acme-ltda.platform.example.test:8443/login'
@@ -334,6 +337,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'pt-BR',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -366,6 +370,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'XX',
                 'locale' => 'pt-BR',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -393,6 +398,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'xx-XX',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -420,6 +426,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'pt-BR',
                 'plan_code' => 'enterprise',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -437,7 +444,7 @@ class SelfServiceRegistrationTest extends TestCase
     public function test_registration_rejects_inactive_self_service_plan(): void
     {
         $this->seed(
-            \Database\Seeders\PermissionSeeder::class
+            PermissionSeeder::class
         );
 
         Plan::query()->create([
@@ -457,6 +464,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'pt-BR',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -486,8 +494,8 @@ class SelfServiceRegistrationTest extends TestCase
     public function test_registration_rolls_back_when_trial_start_fails(): void
     {
         $this->seed([
-            \Database\Seeders\PermissionSeeder::class,
-            \Database\Seeders\PlanCatalogSeeder::class,
+            PermissionSeeder::class,
+            PlanCatalogSeeder::class,
         ]);
 
         $this->mock(
@@ -505,22 +513,22 @@ class SelfServiceRegistrationTest extends TestCase
         );
 
         $beforeTenantCount =
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'tenants'
             )->count();
 
         $beforeUserCount =
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'users'
             )->count();
 
         $beforeSubscriptionCount =
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'subscriptions'
             )->count();
 
         $beforeFeatureCount =
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'tenant_features'
             )->count();
 
@@ -534,6 +542,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'pt-BR',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
         } catch (RuntimeException $exception) {
             $this->assertSame(
@@ -544,28 +553,28 @@ class SelfServiceRegistrationTest extends TestCase
 
         $this->assertSame(
             $beforeTenantCount,
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'tenants'
             )->count()
         );
 
         $this->assertSame(
             $beforeUserCount,
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'users'
             )->count()
         );
 
         $this->assertSame(
             $beforeSubscriptionCount,
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'subscriptions'
             )->count()
         );
 
         $this->assertSame(
             $beforeFeatureCount,
-            \Illuminate\Support\Facades\DB::table(
+            DB::table(
                 'tenant_features'
             )->count()
         );
@@ -600,8 +609,8 @@ class SelfServiceRegistrationTest extends TestCase
         Notification::fake();
 
         $this->seed([
-            \Database\Seeders\PermissionSeeder::class,
-            \Database\Seeders\PlanCatalogSeeder::class,
+            PermissionSeeder::class,
+            PlanCatalogSeeder::class,
         ]);
 
         $response = $this->post('/register', [
@@ -613,6 +622,7 @@ class SelfServiceRegistrationTest extends TestCase
             'country_code' => 'BR',
             'locale' => 'pt-BR',
             'plan_code' => 'start',
+            'terms_accepted' => '1',
         ]);
 
         $response->assertRedirect();
@@ -651,17 +661,17 @@ class SelfServiceRegistrationTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            "verification.notice",
+            'verification.notice',
             $routes
         );
 
         $this->assertStringContainsString(
-            "verification.verify",
+            'verification.verify',
             $routes
         );
 
         $this->assertStringContainsString(
-            "verification.send",
+            'verification.send',
             $routes
         );
     }
@@ -794,9 +804,9 @@ class SelfServiceRegistrationTest extends TestCase
         ]);
 
         $response = $this->get(
-            '/email/verify/' .
-            $user->getKey() .
-            '/' .
+            '/email/verify/'.
+            $user->getKey().
+            '/'.
             sha1($user->getEmailForVerification())
         );
 
@@ -908,30 +918,31 @@ class SelfServiceRegistrationTest extends TestCase
             ->assertSee('Criar conta');
     }
 
-   public function test_registration_validation_preserves_safe_fields_and_shows_feedback(): void
-{
-    $response = $this
-        ->followingRedirects()
-        ->from('http://localhost/register')
-        ->post('http://localhost/register', [
-            'company_name' => 'Empresa UX',
-            'name' => 'Maria UX',
-            'email' => 'maria.ux@example.test',
-            'password' => 'curta',
-            'password_confirmation' => 'diferente',
-            'country_code' => 'BR',
-            'locale' => 'pt-BR',
-            'plan_code' => 'start',
-        ]);
+    public function test_registration_validation_preserves_safe_fields_and_shows_feedback(): void
+    {
+        $response = $this
+            ->followingRedirects()
+            ->from('http://localhost/register')
+            ->post('http://localhost/register', [
+                'company_name' => 'Empresa UX',
+                'name' => 'Maria UX',
+                'email' => 'maria.ux@example.test',
+                'password' => 'curta',
+                'password_confirmation' => 'diferente',
+                'country_code' => 'BR',
+                'locale' => 'pt-BR',
+                'plan_code' => 'start',
+                'terms_accepted' => '1',
+            ]);
 
-    $response
-        ->assertOk()
-        ->assertSee('Revise os campos destacados antes de continuar.')
-        ->assertSee('value="Empresa UX"', false)
-        ->assertSee('value="Maria UX"', false)
-        ->assertSee('value="maria.ux@example.test"', false);
+        $response
+            ->assertOk()
+            ->assertSee('Revise os campos destacados antes de continuar.')
+            ->assertSee('value="Empresa UX"', false)
+            ->assertSee('value="Maria UX"', false)
+            ->assertSee('value="maria.ux@example.test"', false);
 
-}
+    }
 
     public function test_registration_rejects_email_without_valid_domain_shape(): void
     {
@@ -948,6 +959,7 @@ class SelfServiceRegistrationTest extends TestCase
                 'country_code' => 'BR',
                 'locale' => 'pt-BR',
                 'plan_code' => 'start',
+                'terms_accepted' => '1',
             ]);
 
         $response
@@ -979,6 +991,7 @@ class SelfServiceRegistrationTest extends TestCase
             'country_code' => 'BR',
             'locale' => 'pt-BR',
             'plan_code' => 'start',
+            'terms_accepted' => '1',
         ]);
 
         $response->assertRedirect(
@@ -986,6 +999,42 @@ class SelfServiceRegistrationTest extends TestCase
         );
     }
 
+    public function test_registration_page_requires_legal_acceptance(): void
+    {
+        $response = $this->get('/register');
 
+        $response
+            ->assertOk()
+            ->assertSee('name="terms_accepted"', false)
+            ->assertSee('Termos de Uso')
+            ->assertSee('Política de Privacidade')
+            ->assertSee(route('marketing.terms'), false)
+            ->assertSee(route('marketing.privacy'), false);
+    }
 
+    public function test_registration_rejects_missing_legal_acceptance(): void
+    {
+        $this->seed(PlanCatalogSeeder::class);
+
+        $response = $this
+            ->from('/register')
+            ->post('/register', [
+                'company_name' => 'Empresa Sem Aceite',
+                'name' => 'Admin Sem Aceite',
+                'email' => 'sem.aceite@example.test',
+                'password' => 'SenhaSegura123',
+                'password_confirmation' => 'SenhaSegura123',
+                'country_code' => 'BR',
+                'locale' => 'pt-BR',
+                'plan_code' => 'start',
+            ]);
+
+        $response
+            ->assertRedirect('/register')
+            ->assertSessionHasErrors('terms_accepted');
+
+        $this->assertDatabaseMissing('tenants', [
+            'slug' => 'empresa-sem-aceite',
+        ]);
+    }
 }
