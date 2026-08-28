@@ -266,6 +266,41 @@
     accent-color: #111827;
     flex: 0 0 auto;
 }
+
+/* Terms acceptance: checkbox and text on the same line */
+.registration-page .registration-footer label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 0 0 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374151;
+    cursor: pointer;
+}
+
+.registration-page .registration-footer label input[type="checkbox"] {
+    appearance: auto;
+    -webkit-appearance: checkbox;
+    display: block;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    max-width: 18px;
+    max-height: 18px;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 18px;
+    accent-color: #111827;
+}
+
+.registration-page .registration-footer label a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
 </style>
 
 <div class="registration-page">
