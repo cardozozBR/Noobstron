@@ -175,24 +175,6 @@
     border-top: 1px solid #e5e7eb;
 }
 
-.registration-page .registration-footer label {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 18px;
-    color: #374151;
-    font-size: 14px;
-    line-height: 1.55;
-}
-
-.registration-page .registration-footer input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin: 2px 0 0;
-    accent-color: #111827;
-    flex: 0 0 auto;
-}
-
 .registration-page .registration-footer .button,
 .registration-page button[type="submit"] {
     min-height: 48px;
@@ -267,23 +249,31 @@
     flex: 0 0 auto;
 }
 
-/* Terms acceptance: checkbox and text on the same line */
-.registration-page .registration-footer label {
+.registration-page .registration-actions {
+    grid-column: 1 / -1;
+}
+
+.registration-page .registration-terms {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.registration-page .registration-terms label {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
-    margin: 0 0 18px;
+    width: 100%;
+    margin: 0;
+    color: #374151;
     font-size: 14px;
     line-height: 1.5;
-    color: #374151;
     cursor: pointer;
 }
 
-.registration-page .registration-footer label input[type="checkbox"] {
+.registration-page .registration-terms input[type="checkbox"] {
     appearance: auto;
     -webkit-appearance: checkbox;
-    display: block;
     width: 18px;
     height: 18px;
     min-width: 18px;
@@ -296,10 +286,20 @@
     accent-color: #111827;
 }
 
-.registration-page .registration-footer label a {
+.registration-page .registration-terms label span {
+    display: inline;
+    min-width: 0;
+}
+
+.registration-page .registration-terms a {
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+
+.registration-page .registration-actions > .button,
+.registration-page .registration-actions > button {
+    display: inline-block;
 }
 </style>
 
@@ -565,8 +565,8 @@
                                 {{ __('registration.trial_note') }}
                             </p>
                         </div>
-                        <div>
-                                        <div class="registration-field">
+                        <div class="registration-actions">
+                            <div class="registration-field registration-terms">
                 <label>
                     <input
                         type="checkbox"
@@ -576,18 +576,20 @@
                         @checked(old('terms_accepted'))
                     >
 
-                    Li e aceito os
-                    <a
-                        href="{{ route('marketing.terms') }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >Termos de Uso</a>
-                    e a
-                    <a
-                        href="{{ route('marketing.privacy') }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >Política de Privacidade</a>.
+                    <span>
+                        Li e aceito os
+                        <a
+                            href="{{ route('marketing.terms') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >Termos de Uso</a>
+                        e a
+                        <a
+                            href="{{ route('marketing.privacy') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >Política de Privacidade</a>.
+                    </span>
                 </label>
 
                 @error('terms_accepted')
