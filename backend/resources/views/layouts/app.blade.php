@@ -615,8 +615,74 @@
             top: 0;
             z-index: 50;
             gap: 22px;
-            padding: 14px 26px;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+            padding: 12px 26px;
+            background: #111827;
+            color: #f9fafb;
+            border-bottom: 1px solid #1f2937;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.16);
+        }
+
+        header .brand {
+            color: #ffffff;
+        }
+
+        header nav a {
+            color: #e5e7eb !important;
+        }
+
+        header nav a:not(.nav-pill)::after {
+            background: #ffffff;
+        }
+
+        header nav a:not(.nav-pill):hover,
+        header nav a:not(.nav-pill).is-active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff !important;
+        }
+
+        header nav a.nav-pill {
+            border-color: rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.06);
+            color: #e5e7eb !important;
+            box-shadow: none;
+        }
+
+        header nav a.nav-pill:hover,
+        header nav a.nav-pill.is-active {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.18);
+            color: #ffffff !important;
+        }
+
+        header nav a.nav-pill::before {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        header .user-area {
+            border-left-color: rgba(255, 255, 255, 0.14);
+            color: #e5e7eb;
+        }
+
+        header .user-area > a {
+            color: #e5e7eb !important;
+        }
+
+        header .user-area > a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff !important;
+        }
+
+        header .nav-more-button {
+            color: #e5e7eb;
+            border-color: rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        header .nav-more-button:hover,
+        header .nav-more.is-open .nav-more-button {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.18);
         }
 
         .brand {
@@ -947,8 +1013,8 @@
         .nav-more-menu a.is-active,
         .nav-more-menu a.nav-pill:hover,
         .nav-more-menu a.nav-pill.is-active {
-            background: #f3f4f6;
-            color: #111827 !important;
+            background: #1f2937;
+            color: #ffffff !important;
             transform: none;
         }
 
@@ -1072,6 +1138,26 @@
         .nav-more-menu a.is-active.nav-whatsapp::before,
         .nav-more-menu a.is-active.nav-financial::before {
             opacity: 1;
+        }
+
+        /* NAV-MORE-DARK-FIX */
+        header .nav-more-menu {
+            background: #111827 !important;
+            border-color: #374151 !important;
+        }
+
+        header .nav-more-menu a,
+        header .nav-more-menu a.nav-pill {
+            background: transparent !important;
+            color: #e5e7eb !important;
+        }
+
+        header .nav-more-menu a:hover,
+        header .nav-more-menu a.is-active,
+        header .nav-more-menu a.nav-pill:hover,
+        header .nav-more-menu a.nav-pill.is-active {
+            background: #1f2937 !important;
+            color: #ffffff !important;
         }
         /* NAV-ICON-FIX-V1:END */
 </style>

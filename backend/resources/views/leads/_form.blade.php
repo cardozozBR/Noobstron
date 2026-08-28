@@ -233,7 +233,7 @@
                 <button
                     type="button"
                     id="lead_ai_rewrite"
-                    class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50"
+                    class="rounded-lg border border-[#111827] bg-[#111827] px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1f2937]"
                     data-url="{{ route('ai.rewrite') }}"
                 >
                     {{ __('leads.ai_rewrite') }}
