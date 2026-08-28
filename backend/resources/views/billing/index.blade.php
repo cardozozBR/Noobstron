@@ -394,7 +394,8 @@ $amountFormatted =
 @endif
 
 @if (
-    $isCurrentPaidSubscription
+    $subscription !== null
+    && $isCurrentPaidSubscription
     && $subscription->payment_provider === 'stripe'
     && isset($availablePlans)
     && $availablePlans->isNotEmpty()
