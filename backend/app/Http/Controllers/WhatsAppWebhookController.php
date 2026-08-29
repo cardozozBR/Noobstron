@@ -6,6 +6,7 @@ use App\Contracts\WhatsAppWebhookNormalizer;
 use App\Contracts\WhatsAppWebhookVerifier;
 use App\Models\Tenant;
 use App\Services\TenantContext;
+use App\Services\WhatsAppProviderConfigService;
 use App\Services\WhatsAppWebhookHttpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,84 @@ use RuntimeException;
 
 class WhatsAppWebhookController extends Controller
 {
+    public function verify(
+        string $tenantSlug,
+        string $provider,
+        Request $request,
+        TenantContext $tenantContext
+    ) {
+        $tenant = Tenant::query()
+            ->withoutGlobalScopes()
+            ->where(
+                'slug',
+                $tenantSlug
+            )
+            ->where(
+                'status',
+                'active'
+            )
+            ->firstOrFail();
+
+        $tenantContext->set(
+            $tenant
+        );
+
+        $provider = strtolower(
+            trim($provider)
+        );
+
+        if ($provider !== 'meta') {
+            abort(404);
+        }
+
+        $config = app(
+            WhatsAppProviderConfigService::class
+        )->active('meta');
+
+        $settings = $config->settings;
+
+        if (! is_array($settings)) {
+            abort(403);
+        }
+
+        $verifyToken =
+            $settings['verify_token'] ?? null;
+
+        $mode = $request->query(
+            'hub_mode',
+            $request->query('hub.mode')
+        );
+
+        $token = $request->query(
+            'hub_verify_token',
+            $request->query('hub.verify_token')
+        );
+
+        $challenge = $request->query(
+            'hub_challenge',
+            $request->query('hub.challenge')
+        );
+
+        if (
+            $mode !== 'subscribe'
+            || ! is_string($token)
+            || ! is_string($verifyToken)
+            || $verifyToken === ''
+            || ! hash_equals(
+                $verifyToken,
+                $token
+            )
+            || $challenge === null
+        ) {
+            abort(403);
+        }
+
+        return response(
+            (string) $challenge,
+            200
+        );
+    }
+
     public function handle(
         string $tenantSlug,
         string $provider,
@@ -50,11 +129,11 @@ class WhatsAppWebhookController extends Controller
 
         $verifierKey =
             'whatsapp.webhook.verifier.'
-            . $provider;
+            .$provider;
 
         $normalizerKey =
             'whatsapp.webhook.normalizer.'
-            . $provider;
+            .$provider;
 
         if (
             ! app()->bound(
@@ -86,8 +165,7 @@ class WhatsAppWebhookController extends Controller
                     $verifier,
                     $normalizer
                 );
-        }
-        catch (RuntimeException $exception) {
+        } catch (RuntimeException $exception) {
             if (
                 $exception->getMessage() ===
                 'Invalid WhatsApp webhook signature.'
@@ -95,8 +173,7 @@ class WhatsAppWebhookController extends Controller
                 return response()
                     ->json(
                         [
-                            'ok' =>
-                                false,
+                            'ok' => false,
                         ],
                         401
                     );
@@ -107,11 +184,9 @@ class WhatsAppWebhookController extends Controller
 
         return response()
             ->json([
-                'ok' =>
-                    true,
+                'ok' => true,
 
-                'processed' =>
-                    $processed,
+                'processed' => $processed,
             ]);
     }
 }

@@ -137,7 +137,7 @@ class WhatsAppDeliveryServiceTest extends TestCase
         );
 
         $this->config(
-            'meta'
+            'unknown'
         );
 
         $message = $this->message();
@@ -150,7 +150,7 @@ class WhatsAppDeliveryServiceTest extends TestCase
             WhatsAppDeliveryService::class
         )->send(
             $message,
-            'meta'
+            'unknown'
         );
     }
 
@@ -162,20 +162,15 @@ class WhatsAppDeliveryServiceTest extends TestCase
 
         $message = WhatsAppMessage::query()
             ->create([
-                'phone' =>
-                    '5585999999999',
+                'phone' => '5585999999999',
 
-                'body' =>
-                    'Mensagem',
+                'body' => 'Mensagem',
 
-                'status' =>
-                    WhatsAppMessageStatus::RECEIVED,
+                'status' => WhatsAppMessageStatus::RECEIVED,
 
-                'direction' =>
-                    'inbound',
+                'direction' => 'inbound',
 
-                'received_at' =>
-                    now(),
+                'received_at' => now(),
             ]);
 
         $this->expectException(
@@ -200,13 +195,11 @@ class WhatsAppDeliveryServiceTest extends TestCase
     private function successfulProvider(
         string $name
     ): WhatsAppProvider {
-        return new class(
-            $name
-        ) implements WhatsAppProvider {
+        return new class($name) implements WhatsAppProvider
+        {
             public function __construct(
                 private readonly string $providerName
-            ) {
-            }
+            ) {}
 
             public function name(): string
             {
@@ -231,13 +224,11 @@ class WhatsAppDeliveryServiceTest extends TestCase
     private function failingProvider(
         string $name
     ): WhatsAppProvider {
-        return new class(
-            $name
-        ) implements WhatsAppProvider {
+        return new class($name) implements WhatsAppProvider
+        {
             public function __construct(
                 private readonly string $providerName
-            ) {
-            }
+            ) {}
 
             public function name(): string
             {
@@ -260,20 +251,15 @@ class WhatsAppDeliveryServiceTest extends TestCase
     ): WhatsAppProviderConfig {
         return WhatsAppProviderConfig::query()
             ->create([
-                'provider' =>
-                    $provider,
+                'provider' => $provider,
 
-                'sender_id' =>
-                    'sender-id',
+                'sender_id' => 'sender-id',
 
-                'active' =>
-                    $active,
+                'active' => $active,
 
-                'settings' =>
-                    [
-                        'token' =>
-                            'secret',
-                    ],
+                'settings' => [
+                    'token' => 'secret',
+                ],
             ]);
     }
 
@@ -281,11 +267,9 @@ class WhatsAppDeliveryServiceTest extends TestCase
     {
         return WhatsAppMessage::query()
             ->create([
-                'phone' =>
-                    '5585999999999',
+                'phone' => '5585999999999',
 
-                'body' =>
-                    'Mensagem WhatsApp',
+                'body' => 'Mensagem WhatsApp',
             ]);
     }
 
@@ -294,26 +278,19 @@ class WhatsAppDeliveryServiceTest extends TestCase
     ): Tenant {
         $tenant = Tenant::query()
             ->create([
-                'name' =>
-                    'Tenant ' . $slug,
+                'name' => 'Tenant '.$slug,
 
-                'slug' =>
-                    $slug,
+                'slug' => $slug,
 
-                'status' =>
-                    'active',
+                'status' => 'active',
 
-                'country_code' =>
-                    'BR',
+                'country_code' => 'BR',
 
-                'locale' =>
-                    'pt-BR',
+                'locale' => 'pt-BR',
 
-                'timezone' =>
-                    'America/Fortaleza',
+                'timezone' => 'America/Fortaleza',
 
-                'currency' =>
-                    'BRL',
+                'currency' => 'BRL',
             ]);
 
         app(

@@ -19,6 +19,8 @@ class WhatsAppMessage extends Model
         'phone',
         'recipient_name',
         'body',
+        'whatsapp_template_id',
+        'template_variables',
         'status',
         'direction',
         'provider',
@@ -32,6 +34,9 @@ class WhatsAppMessage extends Model
     ];
 
     protected $casts = [
+        'template_variables' =>
+            'array',
+
         'status' =>
             WhatsAppMessageStatus::class,
 
@@ -198,6 +203,14 @@ class WhatsAppMessage extends Model
     {
         return $this->belongsTo(
             Conversation::class
+        );
+    }
+
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(
+            WhatsAppTemplate::class,
+            'whatsapp_template_id'
         );
     }
 }

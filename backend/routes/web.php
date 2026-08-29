@@ -1782,6 +1782,19 @@ Route::post(
         'webhooks.subscription.stripe'
     );
 
+Route::get(
+    '/webhooks/whatsapp/{tenantSlug}/{provider}',
+    [
+        WhatsAppWebhookController::class,
+        'verify',
+    ]
+)
+    ->withoutMiddleware(
+        ResolveTenant::class
+    )
+    ->name(
+        'webhooks.whatsapp.verify'
+    );
 Route::post(
     '/webhooks/whatsapp/{tenantSlug}/{provider}',
     [
